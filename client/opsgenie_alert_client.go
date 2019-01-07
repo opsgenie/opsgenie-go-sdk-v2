@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/alerts"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/alerts/savedsearches"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/alert/savedsearches"
 )
 
 type OpsGenieAlertClient struct {
@@ -22,37 +22,36 @@ func NewAlertClient(config Config) *OpsGenieAlertClient {
 	return OpsGenieAlertClient
 }
 
-// Retrieves the alerts from OpsGenie
-func (cli *OpsGenieClient) List(ctx context.Context, req alerts.ListAlertRequest) (*alerts.ListAlertResponse, error) {
+// Retrieves the alert from OpsGenie
+func (cli *OpsGenieClient) List(ctx context.Context, req alert.ListAlertRequest) (*alert.ListAlertResponse, error) {
 
-	response, err := cli.SendGetRequest(ctx, req.Uri)
+	response, err := cli.Get(ctx, req.Uri)
 	if err != nil {
-		if err == context.DeadlineExceeded {
-			return nil, err
-		}
+
 		return nil, err
 	}
 
 	defer response.Body.Close()
 
-	listAlertResponse := &alerts.ListAlertResponse{}
+	listAlertResponse := &alert.ListAlertResponse{}
 	json.NewDecoder(response.Body).Decode(listAlertResponse)
 
 	return listAlertResponse, nil
 }
 
 // Creates an alert
-func (cli *OpsGenieClient) Create(ctx context.Context, req alerts.CreateAlertRequest) (*alerts.AsyncRequestResponse, error) {
+func (cli *OpsGenieClient) Create(ctx context.Context, req alert.CreateAlertRequest) (*alert.AsyncRequestResponse, error) {
 
 	response, err := cli.sendAsyncPostRequest(ctx, req.Uri, req.CreateAlertInput)
 
 	if err != nil {
+
 		return nil, err
 	}
 
 	defer response.Body.Close()
 
-	asyncRequestResponse := &alerts.AsyncRequestResponse{}
+	asyncRequestResponse := &alert.AsyncRequestResponse{}
 	err = json.NewDecoder(response.Body).Decode(asyncRequestResponse)
 
 	if err != nil {
@@ -62,16 +61,17 @@ func (cli *OpsGenieClient) Create(ctx context.Context, req alerts.CreateAlertReq
 	return asyncRequestResponse, nil
 }
 
-func (cli *OpsGenieClient) Delete(ctx context.Context, req alerts.DeleteAlertRequest) (*alerts.AsyncRequestResponse, error) {
+func (cli *OpsGenieClient) DeleteAlert(ctx context.Context, req alert.DeleteAlertRequest) (*alert.AsyncRequestResponse, error) {
 
-	response, err := cli.sendDeleteRequest(ctx, req.Uri)
+	response, err := cli.Delete(ctx, req.Uri)
 	if err != nil {
+
 		return nil, err
 	}
 
 	defer response.Body.Close()
 
-	asyncRequestResponse := &alerts.AsyncRequestResponse{}
+	asyncRequestResponse := &alert.AsyncRequestResponse{}
 	err = json.NewDecoder(response.Body).Decode(asyncRequestResponse)
 
 	if err != nil {
@@ -84,7 +84,7 @@ func (cli *OpsGenieClient) Delete(ctx context.Context, req alerts.DeleteAlertReq
 // Creates a SavedSearch
 func (cli *OpsGenieClient) CreateSavedSearch(ctx context.Context, req savedsearches.CreateSavedSearchRequest) (*savedsearches.CreateSavedSearchResponse, error) {
 
-	response, err := cli.sendPostRequest(ctx, req.Uri, req.CreateSavedSearchInput)
+	response, err := cli.Post(ctx, req.Uri, req.CreateSavedSearchInput)
 
 	if err != nil {
 		return nil, err
@@ -106,7 +106,7 @@ func (cli *OpsGenieClient) CreateSavedSearch(ctx context.Context, req savedsearc
 // Updates the SavedSearch
 func (cli *OpsGenieClient) UpdateSavedSearch(ctx context.Context, req savedsearches.UpdateSavedSearchRequest) (*savedsearches.UpdateSavedSearchResponse, error) {
 
-	response, err := cli.sendPatchRequest(ctx, req.Uri, req.UpdateSavedSearchInput)
+	response, err := cli.Patch(ctx, req.Uri, req.UpdateSavedSearchInput)
 
 	if err != nil {
 		return nil, err
@@ -125,20 +125,12 @@ func (cli *OpsGenieClient) UpdateSavedSearch(ctx context.Context, req savedsearc
 
 	return updateSavedSearchResponse, nil
 
-	/*
-		var response alertsv2.ListAlertRecipientsResponse
-		err := cli.sendGetRequest(&req, &response)
-		if err != nil {
-			return nil, err
-		}
-		return &response, nil*/
-
 }
 
 // Deletes the SavedSearch
 func (cli *OpsGenieClient) DeleteSavedSearch(ctx context.Context, req savedsearches.DeleteSavedSearchRequest) (*savedsearches.DeleteSavedSearchResponse, error) {
 
-	response, err := cli.sendDeleteRequest(ctx, req.Uri)
+	response, err := cli.Delete(ctx, req.Uri)
 	if err != nil {
 		return nil, err
 	}
@@ -149,6 +141,7 @@ func (cli *OpsGenieClient) DeleteSavedSearch(ctx context.Context, req savedsearc
 	err = json.NewDecoder(response.Body).Decode(deleteSavedSearchResponse)
 
 	if err != nil {
+
 		return nil, err
 	}
 
@@ -159,7 +152,7 @@ func (cli *OpsGenieClient) DeleteSavedSearch(ctx context.Context, req savedsearc
 // Retrieves list of saved searches
 func (cli *OpsGenieClient) ListSavedSearches(ctx context.Context, req savedsearches.ListSavedSearchRequest) (*savedsearches.ListSavedSearchResponse, error) {
 
-	response, err := cli.SendGetRequest(ctx, req.Uri)
+	response, err := cli.Get(ctx, req.Uri)
 	if err != nil {
 		if err == context.DeadlineExceeded {
 			return nil, err
