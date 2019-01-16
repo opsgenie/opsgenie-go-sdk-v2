@@ -1,4 +1,4 @@
-package savedsearches
+package alert
 
 import (
 	"net/url"

@@ -1,4 +1,4 @@
-package savedsearches
+package alert
 
 type ListSavedSearchRequest struct {
 	Uri string

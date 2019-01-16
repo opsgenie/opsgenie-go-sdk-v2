@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-type ListAlertInput struct {
+type ListAlertRequest struct {
 	Limit                int
 	Sort                 SortField
 	Offset               int
@@ -13,15 +13,64 @@ type ListAlertInput struct {
 	Query                string
 	SearchIdentifier     string
 	SearchIdentifierType SearchIdentifierType
-	ApiKey               string
+	params               string
 }
 
-type ListAlertRequest struct {
-	Uri string
+func (ar ListAlertRequest) Validate() (bool, error) {
+
+	return true, nil
 }
 
-func NewListAlertRequest(input *ListAlertInput) (ListAlertRequest, error) {
+func (ar ListAlertRequest) Endpoint() string {
+
+	return "/v2/alerts" + ar.setParams(ar)
+}
+
+func (ar ListAlertRequest) Method() string {
+	return "GET"
+}
+
+func (ar ListAlertRequest) setParams(request ListAlertRequest) string {
+
 	params := url.Values{}
+
+	if request.Limit != 0 {
+		params.Add("limit", strconv.Itoa(request.Limit))
+	}
+
+	if request.Sort != "" {
+		params.Add("sort", string(request.Sort))
+	}
+
+	if request.Offset != 0 {
+		params.Add("offset", strconv.Itoa(request.Offset))
+	}
+
+	if request.Query != "" {
+		params.Add("query", request.Query)
+	}
+
+	if request.SearchIdentifier != "" {
+		params.Add("searchIdentifier", request.SearchIdentifier)
+	}
+
+	if request.SearchIdentifierType != "" {
+		params.Add("searchIdentifierType", string(request.SearchIdentifierType))
+	}
+
+	if params != nil {
+		request.params = "?" + params.Encode()
+	} else {
+		request.params = ""
+	}
+
+	return request.params
+
+}
+
+/*func NewListAlertRequest(input *ListAlertInput) (ListAlertRequest, error) {
+	params := url.Values{}
+	value := ""
 
 	if input.Limit != 0 {
 		params.Add("limit", strconv.Itoa(input.Limit))
@@ -48,11 +97,15 @@ func NewListAlertRequest(input *ListAlertInput) (ListAlertRequest, error) {
 
 	}
 
-	uri := generateFullPathWithParams("/v2/alerts", params)
 
-	return ListAlertRequest{uri}, nil
+	if params != nil {
+		value =  "?" + params.Encode()
+	}
 
-}
+
+	return ListAlertRequest{value}, nil
+
+}*/
 
 func generateFullPathWithParams(url string, values url.Values) string {
 
