@@ -1,13 +1,18 @@
 package alert
 
 type ListSavedSearchRequest struct {
-	Uri string
 }
 
-func NewListSavedSearchRequest() (ListSavedSearchRequest, error) {
+func (ssr ListSavedSearchRequest) Validate() (bool, error) {
 
-	uri := generateFullPathWithParams("/v2/alerts/saved-searches", nil)
+	return true, nil
+}
 
-	return ListSavedSearchRequest{Uri: uri}, nil
+func (ssr ListSavedSearchRequest) Endpoint() string {
 
+	return "/v2/alerts/saved-searches"
+}
+
+func (ssr ListSavedSearchRequest) Method() string {
+	return "GET"
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"strconv"
 	"time"
 )
 
@@ -40,179 +39,7 @@ func main() {
 		return false, nil
 	},*/
 
-	/*})
-
-	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 100*time.Second)
-	defer cancel()*/
-
-	//list alert
-	/*req, err := alert.NewListAlertRequest(&alert.ListAlertInput{
-			Limit:2,
-			Offset:               0,
-			SearchIdentifierType: alert.Name,
-		})
-
-	response, err := alertTest.List(ctx, req)
-
-	fmt.Println(response)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		for i, alert := range response.Alerts {
-			fmt.Println(strconv.Itoa(i) + ". " + alert.Message)
-		}
-	}*/
-
-	//create alert
-	/*req2, err := alert.NewCreateAlertRequest(alert.CreateAlertRequest{
-
-		Alias:       "alias11112435",
-		Description: "alert description2",
-		Actions:     []string{"action12", "action22"},
-		Tags:        []string{"tag12", "tag22"},
-		Details: map[string]string{
-			"key":  "value2",
-			"key2": "value22",
-		},
-		Entity:   "entity2",
-		Source:   "source2",
-		Priority: alert.P1,
-		User:     "busra+test@opsgenie.com",
-		Note:     "alert note2",
-	})
-
-	println(err.Error())
-
-
-		response2, err := alertTest.Create(ctx, *req2)
-
-		if err != nil {
-			fmt.Println(err.Error())
-		} else {
-			fmt.Println("Create request ID: " + response2.RequestID)
-			fmt.Printf("Took: %f\n" , response2.ResponseTime)
-
-		}*/
-
-	// delete alert
-	/*identifierInput := alert.Identifier{Alias:"alias4"}
-
-	//identifier , _ := alert.NewIdentifierRequest(&identifierInput)
-
-
-	req3, err := alert.NewDeleteAlertRequest(
-		&alert.DeleteAlertInput{
-		Identifier: &identifierInput,
-
-	})
-
-	response3, err := alertTest.Delete(ctx,req3)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("Create request ID: " + response3.RequestID)
-	}*/
-
-	/*request := alertsv2.DeleteAlertRequest{
-		Identifier: &alertsv2.Identifier{
-			TinyID: "2",
-		},
-		Source: "source",
-		User:   "user@opsgenie.com",
-	}
-
-	response, err := alertCli.Delete(request)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("RequestID" + response.RequestID)
-	}*/
-
-	/*req4, err := savedsearches.NewCreateSavedSearchRequest(&savedsearches.CreateSavedSearchInput{
-		Name: "test-busra",
-		Owner: alert.User{
-			Username: "busra+test@opsgenie.com",
-		},
-		Teams: []alert.Team{
-			{Name: "Marketing"},
-		},
-		Description: "description",
-		Query:       "status: Open",
-	})
-
-	response4, err := alertTest.CreateSavedSearch(ctx, req4)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		savedSearch := response4.SavedSearch
-
-		fmt.Println("ID: " + savedSearch.ID)
-		fmt.Println("Name: " + savedSearch.Name)
-	}*/
-
-	/*savedSearchIdentifier := savedsearches.SavedSearchIdentifier{Name:"test3"}
-
-	req5, err := savedsearches.NewUpdateSavedSearchRequest(&savedsearches.UpdateSavedSearchInput{
-		Name:  "test",
-		Owner: alert.User{Username: "busra+test@opsgenie.com", },
-		Query:       "status: Open",
-
-	}, savedSearchIdentifier)
-
-	response5, err := alertTest.UpdateSavedSearch(ctx, req5)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		savedSearch := response5.SavedSearch
-
-		fmt.Println("ID: " + savedSearch.ID)
-		fmt.Println("Name: " + savedSearch.Name)
-		fmt.Println("RequestId: " + response5.RequestID)
-		fmt.Println("RateLimitState: " + response5.RateLimitState)
-		fmt.Printf("ResponseTime: %f " , response5.ResponseTime)
-
-	}*/
-
-	/*req6, err := alert.NewListSavedSearchRequest()
-
-	response6, err := alertTest.ListSavedSearches(nil, req6)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		for _, search := range response6.SavedSearches {
-			fmt.Println("ID: " + search.ID)
-			fmt.Println("Name: " + search.Name)
-		}
-	}*/
-
-	/*req7, err := savedsearches.NewDeleteSavedSearchRequest(&savedsearches.DeleteSavedSearchInput{ Name: "test3"})
-
-
-	response7, err := alertTest.DeleteSavedSearch(ctx, req7)
-
-
-
-	if err != nil {
-		fmt.Println(err.Error())
-	} else {
-		fmt.Println("Deleted")
-		fmt.Println(response7.RequestID)
-	}*/
-
-	/*req8, err := alertTest.GetAsyncRequestStatus(nil)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}else{
-		fmt.Printf("status: %s" , req8.Status.Status)
-	}*/
+	/*})*/
 
 	ctx := context.Background()
 	ctx, cancel := context.WithTimeout(ctx, 100*time.Second)
@@ -231,10 +58,14 @@ func main() {
 		fmt.Println(pr)
 	}*/
 
-	alertTest := alert.NewClient(client.Config{
-		ApiKey: "8f8e3be1-9684-4bb9-9ebb-46015d0c9952", //5d2891dc-8e22-403c-a124-0becc4e4c460
+	alertTest, err := alert.NewClient(client.Config{
+		ApiKey: "8f8e3be1-9684-4bb9-9ebb-46015d0c9950", //"73fbb690-c912-41f0-a773-06a8719db6d6", //5d2891dc-8e22-403c-a124-0becc4e4c460
 		//OpsGenieAPIURL: "https://localhost:9002",
 	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	/*cr, err :=alertTest.Create(ctx,alert.CreateAlertRequest{
 		Alias:       "aliasx",
@@ -259,7 +90,7 @@ func main() {
 
 	}*/
 
-	response, err := alertTest.List(ctx, alert.ListAlertRequest{})
+	/*response, err := alertTest.List(ctx, alert.ListAlertRequest{})
 
 	fmt.Println(response)
 
@@ -269,6 +100,83 @@ func main() {
 		for i, alert := range response.Alerts {
 			fmt.Println(strconv.Itoa(i) + ". " + alert.Message)
 		}
+	}*/
+
+	/*response4, err := alertTest.CreateSavedSearch(ctx, alert.CreateSavedSearchRequest{
+		Name: "test-busra",
+
+		Teams: []alert.Team{
+			{Name: "Marketing"},
+		},
+		Description: "description",
+		Query:       "status: Open",
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		savedSearch := response4.SavedSearch
+
+		fmt.Println("ID: " + savedSearch.ID)
+		fmt.Println("Name: " + savedSearch.Name)
+	}*/
+
+	/*response6, err := alertTest.ListSavedSearches(ctx, alert.ListSavedSearchRequest{})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		for _, search := range response6.SavedSearches {
+			fmt.Println("ID: " + search.ID)
+			fmt.Println("Name: " + search.Name)
+		}
+	}*/
+
+	/*resp, err := alertTest.GetAsyncRequestStatus(ctx, alert.GetAsyncRequestStatusRequest{})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}else{
+		fmt.Printf("status: %s" , resp.Status.Status)
+	}*/
+
+	/*response5, err := alertTest.UpdateSavedSearch(ctx, alert.UpdateSavedSearchRequest{
+		Name:  "testttttt2",
+		Owner: alert.User{Username: "mbtekinsen@gmail.com", },
+		Query:       "status: Open",
+		NewName:"testttttt3",
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		savedSearch := response5.SavedSearch
+
+		fmt.Println("ID: " + savedSearch.ID)
+		fmt.Println("Name: " + savedSearch.Name)
+		fmt.Println("RequestId: " + response5.RequestID)
+
+	}*/
+
+	response5, err := alertTest.Delete(ctx, alert.DeleteAlertRequest{Identifier: &alert.Identifier{Alias: "alias3"}})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("Create request ID: " + response5.RequestID)
 	}
+
+	//req7, err := savedsearches.NewDeleteSavedSearchRequest(&savedsearches.DeleteSavedSearchInput{ Name: "test3"})
+
+	/*response7, err := alertTest.DeleteSavedSearch(ctx, alert.DeleteSavedSearchRequest{Name:"list-blue-team-alerts"})
+
+
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println("Deleted")
+		fmt.Println(response7.RequestID)
+	}*/
 
 }

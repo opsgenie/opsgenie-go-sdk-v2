@@ -2,32 +2,41 @@ package alert
 
 import "net/url"
 
-type DeleteAlertInput struct {
+type DeleteAlertRequest struct {
 	*Identifier
 	Source string
+	params string
 }
 
-type DeleteAlertRequest struct {
-	Uri string
+func (r DeleteAlertRequest) Validate() (bool, error) {
+	valid, err := r.Identifier.Validate()
+	if err != nil {
+		return valid, err
+	}
+	return true, nil
 }
 
-func NewDeleteAlertRequest(input *DeleteAlertInput) (DeleteAlertRequest, error) {
+func (r DeleteAlertRequest) Endpoint() string {
 
-	identifier, err := NewIdentifierRequest(input.Identifier)
+	return "/v2/alerts/" + r.setParams(r)
+}
 
-	params := url.Values{}
-	uri := ""
+func (r DeleteAlertRequest) Method() string {
+	return "DELETE"
+}
 
-	if input.Source != "" {
-		params.Add("source", input.Source)
+func (r DeleteAlertRequest) setParams(request DeleteAlertRequest) string {
+
+	request.params = request.Identifier.setParams(*request.Identifier)
+
+	if r.Source != "" {
+		params := url.Values{}
+		params.Add("source", r.Source)
+		request.params = request.params + "?" + params.Encode()
 	}
 
-	if len(params) != 0 {
-		uri = generateFullPathWithParams(identifier.Uri, params)
-	} else {
-		uri = generateFullPathWithParams(identifier.Uri, nil)
-	}
+	request.params = request.params + ""
 
-	return DeleteAlertRequest{uri}, err
+	return request.params
 
 }

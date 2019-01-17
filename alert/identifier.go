@@ -1,6 +1,7 @@
 package alert
 
 import (
+	"github.com/pkg/errors"
 	"net/url"
 )
 
@@ -8,43 +9,50 @@ type Identifier struct {
 	ID     string `json:"-"`
 	Alias  string `json:"-"`
 	TinyID string `json:"-"`
+	params string
 }
 
-type IdentifierRequest struct {
-	Uri        string
-	Identifier *Identifier
+func (r Identifier) Validate() (bool, error) {
+
+	if r.ID == "" && r.Alias == "" && r.TinyID == "" {
+		return false, errors.New("ID, TinyID or Alias should be provided")
+	}
+
+	return true, nil
 }
 
-func NewIdentifierRequest(input *Identifier) (IdentifierRequest, error) {
+func (r Identifier) Endpoint() string {
 
-	baseUrl := "/v2/alerts/"
-	baseUri := ""
+	return "/v2/alerts/" + r.setParams(r)
+}
+
+func (r Identifier) setParams(request Identifier) string {
+
 	params := url.Values{}
+	inlineParam := ""
 
-	if input.ID != "" {
-		params.Set("identifierType", "id") //TODO: default valuesu id o yüzden koymasak da olabilir sanki check it
+	if request.ID != "" {
+		inlineParam = r.ID
+		params.Add("identifierType", "id")
 
-		baseUri = baseUrl + input.ID
-		//, url.Values{}, nil
 	}
 
-	if input.Alias != "" {
-		params.Set("identifierType", "alias")
-		baseUri = baseUrl + input.Alias
-		//return , params, nil
+	if request.Alias != "" {
+		inlineParam = r.Alias
+		params.Add("identifierType", "alias")
 	}
 
-	if input.TinyID != "" {
-		params.Set("identifierType", "tiny")
-		baseUri = baseUrl + input.TinyID
-
-		//return baseUrl + input.TinyID, params, nil
+	if request.TinyID != "" {
+		inlineParam = r.TinyID
+		params.Add("identifierType", "tiny")
 	}
 
-	//return "", nil, errors.New("ID, TinyID or Alias should be provided")
+	if params != nil {
+		request.params = inlineParam + "?" + params.Encode()
+	} else {
+		request.params = inlineParam + ""
+	}
 
-	uri := generateFullPathWithParams(baseUri, params)
-
-	return IdentifierRequest{uri, input}, nil
+	return request.params
 
 }

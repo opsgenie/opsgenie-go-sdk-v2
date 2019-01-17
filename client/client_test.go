@@ -17,25 +17,10 @@ var (
 
 func TestNewClient(t *testing.T) {
 
-	client := NewOpsGenieClient(Config{
+	client, _ := NewOpsGenieClient(Config{
 		ApiKey: "5d2891dc-8e22-403c-a124-0becc4e4c460"})
 
 	assert.Equal(t, BaseURL, client.Config.OpsGenieAPIURL)
-}
-
-func TestNewRequest(t *testing.T) {
-	client := NewOpsGenieClient(Config{
-		ApiKey: "5d2891dc-8e22-403c-a124-0becc4e4c460"})
-
-	request, err := client.NewRequest("GET", Endpoint, nil)
-
-	assert.Nil(t, err, "NewRequest creation error")
-
-	assert.Equal(t, EndpointURL, request.URL.String(), "NewRequest endpoint URL")
-
-	_, err = client.NewRequest("GET", BadEndpoint, nil)
-
-	assert.NotNil(t, err, "NewRequest bad URL no error")
 }
 
 func TestGet(t *testing.T) {

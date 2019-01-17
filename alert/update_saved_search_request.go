@@ -1,49 +1,73 @@
 package alert
 
 import (
+	"github.com/pkg/errors"
 	"net/url"
 )
 
-type SavedSearchIdentifier struct {
-	ID   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-}
-
-type UpdateSavedSearchInput struct {
-	Name        string `json:"name,omitempty"`
+type UpdateSavedSearchRequest struct {
+	ID          string `json:"-"`
+	Name        string `json:"-"`
+	NewName     string `json:"name,omitempty"`
 	Query       string `json:"query,omitempty"`
 	Owner       User   `json:"owner,omitempty"`
 	Description string `json:"description,omitempty"`
 	Teams       []Team `json:"teams,omitempty"`
+	params      string
 }
 
-type UpdateSavedSearchRequest struct {
-	Uri                    string
-	UpdateSavedSearchInput *UpdateSavedSearchInput
+func (r UpdateSavedSearchRequest) Validate() (bool, error) {
+
+	if r.ID == "" && r.Name == "" {
+		return false, errors.New("ID or Name should be provided")
+	}
+
+	if r.NewName == "" {
+		return false, errors.New("name cannot be empty")
+	}
+
+	if r.Query == "" {
+		return false, errors.New("query cannot be empty")
+	}
+
+	if r.Owner.ID == "" && r.Owner.Username == "" {
+		return false, errors.New("owner cannot be empty")
+	}
+
+	return true, nil
 }
 
-func NewUpdateSavedSearchRequest(input *UpdateSavedSearchInput, identifier SavedSearchIdentifier) (UpdateSavedSearchRequest, error) {
+func (r UpdateSavedSearchRequest) Endpoint() string {
 
-	baseUrl := "/v2/alertss/saved-searches/"
-	baseUri := ""
+	return "/v2/alerts/saved-searches/" + r.setParams(r)
+}
+
+func (r UpdateSavedSearchRequest) Method() string {
+	return "PATCH"
+}
+
+func (r UpdateSavedSearchRequest) setParams(request UpdateSavedSearchRequest) string {
+
 	params := url.Values{}
+	inlineParam := ""
 
-	if identifier.ID != "" {
-		baseUri = baseUrl + identifier.ID
+	if r.ID != "" {
+		inlineParam = r.ID
 		params.Add("identifierType", "id")
 
 	}
 
-	if identifier.Name != "" {
-
-		baseUri = baseUrl + identifier.Name
+	if r.Name != "" {
+		inlineParam = r.Name
 		params.Add("identifierType", "name")
 	}
 
-	uri := generateFullPathWithParams(baseUri, params)
+	if params != nil {
+		request.params = inlineParam + "?" + params.Encode()
+	} else {
+		request.params = inlineParam + ""
+	}
 
-	return UpdateSavedSearchRequest{uri, input}, nil
-
-	//return "", nil, errors.New("ID or Name should be provided")
+	return request.params
 
 }

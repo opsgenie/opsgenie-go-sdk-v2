@@ -33,15 +33,20 @@ type ApiRequest interface {
 
 type apiResult interface {
 	//parse
+	Response
 }
 
 var endpointURL = "https://api.opsgenie.com"
 
-func NewOpsGenieClient(cfg Config) *OpsGenieClient {
+func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
 
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
+	}
+	_, err := cfg.Validate()
+	if err != nil {
+		return nil, err
 	}
 
 	if cfg.OpsGenieAPIURL == "" {
@@ -53,7 +58,7 @@ func NewOpsGenieClient(cfg Config) *OpsGenieClient {
 	}
 
 	// we will not use library logger
-	opsGenieClient.RetryableClient.Logger = nil
+	//opsGenieClient.RetryableClient.Logger = nil
 
 	//set logger
 	logrus.SetFormatter(
@@ -116,157 +121,7 @@ func NewOpsGenieClient(cfg Config) *OpsGenieClient {
 		}
 	}
 
-	return opsGenieClient
-}
-
-func (cli *OpsGenieClient) NewRequest(method, path string, body interface{}) (*Request, error) {
-
-	var buf io.ReadWriter
-	if body != nil {
-		buf = new(bytes.Buffer)
-		err := json.NewEncoder(buf).Encode(body)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	req, err := retryablehttp.NewRequest(method, path, buf)
-	if err != nil {
-		logrus.Debugf("Can not create retryable http request: %s", err.Error())
-		return nil, err
-	}
-
-	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
-	}
-	req.Header.Set("Accept", "application/json")
-	req.Header.Set("Authorization", "GenieKey "+cli.Config.ApiKey)
-
-	return &Request{req}, err
-
-}
-
-func (cli *OpsGenieClient) Get(ctx context.Context, path string, params string) (response *http.Response, err error) {
-
-	request := cli.newGetRequest(path, params)
-
-	if ctx != nil {
-		request.Request = request.Request.WithContext(ctx)
-	}
-
-	return cli.do(request)
-
-}
-
-func (cli *OpsGenieClient) newGetRequest(uri string, params string) *Request {
-
-	requestUri := cli.Config.OpsGenieAPIURL + uri + params
-
-	req, err := cli.NewRequest("GET", requestUri, nil)
-
-	if err != nil {
-
-		return nil
-	}
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-	logrus.Debugf("Executing OpsGenie request to [" + requestUri + "]")
-
-	return req
-}
-
-func (cli *OpsGenieClient) SendAsyncPostRequest(ctx context.Context, path string, request interface{}) (response *http.Response, err error) {
-
-	return cli.Post(ctx, path, request)
-
-}
-
-func (cli *OpsGenieClient) Post(ctx context.Context, path string, body interface{}) (response *http.Response, err error) {
-
-	request := cli.newPostRequest(path, body)
-
-	if ctx != nil {
-		request.Request = request.Request.WithContext(ctx)
-	}
-
-	return cli.do(request)
-
-}
-
-func (cli *OpsGenieClient) newPostRequest(uri string, body interface{}) *Request {
-
-	requestUri := cli.Config.OpsGenieAPIURL + uri
-
-	req, err := cli.NewRequest("POST", requestUri, body)
-
-	if err != nil {
-
-		return nil
-	}
-
-	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-
-	j, _ := json.Marshal(body)
-
-	logrus.Debugf("Executing OpsGenie request to [%s] with content parameters: %s", requestUri, string(j))
-
-	return req
-}
-
-func (cli *OpsGenieClient) Delete(ctx context.Context, path string) (response *http.Response, err error) {
-
-	request := cli.newDeleteRequest(path)
-
-	if ctx != nil {
-		request.Request = request.Request.WithContext(ctx)
-	}
-
-	return cli.do(request)
-
-}
-
-func (cli *OpsGenieClient) newDeleteRequest(uri string) *Request {
-	req := cli.newGetRequest(uri, "")
-	req.Method = "DELETE"
-	logrus.Debugf("Executing OpsGenie request to [" + req.URL.String() + "]")
-
-	return req
-}
-
-func (cli *OpsGenieClient) Put(ctx context.Context, path string) (response *http.Response, err error) {
-
-	request := cli.newPutRequest(path, nil)
-
-	if ctx != nil {
-		request.Request = request.Request.WithContext(ctx)
-	}
-
-	return cli.do(request)
-
-}
-
-func (cli *OpsGenieClient) newPutRequest(uri string, request interface{}) *Request {
-	req := cli.newPostRequest(uri, request)
-	req.Method = "PUT"
-	return req
-}
-
-func (cli *OpsGenieClient) Patch(ctx context.Context, path string, req interface{}) (response *http.Response, err error) {
-
-	request := cli.newPatchRequest(path, req)
-
-	if ctx != nil {
-		request.Request = request.Request.WithContext(ctx)
-	}
-
-	return cli.do(request)
-
-}
-
-func (cli *OpsGenieClient) newPatchRequest(uri string, request interface{}) *Request {
-	req := cli.newPostRequest(uri, request)
-	req.Method = "PATCH"
-	return req
+	return opsGenieClient, nil
 }
 
 func (cli *OpsGenieClient) do(request *Request) (*http.Response, error) {
@@ -298,7 +153,7 @@ type Response interface {
 	SetRateLimitState(state string)
 }
 
-func (cli *OpsGenieClient) SetResponseMeta(httpResponse *http.Response, response Response) {
+func (cli *OpsGenieClient) setResponseMeta(httpResponse *http.Response, response Response) {
 	requestID := httpResponse.Header.Get("X-Request-Id")
 	response.SetRequestID(requestID)
 
@@ -366,22 +221,8 @@ func errorMessage(httpStatusCode int, response *structuredResponse) string {
 	return ""
 }
 
-func (cli *OpsGenieClient) ParseResponse(response *http.Response, responseType Response) error {
-
-	if err := json.NewDecoder(response.Body).Decode(responseType); err != nil {
-		message := "Server response can not be parsed, " + err.Error()
-		logrus.Warnf(message)
-		return errors.New(message)
-	}
-
-	cli.SetResponseMeta(response, responseType)
-
-	return nil
-
-}
-
 //final
-func (cli *OpsGenieClient) NewReq(method string, path string, body interface{}) (*Request, error) {
+func (cli *OpsGenieClient) NewRequest(method string, path string, body interface{}) (*Request, error) {
 	var buf io.ReadWriter
 	if method != "GET" && method != "DELETE" {
 		buf = new(bytes.Buffer)
@@ -403,11 +244,13 @@ func (cli *OpsGenieClient) NewReq(method string, path string, body interface{}) 
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "GenieKey "+cli.Config.ApiKey)
 
+	//todo req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8") (GET için)
+	//todo 	req.Header.Set("Content-Type", "application/json; charset=utf-8") (POST için)
+
 	return &Request{req}, err
 
 }
 
-//final
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result apiResult) error {
 
 	if ok, err := request.Validate(); !ok {
@@ -416,18 +259,35 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	path := cli.Config.OpsGenieAPIURL + request.Endpoint()
 
-	req, err := cli.NewReq(request.Method(), path, request)
+	req, err := cli.NewRequest(request.Method(), path, request)
 	if err != nil {
 		return err
 	}
 
 	response, err := cli.do(req)
-	parse(result, response)
+	if err != nil {
+		return err
+	}
+
+	err = cli.parse(result, response)
+	if err != nil {
+		return err
+	}
+
 	defer response.Body.Close()
 	return err
 }
 
-func parse(result apiResult, response *http.Response) {
-	body, _ := ioutil.ReadAll(response.Body)
-	json.Unmarshal(body, result)
+func (cli *OpsGenieClient) parse(result apiResult, response *http.Response) error {
+	body, err := ioutil.ReadAll(response.Body)
+	err = json.Unmarshal(body, result)
+	if err != nil {
+		message := "Server response can not be parsed, " + err.Error()
+		logrus.Warnf(message)
+		return errors.New(message)
+
+	}
+	cli.setResponseMeta(response, result)
+
+	return nil
 }

@@ -1,6 +1,10 @@
 package alert
 
-type CreateSavedSearchInput struct {
+import (
+	"github.com/pkg/errors"
+)
+
+type CreateSavedSearchRequest struct {
 	Name        string `json:"name,omitempty"`
 	Query       string `json:"query,omitempty"`
 	Owner       User   `json:"owner,omitempty"`
@@ -8,15 +12,27 @@ type CreateSavedSearchInput struct {
 	Teams       []Team `json:"teams,omitempty"`
 }
 
-type CreateSavedSearchRequest struct {
-	Uri                    string
-	CreateSavedSearchInput *CreateSavedSearchInput
+func (r CreateSavedSearchRequest) Validate() (bool, error) {
+	if r.Name == "" {
+		return false, errors.New("name cannot be empty")
+	}
+
+	if r.Query == "" {
+		return false, errors.New("query cannot be empty")
+	}
+
+	if r.Owner.ID == "" && r.Owner.Username == "" {
+		return false, errors.New("owner cannot be empty")
+	}
+
+	return true, nil
 }
 
-func NewCreateSavedSearchRequest(input *CreateSavedSearchInput) (CreateSavedSearchRequest, error) {
+func (r CreateSavedSearchRequest) Endpoint() string {
 
-	uri := generateFullPathWithParams("/v2/alerts/saved-searches", nil)
+	return "/v2/alerts/saved-searches"
+}
 
-	return CreateSavedSearchRequest{Uri: uri, CreateSavedSearchInput: input}, nil
-
+func (r CreateSavedSearchRequest) Method() string {
+	return "POST"
 }
