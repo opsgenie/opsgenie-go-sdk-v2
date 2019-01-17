@@ -31,7 +31,7 @@ type ApiRequest interface {
 	Method() string
 }
 
-type apiResult interface {
+type ApiResult interface {
 	//parse
 }
 
@@ -408,7 +408,7 @@ func (cli *OpsGenieClient) NewReq(method string, path string, body interface{}) 
 }
 
 //final
-func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result apiResult) error {
+func (cli *OpsGenieClient) Exec(request ApiRequest, result ApiResult) error {
 
 	if ok, err := request.Validate(); !ok {
 		return err
@@ -427,7 +427,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	return err
 }
 
-func parse(result apiResult, response *http.Response) {
+func parse(result ApiResult, response *http.Response) {
 	body, _ := ioutil.ReadAll(response.Body)
 	json.Unmarshal(body, result)
 }
