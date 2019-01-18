@@ -44,7 +44,10 @@ func (client *Client) Ping(request PingRequest) (*PingResult, error) {
 
 func (client *Client) Get(request GetRequest) (*GetResult, error) {
 	getResult := &GetResult{}
-	client.executor.Exec(nil, request, getResult)
+	err := client.executor.Exec(nil, request, getResult)
+	if err != nil {
+		return nil, err
+	}
 	return getResult, nil
 }
 
@@ -52,35 +55,50 @@ func (client *Client) List() (*ListResult, error) {
 	request := listRequest{}
 	lr := &listResponse{}
 	listResult := &ListResult{}
-	client.executor.Exec(nil, request, lr)
+	err := client.executor.Exec(nil, request, lr)
 	listResult.Took = lr.Took
 	listResult.Heartbeats = lr.Data.Heartbeats
 	listResult.RequestId = lr.RequestId
+	if err != nil {
+		return nil, err
+	}
 	return listResult, nil
 }
 
 func (client *Client) Update(request UpdateRequest) (*UpdateResult, error) {
 	updateResult := &UpdateResult{}
-	client.executor.Exec(nil, request, updateResult)
+	err := client.executor.Exec(nil, request, updateResult)
+	if err != nil {
+		return nil, err
+	}
 	return updateResult, nil
 }
 
 func (client *Client) Add(request AddRequest) (*AddResult, error) {
 	result := &AddResult{}
-	client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(nil, request, result)
+	if err != nil {
+		return nil, err
+	}
 	return result, nil
 }
 
 func (client *Client) Enable(heartbeatName string) (*EnableResult, error) {
 	result := &EnableResult{}
 	request := enableRequest{heartbeatName: heartbeatName}
-	client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(nil, request, result)
+	if err != nil {
+		return nil, err
+	}
 	return result, nil
 }
 
 func (client *Client) Disable(heartbeatName string) (*DisableResult, error) {
 	result := &DisableResult{}
 	request := disableRequest{heartbeatName: heartbeatName}
-	client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(nil, request, result)
+	if err != nil {
+		return nil, err
+	}
 	return result, nil
 }
