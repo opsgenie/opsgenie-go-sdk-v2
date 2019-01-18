@@ -1,8 +1,6 @@
 package client
 
-import "fmt"
-
-const (
+/*const (
 	RequestNotProcessed = "RequestNotProcessed"
 	Unauthorized        = "401"
 	NotFound            = "404"
@@ -21,7 +19,7 @@ type ogError interface {
 
 type requestNotProcessedError struct {
 	message    string
-	headerCode string
+	headerCode string//todo error header
 	statusCode string
 }
 
@@ -47,7 +45,7 @@ func (e *requestNotProcessedError) StatusCode() string {
 
 type unauthorizedError struct {
 	message    string
-	headerCode string
+	headerCode string//remove
 	statusCode string
 }
 
@@ -69,4 +67,4 @@ func (e *unauthorizedError) HeaderCode() string {
 
 func (e *unauthorizedError) StatusCode() string {
 	return Unauthorized
-}
+}*/

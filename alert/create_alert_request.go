@@ -33,3 +33,5 @@ func (ar CreateAlertRequest) Endpoint() string {
 func (ar CreateAlertRequest) Method() string {
 	return "POST"
 }
+
+//init yapılacak responder and visible to parse ı için

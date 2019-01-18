@@ -59,7 +59,7 @@ func main() {
 	}*/
 
 	alertTest, err := alert.NewClient(client.Config{
-		ApiKey: "8f8e3be1-9684-4bb9-9ebb-46015d0c9950", //"73fbb690-c912-41f0-a773-06a8719db6d6", //5d2891dc-8e22-403c-a124-0becc4e4c460
+		ApiKey: "8f8e3be1-9684-4bb9-9ebb-46015d0c9951", //"73fbb690-c912-41f0-a773-06a8719db6d6", //5d2891dc-8e22-403c-a124-0becc4e4c460
 		//OpsGenieAPIURL: "https://localhost:9002",
 	})
 
@@ -67,7 +67,8 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
-	/*cr, err :=alertTest.Create(ctx,alert.CreateAlertRequest{
+	cr, err := alertTest.Create(ctx, alert.CreateAlertRequest{
+		Message:     "mess",
 		Alias:       "aliasx",
 		Description: "alert description2",
 		Actions:     []string{"action12", "action22"},
@@ -80,15 +81,15 @@ func main() {
 		Source:   "source2",
 		Priority: alert.P1,
 		User:     "mbtekinsen@gmail.com",
-		Note:     "alert note2",})
+		Note:     "alert note2"})
 
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
 		fmt.Println("Create request ID: " + cr.RequestID)
-		fmt.Printf("Took: %f\n" , cr.ResponseTime)
+		fmt.Printf("Took: %f\n", cr.ResponseTime)
 
-	}*/
+	}
 
 	/*response, err := alertTest.List(ctx, alert.ListAlertRequest{})
 
@@ -158,13 +159,15 @@ func main() {
 
 	}*/
 
-	response5, err := alertTest.Delete(ctx, alert.DeleteAlertRequest{Identifier: &alert.Identifier{Alias: "alias3"}})
+	/*response5, err := alertTest.Delete(ctx, alert.DeleteAlertRequest{Identifier: &alert.Identifier{Alias: "alias3"}})
 
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
 		fmt.Println("Create request ID: " + response5.RequestID)
-	}
+		fmt.Println("Create request ID: " + response5.RequestID)
+
+	}*/
 
 	//req7, err := savedsearches.NewDeleteSavedSearchRequest(&savedsearches.DeleteSavedSearchInput{ Name: "test3"})
 

@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -36,10 +35,12 @@ type apiResult interface {
 	Response
 }
 
-var endpointURL = "https://api.opsgenie.com"
+//var endpointURL = "https://api.opsgenie.com"
+
+var endpointURL = "https://localhost:9004"
 
 func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
-
+	//todo split to private methods
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
@@ -58,7 +59,7 @@ func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
 	}
 
 	// we will not use library logger
-	//opsGenieClient.RetryableClient.Logger = nil
+	opsGenieClient.RetryableClient.Logger = nil
 
 	//set logger
 	logrus.SetFormatter(
@@ -132,7 +133,7 @@ func (cli *OpsGenieClient) do(request *Request) (*http.Response, error) {
 
 	if err != nil {
 
-		logrus.Errorf("Unable to send the request %s ", err.Error())
+		//logrus.Errorf("Unable to send the request %s ", err.Error())
 
 		if err == context.DeadlineExceeded {
 			return nil, err
@@ -141,7 +142,9 @@ func (cli *OpsGenieClient) do(request *Request) (*http.Response, error) {
 		return nil, err
 	}
 
-	response, err = checkErrors(response)
+	//response, err = checkErrors(response)
+
+	err = handleErrorIfExist(response)
 
 	return response, err
 
@@ -167,58 +170,32 @@ func (cli *OpsGenieClient) setResponseMeta(httpResponse *http.Response, response
 
 }
 
-type structuredResponse struct {
-	Message   string  `json:"message"`
-	Took      float32 `json:"took"`
-	RequestId string  `json:"requestId"`
+type ApiError struct {
+	error
+	Message     string            `json:"message"`
+	Took        float32           `json:"took"`
+	RequestId   string            `json:"requestId"`
+	Errors      map[string]string `json:"errors"`
+	StatusCode  string
+	ErrorHeader string
 }
 
-func checkErrors(response *http.Response) (*http.Response, error) {
+func (ar ApiError) Error() string {
+	return ar.StatusCode + " " + ar.Message
+}
 
+func handleErrorIfExist(response *http.Response) ApiError {
+	apiError := &ApiError{}
 	statusCode := response.StatusCode
-	opsGenieError := response.Header.Get("X-Opsgenie-Errortype")
 
-	NewErrorFunc := errors.Errorf
-	if opsGenieError != "" {
-		newErrorFunc, ok := errorMappings[opsGenieError]
-		if ok {
-			NewErrorFunc = newErrorFunc
-		}
+	if statusCode >= 300 {
+		apiError.StatusCode = strconv.Itoa(statusCode)
+		apiError.ErrorHeader = response.Header.Get("X-Opsgenie-Errortype")
+		body, _ := ioutil.ReadAll(response.Body)
+		json.Unmarshal(body, apiError)
+
 	}
-
-	if statusCode >= 400 {
-
-		structuredResponse := &structuredResponse{}
-		body, err := ioutil.ReadAll(response.Body)
-		err = json.Unmarshal(body, structuredResponse)
-
-		if err != nil {
-			message := "Server response with error can not be parsed " + err.Error()
-			logrus.Warnf("Server response with error can not be parsed %s", err.Error())
-			return nil, NewErrorFunc(message)
-		}
-
-		return nil, NewErrorFunc(errorMessage(statusCode, structuredResponse))
-	}
-	logrus.Debugf("Response received, status code: %d\n", response.StatusCode)
-	return response, nil
-}
-
-func errorMessage(httpStatusCode int, response *structuredResponse) string {
-	if httpStatusCode >= 400 && httpStatusCode < 500 {
-		message := fmt.Sprintf("Client error occurred;  Status: %d, Message: %s", httpStatusCode, response.Message)
-		//logrus.Warnf(message)
-		logrus.Errorf("Client error occurred;  Status: %d, Message: %s, Took: %f, RequestId: %s", httpStatusCode, response.Message, response.Took, response.RequestId)
-		return message
-	}
-	if httpStatusCode >= 500 {
-		message := fmt.Sprintf("Server error occurred; Status: %d, Message: %s", httpStatusCode, response.Message)
-		//logrus.Warnf(message)
-		logrus.Errorf("Server error occurred;  Status: %d, Message: %s, Took: %f, RequestId: %s", httpStatusCode, response.Message, response.Took, response.RequestId)
-
-		return message
-	}
-	return ""
+	return *apiError
 }
 
 //final
