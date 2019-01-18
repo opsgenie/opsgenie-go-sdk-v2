@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
@@ -15,28 +16,99 @@ var (
 	BadEndpoint = ":"
 )
 
-func TestNewClient(t *testing.T) {
-
-	client, _ := NewOpsGenieClient(Config{
-		ApiKey: "5d2891dc-8e22-403c-a124-0becc4e4c460"})
-
-	assert.Equal(t, BaseURL, client.Config.OpsGenieAPIURL)
+type testRequest struct {
+	MandatoryField string
+	ExtraField     string
 }
 
-func TestGet(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
-		rw.Header().Set("Content-Type", "application/json")
-		fmt.Fprintln(rw, `{}`)
+func (tr testRequest) Validate() (bool, error) {
+	if tr.MandatoryField == "" {
+		return false, errors.New("mandatory field cannot be empty")
+	}
+	return true, nil
+}
 
+func (tr testRequest) Endpoint() string {
+	return "/an-enpoint"
+}
+
+func (tr testRequest) Method() string {
+	return "POST"
+}
+
+type testResult struct {
+	ResponseMeta
+	Data string
+}
+
+func TestExec(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{
+    		"Data": "processed"}`)
 	}))
-	// Close the server when test finishes
-	defer server.Close()
+	defer ts.Close()
 
-	// Use Client & URL from our local test server
-	/*api := API{server.Client(), server.URL}
-	body, err := api.DoStuff()
+	ogClient, err := NewOpsGenieClient(Config{
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ts.URL,
+	})
 
-	ok(t, err)
-	equals(t, []byte("OK"), body)*/
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+	assert.Equal(t, result.Data, "processed")
+	if err != nil {
+		t.Fail()
+	}
+}
+
+func TestExecWhenRequestIsNotValid(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `{
+    		"Data": "processed"}`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(Config{
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ts.URL,
+	})
+
+	request := testRequest{ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+	assert.Equal(t, err.Error(), "mandatory field cannot be empty")
+}
+
+func TestExecWhenApiReturns422(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		fmt.Fprintln(w, `{
+    "message": "Request body is not processable. Please check the errors.",
+    "errors": {
+        "recipients#type": "Invalid recipient type 'bb'"
+    },
+    "took": 0.083,
+    "requestId": "Id"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(Config{
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ts.URL,
+	})
+
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+	fmt.Println(err.Error())
+	assert.Contains(t, err.Error(), "422")
+	assert.Contains(t, err.Error(), "Invalid recipient")
 
 }

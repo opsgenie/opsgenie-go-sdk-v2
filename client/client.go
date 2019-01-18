@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -194,7 +195,17 @@ type ApiError struct {
 }
 
 func (ar ApiError) Error() string {
-	return ar.StatusCode + " " + ar.Message
+	errMessage := "Status code: " + ar.StatusCode + "\n " +
+		"Message: " + ar.Message + "\n" +
+		"Took: " + fmt.Sprintf("%f", ar.Took) + "\n" +
+		"RequestId: " + ar.RequestId + "\n"
+	if ar.ErrorHeader != "" {
+		errMessage = errMessage + "Error Header: " + ar.ErrorHeader
+	}
+	if ar.Errors != nil {
+		errMessage = errMessage + "Error Detail: " + fmt.Sprintf("%v", ar.Errors)
+	}
+	return errMessage
 }
 
 func handleErrorIfExist(response *http.Response) error {
