@@ -18,16 +18,17 @@ func main() {
 		OpsGenieAPIURL: "https://api.opsgenie.com/v2",
 	})
 
-	/*pr := heartbeat.PingRequest{HeartbeatName:"asd"}
+	pr := heartbeat.PingRequest{HeartbeatName: "asd"}
 
 	res, err := heartbeatClient.Ping(pr)
 
 	if err != nil {
 		fmt.Println(err)
+	} else {
+		fmt.Println(res)
 	}
-	fmt.Println(res)
 
-	gr := heartbeat.GetRequest{HeartbeatName:"NewSDK"}
+	/*gr := heartbeat.GetRequest{HeartbeatName:"NewSDK"}
 
 	res, err := heartbeatClient.Get(gr)
 
@@ -64,13 +65,13 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(res)*/
+	fmt.Println(res)
 
 	res, err := heartbeatClient.Disable("NewDesign")
 
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(res)
+	fmt.Println(res)*/
 
 }

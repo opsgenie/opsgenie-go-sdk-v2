@@ -27,7 +27,7 @@ type Client struct {
 }
 
 func NewClient(config client.Config) *Client {
-	opsgenieClient := client.NewOpsGenieClient(config)
+	opsgenieClient, _ := client.NewOpsGenieClient(config)
 	client := &Client{}
 	client.executor = *opsgenieClient
 	return client
@@ -35,13 +35,16 @@ func NewClient(config client.Config) *Client {
 
 func (client *Client) Ping(request PingRequest) (*PingResult, error) {
 	pingResult := &PingResult{}
-	client.executor.Exec(request, pingResult)
+	err := client.executor.Exec(nil, request, pingResult)
+	if err != nil {
+		return nil, err
+	}
 	return pingResult, nil
 }
 
 func (client *Client) Get(request GetRequest) (*GetResult, error) {
 	getResult := &GetResult{}
-	client.executor.Exec(request, getResult)
+	client.executor.Exec(nil, request, getResult)
 	return getResult, nil
 }
 
@@ -49,7 +52,7 @@ func (client *Client) List() (*ListResult, error) {
 	request := listRequest{}
 	lr := &listResponse{}
 	listResult := &ListResult{}
-	client.executor.Exec(request, lr)
+	client.executor.Exec(nil, request, lr)
 	listResult.Took = lr.Took
 	listResult.Heartbeats = lr.Data.Heartbeats
 	listResult.RequestId = lr.RequestId
@@ -58,26 +61,26 @@ func (client *Client) List() (*ListResult, error) {
 
 func (client *Client) Update(request UpdateRequest) (*UpdateResult, error) {
 	updateResult := &UpdateResult{}
-	client.executor.Exec(request, updateResult)
+	client.executor.Exec(nil, request, updateResult)
 	return updateResult, nil
 }
 
 func (client *Client) Add(request AddRequest) (*AddResult, error) {
 	result := &AddResult{}
-	client.executor.Exec(request, result)
+	client.executor.Exec(nil, request, result)
 	return result, nil
 }
 
 func (client *Client) Enable(heartbeatName string) (*EnableResult, error) {
 	result := &EnableResult{}
 	request := enableRequest{heartbeatName: heartbeatName}
-	client.executor.Exec(request, result)
+	client.executor.Exec(nil, request, result)
 	return result, nil
 }
 
 func (client *Client) Disable(heartbeatName string) (*DisableResult, error) {
 	result := &DisableResult{}
 	request := disableRequest{heartbeatName: heartbeatName}
-	client.executor.Exec(request, result)
+	client.executor.Exec(nil, request, result)
 	return result, nil
 }

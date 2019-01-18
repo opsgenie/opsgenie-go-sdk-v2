@@ -35,6 +35,24 @@ type apiResult interface {
 	Response
 }
 
+type ResponseMeta struct {
+	RequestID      string
+	ResponseTime   float32
+	RateLimitState string
+}
+
+func (rm *ResponseMeta) SetRequestID(requestID string) {
+	rm.RequestID = requestID
+}
+
+func (rm *ResponseMeta) SetResponseTime(responseTime float32) {
+	rm.ResponseTime = responseTime
+}
+
+func (rm *ResponseMeta) SetRateLimitState(state string) {
+	rm.RateLimitState = state
+}
+
 //var endpointURL = "https://api.opsgenie.com"
 
 var endpointURL = "https://localhost:9004"
@@ -141,13 +159,8 @@ func (cli *OpsGenieClient) do(request *Request) (*http.Response, error) {
 
 		return nil, err
 	}
-
-	//response, err = checkErrors(response)
-
 	err = handleErrorIfExist(response)
-
 	return response, err
-
 }
 
 type Response interface {
@@ -156,7 +169,7 @@ type Response interface {
 	SetRateLimitState(state string)
 }
 
-func (cli *OpsGenieClient) setResponseMeta(httpResponse *http.Response, response Response) {
+func setResponseMeta(httpResponse *http.Response, response Response) {
 	requestID := httpResponse.Header.Get("X-Request-Id")
 	response.SetRequestID(requestID)
 
@@ -184,18 +197,18 @@ func (ar ApiError) Error() string {
 	return ar.StatusCode + " " + ar.Message
 }
 
-func handleErrorIfExist(response *http.Response) ApiError {
-	apiError := &ApiError{}
-	statusCode := response.StatusCode
-
-	if statusCode >= 300 {
+func handleErrorIfExist(response *http.Response) error {
+	if response.StatusCode >= 300 {
+		apiError := &ApiError{}
+		statusCode := response.StatusCode
 		apiError.StatusCode = strconv.Itoa(statusCode)
 		apiError.ErrorHeader = response.Header.Get("X-Opsgenie-Errortype")
 		body, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(body, apiError)
+		return apiError
 
 	}
-	return *apiError
+	return nil
 }
 
 //final
@@ -246,7 +259,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 
-	err = cli.parse(result, response)
+	err = parse(result, response)
 	if err != nil {
 		return err
 	}
@@ -255,7 +268,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	return err
 }
 
-func (cli *OpsGenieClient) parse(result apiResult, response *http.Response) error {
+func parse(result apiResult, response *http.Response) error {
 	body, err := ioutil.ReadAll(response.Body)
 	err = json.Unmarshal(body, result)
 	if err != nil {
@@ -264,7 +277,7 @@ func (cli *OpsGenieClient) parse(result apiResult, response *http.Response) erro
 		return errors.New(message)
 
 	}
-	cli.setResponseMeta(response, result)
+	setResponseMeta(response, result)
 
 	return nil
 }
