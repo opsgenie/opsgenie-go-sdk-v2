@@ -39,7 +39,7 @@ func main() {
 
 	gr := heartbeat.GetRequest{HeartbeatName: "NewSDK"}
 
-	res, err := heartbeatClient.Get(gr)
+	res, err := heartbeatClient.Get(gr, nil)
 
 	if err != nil {
 		fmt.Println(err.Error())

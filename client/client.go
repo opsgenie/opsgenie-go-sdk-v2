@@ -31,8 +31,6 @@ type ApiRequest interface {
 	Method() string
 }
 
-type WithContext func(ctx context.Context)
-
 type apiResult interface {
 	//parse
 	Response
@@ -278,7 +276,7 @@ func (cli *OpsGenieClient) NewRequest(method string, path string, body interface
 
 }
 
-func (cli *OpsGenieClient) Exec(ctx []context.Context, request ApiRequest, result apiResult) error {
+func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result apiResult) error {
 
 	logrus.Debugf("Starting to process Request %s: to send: %s", request, request.Endpoint())
 	if ok, err := request.Validate(); !ok {
@@ -293,8 +291,8 @@ func (cli *OpsGenieClient) Exec(ctx []context.Context, request ApiRequest, resul
 		logrus.Errorf("Could not create request: %s", err.Error())
 		return err
 	}
-	if len(ctx) > 0 {
-		req.WithContext(ctx[0])
+	if ctx != nil {
+		req.WithContext(ctx)
 	}
 	response, err := cli.do(req)
 	if err != nil {

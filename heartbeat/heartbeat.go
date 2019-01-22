@@ -34,16 +34,16 @@ func NewClient(config client.Config) *Client {
 	return client
 }
 
-func (client *Client) Ping(request PingRequest, c ...context.Context) (*PingResult, error) {
+func (client *Client) Ping(request PingRequest, context context.Context) (*PingResult, error) {
 	pingResult := &PingResult{}
-	err := client.executor.Exec(nil, request, pingResult)
+	err := client.executor.Exec(context, request, pingResult)
 	if err != nil {
 		return nil, err
 	}
 	return pingResult, nil
 }
 
-func (client *Client) Get(request GetRequest, context ...context.Context) (*GetResult, error) {
+func (client *Client) Get(request GetRequest, context context.Context) (*GetResult, error) {
 	getResult := &GetResult{}
 	err := client.executor.Exec(context, request, getResult)
 	if err != nil {
@@ -52,7 +52,7 @@ func (client *Client) Get(request GetRequest, context ...context.Context) (*GetR
 	return getResult, nil
 }
 
-func (client *Client) List() (*ListResult, error) {
+func (client *Client) List(context context.Context) (*ListResult, error) {
 	request := listRequest{}
 	lr := &listResponse{}
 	listResult := &ListResult{}
@@ -66,7 +66,7 @@ func (client *Client) List() (*ListResult, error) {
 	return listResult, nil
 }
 
-func (client *Client) Update(request UpdateRequest) (*UpdateResult, error) {
+func (client *Client) Update(request UpdateRequest, context context.Context) (*UpdateResult, error) {
 	updateResult := &UpdateResult{}
 	err := client.executor.Exec(nil, request, updateResult)
 	if err != nil {
@@ -75,7 +75,7 @@ func (client *Client) Update(request UpdateRequest) (*UpdateResult, error) {
 	return updateResult, nil
 }
 
-func (client *Client) Add(request AddRequest) (*AddResult, error) {
+func (client *Client) Add(request AddRequest, context context.Context) (*AddResult, error) {
 	result := &AddResult{}
 	err := client.executor.Exec(nil, request, result)
 	if err != nil {
@@ -84,7 +84,7 @@ func (client *Client) Add(request AddRequest) (*AddResult, error) {
 	return result, nil
 }
 
-func (client *Client) Enable(heartbeatName string) (*EnableResult, error) {
+func (client *Client) Enable(heartbeatName string, context context.Context) (*EnableResult, error) {
 	result := &EnableResult{}
 	request := enableRequest{heartbeatName: heartbeatName}
 	err := client.executor.Exec(nil, request, result)
@@ -94,7 +94,7 @@ func (client *Client) Enable(heartbeatName string) (*EnableResult, error) {
 	return result, nil
 }
 
-func (client *Client) Disable(heartbeatName string) (*DisableResult, error) {
+func (client *Client) Disable(heartbeatName string, context context.Context) (*DisableResult, error) {
 	result := &DisableResult{}
 	request := disableRequest{heartbeatName: heartbeatName}
 	err := client.executor.Exec(nil, request, result)
