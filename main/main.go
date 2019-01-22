@@ -13,12 +13,21 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, 100*time.Second)
 	defer cancel()
 
-	heartbeatClient := heartbeat.NewClient(client.Config{
+	/*heartbeatClient := heartbeat.NewClient(client.Config{
 		ApiKey:         "a871eb83-2d00-4b09-9fb9-7c134a369082",
-		OpsGenieAPIURL: "https://api.opsgenie.com/v2",
-	})
+		OpsGenieAPIURL: "https://api.opsgenie.com",
+	})*/
 
-	pr := heartbeat.PingRequest{HeartbeatName: "asd"}
+	conf := client.Config{
+		ApiKey:         "43f55e36-7b78-4f0c-ac4b-bf8f0c352ada",
+		OpsGenieAPIURL: "https://mock-api.free.beeceptor.com",
+	}
+	//conf.LogLevel = "debug"
+	conf.RetryCount = 1
+	conf.ProxyUrl = "https://facebook.com"
+	heartbeatClient := heartbeat.NewClient(conf)
+
+	/*pr := heartbeat.PingRequest{}
 
 	res, err := heartbeatClient.Ping(pr)
 
@@ -26,18 +35,18 @@ func main() {
 		fmt.Println(err)
 	} else {
 		fmt.Println(res)
-	}
+	}*/
 
-	/*gr := heartbeat.GetRequest{HeartbeatName:"NewSDK"}
+	gr := heartbeat.GetRequest{HeartbeatName: "NewSDK"}
 
 	res, err := heartbeatClient.Get(gr)
 
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(err.Error())
 	}
 	fmt.Println(res)
 
-	res, err := heartbeatClient.List()
+	/*res, err = heartbeatClient.List()
 
 	if err != nil {
 		fmt.Println(err)

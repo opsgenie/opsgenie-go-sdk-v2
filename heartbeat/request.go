@@ -1,20 +1,26 @@
 package heartbeat
 
-import "errors"
+import (
+	"errors"
+)
 
 type PingRequest struct {
 	HeartbeatName string
 }
 
-func (pr PingRequest) Validate() (bool, error) {
-	if pr.HeartbeatName == "" {
-		return false, errors.New("hb cannot be empty")
+func nameValidation(name string) (bool, error) {
+	if name == "" {
+		return false, errors.New("HeartbeatName cannot be empty")
 	}
 	return true, nil
 }
 
+func (pr PingRequest) Validate() (bool, error) {
+	return nameValidation(pr.HeartbeatName)
+}
+
 func (pr PingRequest) Endpoint() string {
-	return "/heartbeats/" + pr.HeartbeatName + "/ping"
+	return "/v2/heartbeats/" + pr.HeartbeatName + "/ping"
 }
 
 func (pr PingRequest) Method() string {
@@ -26,14 +32,11 @@ type GetRequest struct {
 }
 
 func (gr GetRequest) Validate() (bool, error) {
-	if gr.HeartbeatName == "" {
-		return false, errors.New("hb cannot be empty")
-	}
-	return true, nil
+	return nameValidation(gr.HeartbeatName)
 }
 
 func (gr GetRequest) Endpoint() string {
-	return "/heartbeats/" + gr.HeartbeatName
+	return "/v2/heartbeats/" + gr.HeartbeatName
 }
 
 func (gr GetRequest) Method() string {
@@ -48,7 +51,7 @@ func (lr listRequest) Validate() (bool, error) {
 }
 
 func (lr listRequest) Endpoint() string {
-	return "/heartbeats"
+	return "/v2/heartbeats"
 }
 
 func (lr listRequest) Method() string {
@@ -84,7 +87,7 @@ func (r UpdateRequest) Validate() (bool, error) {
 }
 
 func (r UpdateRequest) Endpoint() string {
-	return "/heartbeats/" + r.Name
+	return "/v2/heartbeats/" + r.Name
 }
 
 func (r UpdateRequest) Method() string {
@@ -120,7 +123,7 @@ func (r AddRequest) Validate() (bool, error) {
 }
 
 func (r AddRequest) Endpoint() string {
-	return "/heartbeats"
+	return "/v2/heartbeats"
 }
 
 func (r AddRequest) Method() string {
@@ -147,7 +150,7 @@ func (r enableRequest) Validate() (bool, error) {
 }
 
 func (r enableRequest) Endpoint() string {
-	return "/heartbeats/" + r.heartbeatName + "/enable"
+	return "/v2/heartbeats/" + r.heartbeatName + "/enable"
 }
 
 func (r enableRequest) Method() string {
@@ -166,7 +169,7 @@ func (r disableRequest) Validate() (bool, error) {
 }
 
 func (r disableRequest) Endpoint() string {
-	return "/heartbeats/" + r.heartbeatName + "/disable"
+	return "/v2/heartbeats/" + r.heartbeatName + "/disable"
 }
 
 func (r disableRequest) Method() string {

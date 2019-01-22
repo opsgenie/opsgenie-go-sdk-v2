@@ -56,12 +56,12 @@ func (client *Client) List() (*ListResult, error) {
 	lr := &listResponse{}
 	listResult := &ListResult{}
 	err := client.executor.Exec(nil, request, lr)
-	listResult.Took = lr.Took
-	listResult.Heartbeats = lr.Data.Heartbeats
-	listResult.RequestId = lr.RequestId
 	if err != nil {
 		return nil, err
 	}
+	listResult.Took = lr.Took
+	listResult.Heartbeats = lr.Data.Heartbeats
+	listResult.RequestId = lr.RequestId
 	return listResult, nil
 }
 
