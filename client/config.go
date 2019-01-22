@@ -4,6 +4,7 @@ import (
 	"github.com/hashicorp/go-retryablehttp"
 	"github.com/pkg/errors"
 	"net/http"
+	"net/url"
 )
 
 type Config struct {
@@ -24,42 +25,24 @@ type Config struct {
 	RetryCount int
 }
 
-//missing other fields validation
 func (conf Config) Validate() (bool, error) {
 
 	if conf.ApiKey == "" {
 		return false, errors.New("API key cannot be blank.")
 	}
-
+	/*if conf.OpsGenieAPIURL != "https://api.opsgenie.com" && conf.OpsGenieAPIURL != "https://eu.api.opsgenie.com" {
+		return false, errors.New(conf.OpsGenieAPIURL + " is not valid.")
+	}*/
+	if conf.LogLevel != "info" && conf.LogLevel != "warn" && conf.LogLevel != "debug" && conf.LogLevel != "error" && conf.LogLevel != "trace" {
+		return false, errors.New(conf.LogLevel + " is not a valid log level")
+	}
+	if conf.RetryCount < 0 {
+		return false, errors.New("Retry count cannot be less than 1.")
+	}
+	if conf.ProxyUrl != "" {
+		if _, err := url.ParseRequestURI(conf.ProxyUrl); err != nil {
+			return false, errors.New(conf.ProxyUrl + " is not a valid url.")
+		}
+	}
 	return true, nil
-}
-
-func (conf Config) WithApiUrl(apiUrl string) Config {
-	conf.OpsGenieAPIURL = apiUrl
-	return conf
-}
-
-func (conf Config) WithProxyUrl(proxyUrl string) Config {
-	conf.ProxyUrl = proxyUrl
-	return conf
-}
-
-func (conf Config) WithLogLevel(logLevel string) Config {
-	conf.LogLevel = logLevel
-	return conf
-}
-
-func (conf Config) WithHttpClient(client *http.Client) Config {
-	conf.HttpClient = client
-	return conf
-}
-
-func (conf Config) WithBackoff(backoff retryablehttp.Backoff) Config {
-	conf.Backoff = backoff
-	return conf
-}
-
-func (conf Config) WithRetryPolicy(retry retryablehttp.CheckRetry) Config {
-	conf.RetryPolicy = retry
-	return conf
 }

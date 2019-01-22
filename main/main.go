@@ -24,7 +24,7 @@ func main() {
 	}
 	//conf.LogLevel = "debug"
 	conf.RetryCount = 1
-	conf.ProxyUrl = "https://facebook.com"
+	//conf.ProxyUrl = "https://facebook.com"
 	heartbeatClient := heartbeat.NewClient(conf)
 
 	/*pr := heartbeat.PingRequest{}

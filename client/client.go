@@ -31,6 +31,8 @@ type ApiRequest interface {
 	Method() string
 }
 
+type WithContext func(ctx context.Context)
+
 type apiResult interface {
 	//parse
 	Response
@@ -56,7 +58,7 @@ func (rm *ResponseMeta) SetRateLimitState(state string) {
 
 var endpointURL = "https://api.opsgenie.com"
 
-func setConfiguration(opsGenieClient OpsGenieClient, cfg Config) {
+func setConfiguration(opsGenieClient *OpsGenieClient, cfg Config) {
 	opsGenieClient.RetryableClient.ErrorHandler = defineErrorHandler
 	if cfg.OpsGenieAPIURL == "" {
 		opsGenieClient.Config.OpsGenieAPIURL = endpointURL
@@ -66,7 +68,7 @@ func setConfiguration(opsGenieClient OpsGenieClient, cfg Config) {
 	}
 }
 
-func setLogger(logLevel string) {
+func setLogger(conf *Config, logLevel string) {
 	logrus.SetFormatter(
 		&logrus.TextFormatter{
 			ForceColors:     true,
@@ -83,6 +85,7 @@ func setLogger(logLevel string) {
 	} else {
 		logrus.SetLevel(logrus.InfoLevel)
 	}
+	conf.LogLevel = logrus.GetLevel().String()
 }
 
 func setProxy(client *OpsGenieClient, proxyUrl string) {
@@ -137,19 +140,19 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg Config) {
 }
 
 func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
-	_, err := cfg.Validate()
-	if err != nil {
-		return nil, err
-	}
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
 	}
-	setConfiguration(*opsGenieClient, cfg)
+	setConfiguration(opsGenieClient, cfg)
 	opsGenieClient.RetryableClient.Logger = nil //disable retryableClient's uncustomizable logging
-	setLogger(cfg.LogLevel)
+	setLogger(&cfg, cfg.LogLevel)
 	setProxy(opsGenieClient, cfg.ProxyUrl)
 	setRetryPolicy(opsGenieClient, cfg)
+	_, err := cfg.Validate()
+	if err != nil {
+		return nil, err
+	}
 
 	printInfoLog(opsGenieClient)
 	return opsGenieClient, nil
