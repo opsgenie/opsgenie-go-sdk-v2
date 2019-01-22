@@ -58,6 +58,10 @@ func (r ListAlertRequest) setParams(request ListAlertRequest) string {
 		params.Add("searchIdentifierType", string(request.SearchIdentifierType))
 	}
 
+	if request.Order != "" {
+		params.Add("order", string(request.Order))
+	}
+
 	if params != nil {
 		request.params = "?" + params.Encode()
 	} else {

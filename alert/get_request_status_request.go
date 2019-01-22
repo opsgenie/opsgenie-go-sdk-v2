@@ -15,7 +15,7 @@ func (r GetAsyncRequestStatusRequest) Validate() (bool, error) {
 }
 
 func (r GetAsyncRequestStatusRequest) Endpoint() string {
-	return "v2/alerts/requests/" + r.RequestID
+	return "/v2/alerts/requests/" + r.RequestID
 }
 
 func (r GetAsyncRequestStatusRequest) Method() string {

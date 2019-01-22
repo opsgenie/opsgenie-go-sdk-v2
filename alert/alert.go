@@ -1,6 +1,7 @@
 package alert
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"time"
 )
 
@@ -29,13 +30,13 @@ type Alert struct {
 }
 
 type ListAlertResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	Alerts []Alert `json:"data"`
 }
 
 // Response for async processing requests
 type AsyncRequestResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	RequestID string `json:"requestId"`
 }
 
@@ -50,6 +51,6 @@ type RequestStatus struct {
 }
 
 type GetAsyncRequestStatusResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	Status RequestStatus `json:"data"`
 }

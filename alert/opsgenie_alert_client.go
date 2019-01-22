@@ -40,7 +40,7 @@ func (ac *Client) List(ctx context.Context, req ListAlertRequest) (*ListAlertRes
 }
 
 func (ac *Client) Create(ctx context.Context, req CreateAlertRequest) (*AsyncRequestResponse, error) {
-
+	req.Init()
 	asyncRequestResponse := &AsyncRequestResponse{}
 
 	err := ac.restClient.Exec(ctx, req, asyncRequestResponse)

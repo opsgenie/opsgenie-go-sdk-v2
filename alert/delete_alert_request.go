@@ -32,7 +32,7 @@ func (r DeleteAlertRequest) setParams(request DeleteAlertRequest) string {
 	if r.Source != "" {
 		params := url.Values{}
 		params.Add("source", r.Source)
-		request.params = request.params + "?" + params.Encode()
+		request.params = request.params + "&" + params.Encode()
 	}
 
 	request.params = request.params + ""

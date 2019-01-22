@@ -1,14 +1,7 @@
 package alert
 
-type Recipient interface {
+type Responder interface {
 	SetID(id string)
-}
-
-type TeamRecipient interface {
-	SetID(id string)
-	SetName(name string)
-	getID() string
-	getName() string
 }
 
 type Team struct {
@@ -50,25 +43,46 @@ type Escalation struct {
 	Name string `json:"name,omitempty"`
 }
 
-type RecipientDTO struct {
+func (e *Escalation) SetID(id string) {
+	e.ID = id
+}
+
+func (e *Escalation) SetUsername(name string) {
+	e.Name = name
+}
+
+type Schedule struct {
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+func (s *Schedule) SetID(id string) {
+	s.ID = id
+}
+
+func (s *Schedule) SetUsername(name string) {
+	s.Name = name
+}
+
+type ResponderDTO struct {
 	Id       string `json:"id,omitempty"`
 	Username string `json:"username,omitempty"`
 	Name     string `json:"name,omitempty"`
 	Type     string `json:"type"`
 }
 
-func (r *RecipientDTO) SetID(id string) {
+func (r *ResponderDTO) SetID(id string) {
 	r.Id = id
 }
 
-func (r *RecipientDTO) SetName(id string) {
+func (r *ResponderDTO) SetName(id string) {
 	r.Id = id
 }
 
-func (r *RecipientDTO) getName() string {
+func (r *ResponderDTO) getName() string {
 	return r.Name
 }
 
-func (r *RecipientDTO) getID() string {
+func (r *ResponderDTO) getID() string {
 	return r.Id
 }

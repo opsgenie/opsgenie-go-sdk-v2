@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -55,6 +56,7 @@ func (rm *ResponseMeta) SetRateLimitState(state string) {
 }
 
 var endpointURL = "https://api.opsgenie.com"
+var UserAgentHeader string
 
 func setConfiguration(opsGenieClient *OpsGenieClient, cfg Config) {
 	opsGenieClient.RetryableClient.ErrorHandler = defineErrorHandler
@@ -138,6 +140,7 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg Config) {
 }
 
 func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
+	UserAgentHeader = fmt.Sprintf("%s %s (%s/%s)", "opsgenie-go-sdk", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
@@ -246,7 +249,6 @@ func handleErrorIfExist(response *http.Response) error {
 	return nil
 }
 
-//final
 func (cli *OpsGenieClient) NewRequest(method string, path string, body interface{}) (*Request, error) {
 	var buf io.ReadWriter
 	if method != "GET" && method != "DELETE" {
@@ -264,14 +266,15 @@ func (cli *OpsGenieClient) NewRequest(method string, path string, body interface
 	}
 
 	if body != nil {
-		req.Header.Set("Content-Type", "application/json")
+		req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", "GenieKey "+cli.Config.ApiKey)
+	req.Header.Add("User-Agent", UserAgentHeader)
+	if method == "GET" {
+		req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 
-	//todo req.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8") (GET için)
-	//todo 	req.Header.Set("Content-Type", "application/json; charset=utf-8") (POST için)
-
+	}
 	return &Request{req}, err
 
 }

@@ -1,6 +1,6 @@
 package alert
 
-import ()
+import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
 
 type SavedSearchMeta struct {
 	ID   string `json:"id,omitempty"`
@@ -8,21 +8,21 @@ type SavedSearchMeta struct {
 }
 
 type CreateSavedSearchResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	SavedSearch SavedSearchMeta `json:"data"`
 }
 
 type ListSavedSearchResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	SavedSearches []SavedSearchMeta `json:"data"`
 }
 
 type UpdateSavedSearchResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	SavedSearch SavedSearchMeta `json:"data"`
 }
 
 type DeleteSavedSearchResponse struct {
-	ResponseMeta
+	client.ResponseMeta
 	SavedSearch SavedSearchMeta `json:"data"`
 }
