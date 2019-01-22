@@ -1,6 +1,7 @@
 package heartbeat
 
 import (
+	"context"
 	"opsgenie-go-sdk-v2/client"
 )
 
@@ -33,7 +34,7 @@ func NewClient(config client.Config) *Client {
 	return client
 }
 
-func (client *Client) Ping(request PingRequest) (*PingResult, error) {
+func (client *Client) Ping(request PingRequest, c ...context.Context) (*PingResult, error) {
 	pingResult := &PingResult{}
 	err := client.executor.Exec(nil, request, pingResult)
 	if err != nil {
@@ -42,9 +43,9 @@ func (client *Client) Ping(request PingRequest) (*PingResult, error) {
 	return pingResult, nil
 }
 
-func (client *Client) Get(request GetRequest) (*GetResult, error) {
+func (client *Client) Get(request GetRequest, context ...context.Context) (*GetResult, error) {
 	getResult := &GetResult{}
-	err := client.executor.Exec(nil, request, getResult)
+	err := client.executor.Exec(context, request, getResult)
 	if err != nil {
 		return nil, err
 	}

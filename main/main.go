@@ -10,7 +10,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	ctx, cancel := context.WithTimeout(ctx, 100*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 1*time.Nanosecond)
 	defer cancel()
 
 	/*heartbeatClient := heartbeat.NewClient(client.Config{
