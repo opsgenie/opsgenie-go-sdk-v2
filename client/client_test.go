@@ -49,7 +49,7 @@ func TestExec(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, err := NewOpsGenieClient(Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
 
@@ -71,7 +71,7 @@ func TestExecWhenRequestIsNotValid(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, err := NewOpsGenieClient(Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
 	ogClient.Config.apiUrl = ts.URL
@@ -97,7 +97,7 @@ func TestExecWhenApiReturns422(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, err := NewOpsGenieClient(Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
 	ogClient.Config.apiUrl = ts.URL
@@ -122,7 +122,7 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, err := NewOpsGenieClient(Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey:     "apiKey",
 		RetryCount: 1,
 	})

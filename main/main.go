@@ -18,12 +18,13 @@ func main() {
 		OpsGenieAPIURL: "https://api.opsgenie.com",
 	})*/
 
-	conf := client.Config{
+	conf := &client.Config{
 		ApiKey:         "a871eb83-2d00-4b09-9fb9-7c134a369082",
-		OpsGenieAPIURL: client.API_URL_EU,
+		OpsGenieAPIURL: client.API_URL,
 	}
-	conf.LogLevel = "iasdasd"
 	conf.RetryCount = 1
+	//conf.LogLevel = logrus.InfoLevel
+
 	//conf.ProxyUrl = "httpadss://faceasdbook.com"
 	heartbeatClient := heartbeat.NewClient(conf)
 

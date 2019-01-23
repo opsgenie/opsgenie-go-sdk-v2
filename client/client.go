@@ -19,7 +19,7 @@ import (
 
 type OpsGenieClient struct {
 	RetryableClient *retryablehttp.Client
-	Config          Config
+	Config          *Config
 }
 
 type request struct {
@@ -60,8 +60,8 @@ var apiURL = "https://api.opsgenie.com"
 var euApiURL = "https://api.eu.opsgenie.com"
 var UserAgentHeader string
 
-func setConfiguration(opsGenieClient *OpsGenieClient, cfg Config) {
-	opsGenieClient.RetryableClient.ErrorHandler = defineErrorHandler
+func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
+	opsGenieClient.RetryableClient.ErrorHandler = opsGenieClient.defineErrorHandler
 	opsGenieClient.Config.apiUrl = apiURL
 	if cfg.OpsGenieAPIURL == API_URL_EU {
 		opsGenieClient.Config.apiUrl = euApiURL
@@ -72,23 +72,19 @@ func setConfiguration(opsGenieClient *OpsGenieClient, cfg Config) {
 }
 
 func setLogger(conf *Config) {
-	logrus.SetFormatter(
-		&logrus.TextFormatter{
-			ForceColors:     true,
-			FullTimestamp:   true,
-			TimestampFormat: time.RFC3339Nano,
-		},
-	)
-	logrus.SetLevel(logrus.InfoLevel)
-	if conf.LogLevel != "" {
-		lvl, err := logrus.ParseLevel(conf.LogLevel)
-		if err != nil {
-			logrus.Infof("Error occurred: %s. Setting log level as info", err.Error())
-		} else {
-			logrus.SetLevel(lvl)
+	if conf.Logger == nil {
+		conf.Logger = logrus.New()
+		if conf.LogLevel != (logrus.Level(0)) {
+			conf.Logger.SetLevel(conf.LogLevel)
 		}
+		conf.Logger.SetFormatter(
+			&logrus.TextFormatter{
+				ForceColors:     true,
+				FullTimestamp:   true,
+				TimestampFormat: time.RFC3339Nano,
+			},
+		)
 	}
-	conf.LogLevel = logrus.GetLevel().String()
 }
 
 func setProxy(client *OpsGenieClient, proxyUrl string) error {
@@ -102,7 +98,7 @@ func setProxy(client *OpsGenieClient, proxyUrl string) error {
 	return nil
 }
 
-func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg Config) {
+func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
 	//custom backoff
 	if cfg.Backoff != nil {
 		opsGenieClient.RetryableClient.Backoff = cfg.Backoff
@@ -142,18 +138,18 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg Config) {
 	}
 }
 
-func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
+func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 	UserAgentHeader = fmt.Sprintf("%s %s (%s/%s)", "opsgenie-go-sdk-v2", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
 	}
-	if cfg.ApiKey == "" {
+	if cfg.Validate() != nil {
 		return nil, errors.New("API key cannot be blank")
 	}
 	setConfiguration(opsGenieClient, cfg)
 	opsGenieClient.RetryableClient.Logger = nil //disable retryableClient's uncustomizable logging
-	setLogger(&cfg)
+	setLogger(cfg)
 	err := setProxy(opsGenieClient, cfg.ProxyUrl)
 	if err != nil {
 		return nil, err
@@ -167,17 +163,17 @@ func NewOpsGenieClient(cfg Config) (*OpsGenieClient, error) {
 }
 
 func printInfoLog(client *OpsGenieClient) {
-	logrus.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
+	client.Config.Logger.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
 		client.Config.ApiKey,
 		client.Config.apiUrl,
 		client.Config.ProxyUrl,
-		logrus.GetLevel().String(),
+		client.Config.Logger.GetLevel().String(),
 		client.RetryableClient.RetryMax)
 }
 
-func defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
+func (client *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
 	if err != nil {
-		logrus.Errorf("Unable to send the request %s ", err.Error())
+		client.Config.Logger.Errorf("Unable to send the request %s ", err.Error())
 		if err == context.DeadlineExceeded {
 			return nil, err
 		}
@@ -272,14 +268,14 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result apiResult) error {
 
-	logrus.Debugf("Starting to process Request %+v: to send: %s", request, request.Endpoint())
+	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.Endpoint())
 	if ok, err := request.Validate(); !ok {
-		logrus.Errorf("Request validation err: %s ", err.Error())
+		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
 		return err
 	}
 	req, err := cli.buildHttpRequest(request)
 	if err != nil {
-		logrus.Errorf("Could not create request: %s", err.Error())
+		cli.Config.Logger.Errorf("Could not create request: %s", err.Error())
 		return err
 	}
 	if ctx != nil {
@@ -288,7 +284,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	response, err := cli.do(req)
 	if err != nil {
-		logrus.Errorf(err.Error())
+		cli.Config.Logger.Errorf(err.Error())
 		return err
 	}
 
@@ -296,17 +292,17 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = handleErrorIfExist(response)
 	if err != nil {
-		logrus.Errorf(err.Error())
+		cli.Config.Logger.Errorf(err.Error())
 		return err
 	}
 
 	err = parse(response, result)
 	if err != nil {
-		logrus.Errorf(err.Error())
+		cli.Config.Logger.Errorf(err.Error())
 		return err
 	}
 
-	logrus.Debugf("Request processed. The result: %+v", result)
+	cli.Config.Logger.Debugf("Request processed. The result: %+v", result)
 	return err
 }
 

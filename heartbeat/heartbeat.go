@@ -27,7 +27,7 @@ type Client struct {
 	executor client.OpsGenieClient
 }
 
-func NewClient(config client.Config) *Client {
+func NewClient(config *client.Config) *Client {
 	opsgenieClient, _ := client.NewOpsGenieClient(config)
 	client := &Client{}
 	client.executor = *opsgenieClient

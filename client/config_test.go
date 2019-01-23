@@ -13,7 +13,6 @@ func TestValidateApiKey(t *testing.T) {
 
 func TestValidateRetryCount(t *testing.T) {
 	conf := &Config{ApiKey: "an api key"}
-	conf.LogLevel = "warn"
 	conf.RetryCount = -2
 	err := conf.Validate()
 	assert.Contains(t, err.Error(), "cannot be less than 1")
@@ -21,7 +20,6 @@ func TestValidateRetryCount(t *testing.T) {
 
 func TestValidateProxyUrl(t *testing.T) {
 	conf := &Config{ApiKey: "an api key"}
-	conf.LogLevel = "warn"
 	conf.RetryCount = 2
 	conf.ProxyUrl = "google.com"
 	err := conf.Validate()
