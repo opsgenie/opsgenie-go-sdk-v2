@@ -19,12 +19,12 @@ func main() {
 	})*/
 
 	conf := client.Config{
-		ApiKey:         "43f55e36-7b78-4f0c-ac4b-bf8f0c352ada",
-		OpsGenieAPIURL: "https://mock-api.free.beeceptor.com",
+		ApiKey:         "a871eb83-2d00-4b09-9fb9-7c134a369082",
+		OpsGenieAPIURL: client.API_URL_EU,
 	}
-	//conf.LogLevel = "debug"
+	conf.LogLevel = "iasdasd"
 	conf.RetryCount = 1
-	//conf.ProxyUrl = "https://facebook.com"
+	//conf.ProxyUrl = "httpadss://faceasdbook.com"
 	heartbeatClient := heartbeat.NewClient(conf)
 
 	/*pr := heartbeat.PingRequest{}
@@ -44,7 +44,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(res)
+	fmt.Printf("%+v", res)
 
 	/*res, err = heartbeatClient.List()
 

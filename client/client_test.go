@@ -50,13 +50,12 @@ func TestExec(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(Config{
-		ApiKey:         "apiKey",
-		OpsGenieAPIURL: ts.URL,
+		ApiKey: "apiKey",
 	})
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
-
+	ogClient.Config.apiUrl = ts.URL
 	err = ogClient.Exec(nil, request, result)
 	assert.Equal(t, result.Data, "processed")
 	if err != nil {
@@ -73,9 +72,9 @@ func TestExecWhenRequestIsNotValid(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(Config{
-		ApiKey:         "apiKey",
-		OpsGenieAPIURL: ts.URL,
+		ApiKey: "apiKey",
 	})
+	ogClient.Config.apiUrl = ts.URL
 
 	request := testRequest{ExtraField: "extra"}
 	result := &testResult{}
@@ -99,10 +98,9 @@ func TestExecWhenApiReturns422(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(Config{
-		ApiKey:         "apiKey",
-		OpsGenieAPIURL: ts.URL,
+		ApiKey: "apiKey",
 	})
-
+	ogClient.Config.apiUrl = ts.URL
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
@@ -125,10 +123,10 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(Config{
-		ApiKey:         "apiKey",
-		OpsGenieAPIURL: ts.URL,
+		ApiKey:     "apiKey",
+		RetryCount: 1,
 	})
-
+	ogClient.Config.apiUrl = ts.URL
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
