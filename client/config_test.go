@@ -21,7 +21,7 @@ func TestValidateRetryCount(t *testing.T) {
 func TestValidateProxyUrl(t *testing.T) {
 	conf := &Config{ApiKey: "an api key"}
 	conf.RetryCount = 2
-	conf.ProxyUrl = "google.com"
+	conf.ProxyUrl = "googleasdcom"
 	err := conf.Validate()
 	assert.Contains(t, err.Error(), "is not a valid url")
 }

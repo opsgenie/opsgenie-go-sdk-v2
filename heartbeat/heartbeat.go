@@ -2,7 +2,7 @@ package heartbeat
 
 import (
 	"context"
-	"opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type Heartbeat struct {

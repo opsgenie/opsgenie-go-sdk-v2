@@ -46,7 +46,7 @@ func (conf Config) Validate() error {
 		return errors.New("Retry count cannot be less than 1.")
 	}
 	if conf.ProxyUrl != "" {
-		if _, err := url.Parse(conf.ProxyUrl); err != nil {
+		if _, err := url.ParseRequestURI(conf.ProxyUrl); err != nil {
 			return errors.New(conf.ProxyUrl + " is not a valid url.")
 		}
 	}
