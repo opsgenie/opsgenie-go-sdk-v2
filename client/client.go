@@ -311,16 +311,30 @@ func parse(response *http.Response, result apiResult) error {
 		return errors.New("No response received")
 	}
 	body, err := ioutil.ReadAll(response.Body)
+	resultMap := make(map[string]interface{})
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(body, result)
+	err = json.Unmarshal(body, &resultMap)
 	if err != nil {
-		message := "Response could not be parsed, " + err.Error()
-		return errors.New(message)
-
+		return handleParsingErrors(err)
+	}
+	if value, ok := resultMap["data"]; ok {
+		data, err := json.Marshal(value)
+		if err != nil {
+			return handleParsingErrors(err)
+		}
+		err = json.Unmarshal(data, result)
+		if err != nil {
+			return handleParsingErrors(err)
+		}
 	}
 	setResponseMeta(response, result)
 
 	return nil
+}
+
+func handleParsingErrors(err error) error {
+	message := "Response could not be parsed, " + err.Error()
+	return errors.New(message)
 }
