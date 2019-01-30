@@ -9,6 +9,120 @@ import (
 	"testing"
 )
 
+type Team struct {
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+type Log struct {
+	Owner      string `json:"owner"`
+	CreateDate string `json:"createdDate"`
+	Log        string `json:"log"`
+}
+
+type aResultDoesNotWantDataFieldsToBeParsed struct {
+	ResponseMeta
+	Logs   []Log  `json:"logs"`
+	Offset string `json:"offset"`
+}
+
+type aResultWantsDataFieldsToBeParsed struct {
+	ResponseMeta
+	Teams []Team `json:"data"`
+}
+
+func (result *aResultWantsDataFieldsToBeParsed) ShouldWrapDataFieldOfThePayload() bool {
+	return false
+}
+
+func TestParsingWithDataField(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `
+			{
+    "data": [
+        {
+            "id": "1",
+            "name": "n1",
+            "description": "d1"
+        },
+        {
+            "id": "2",
+            "name": "n2",
+            "description": "d2"
+        },
+        {
+            "id": "3",
+            "name": "n3",
+            "description": "d3"
+        }
+    ],
+    "took": 1.08,
+    "requestId": "123"
+}
+		`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey: "apiKey",
+	})
+
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &aResultWantsDataFieldsToBeParsed{}
+	ogClient.Config.apiUrl = ts.URL
+	err = ogClient.Exec(nil, request, result)
+	if err != nil {
+		t.Fail()
+	}
+	assert.Equal(t, result.Teams[0], Team{Id: "1", Name: "n1", Description: "d1"})
+	assert.Equal(t, result.Teams[1], Team{Id: "2", Name: "n2", Description: "d2"})
+	assert.Equal(t, result.Teams[2], Team{Id: "3", Name: "n3", Description: "d3"})
+}
+
+func TestParsingWithoutDataField(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `
+			{
+    "data": {
+        "offset": "123",
+        "logs": [
+            {
+                "owner": "o1",
+                "createdDate": "c1",
+                "log": "l1"
+            },
+            {
+                "owner": "o2",
+                "createdDate": "c2",
+                "log": "l2"
+            }
+        ]
+    },
+    "took": 0.041,
+    "requestId": "123"
+}
+		`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey: "apiKey",
+	})
+
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &aResultDoesNotWantDataFieldsToBeParsed{}
+	ogClient.Config.apiUrl = ts.URL
+	err = ogClient.Exec(nil, request, result)
+	if err != nil {
+		t.Fail()
+	}
+	assert.Equal(t, result.Logs[0], Log{Owner: "o1", CreateDate: "c1", Log: "l1"})
+	assert.Equal(t, result.Logs[1], Log{Owner: "o2", CreateDate: "c2", Log: "l2"})
+	assert.Equal(t, result.Offset, "123")
+}
+
 var (
 	BaseURL     = "https://api.opsgenie.com"
 	Endpoint    = "v2/alerts"

@@ -3,35 +3,34 @@ package heartbeat
 import (
 	"context"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 type Heartbeat struct {
-	Name          string    `json:"name"`
-	Description   string    `json:"description"`
-	Interval      int       `json:"interval"`
-	Enabled       bool      `json:"enabled"`
-	IntervalUnit  string    `json:"intervalUnit"`
-	Expired       bool      `json:"expired"`
-	OwnerTeam     OwnerTeam `json:"ownerTeam"`
-	AlertTags     []string  `json:"alertTags"`
-	AlertPriority string    `json:"alertPriority"`
-	AlertMessage  string    `json:"alertMessage"`
-}
-
-type OwnerTeam struct {
-	Id   string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+	Name          string       `json:"name"`
+	Description   string       `json:"description"`
+	Interval      int          `json:"interval"`
+	Enabled       bool         `json:"enabled"`
+	IntervalUnit  string       `json:"intervalUnit"`
+	Expired       bool         `json:"expired"`
+	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
+	AlertTags     []string     `json:"alertTags"`
+	AlertPriority string       `json:"alertPriority"`
+	AlertMessage  string       `json:"alertMessage"`
 }
 
 type Client struct {
 	executor client.OpsGenieClient
 }
 
-func NewClient(config *client.Config) *Client {
-	opsgenieClient, _ := client.NewOpsGenieClient(config)
+func NewClient(config *client.Config) (*Client, error) {
+	opsgenieClient, err := client.NewOpsGenieClient(config)
+	if err != nil {
+		return nil, err
+	}
 	client := &Client{}
 	client.executor = *opsgenieClient
-	return client
+	return client, nil
 }
 
 func (client *Client) Ping(request PingRequest, context context.Context) (*PingResult, error) {

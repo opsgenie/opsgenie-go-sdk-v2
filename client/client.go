@@ -36,6 +36,7 @@ type apiResult interface {
 	setRequestID(requestId string)
 	setResponseTime(responseTime float32)
 	setRateLimitState(state string)
+	ShouldWrapDataFieldOfThePayload() bool
 }
 
 type ResponseMeta struct {
@@ -54,6 +55,13 @@ func (rm *ResponseMeta) setResponseTime(responseTime float32) {
 
 func (rm *ResponseMeta) setRateLimitState(state string) {
 	rm.RateLimitState = state
+}
+
+//indicates that data field is wrapped before starting to parsing process
+//by default it is set to true
+//the results that are want to parse the payload according to the data field of the payload should override this method and return false
+func (rm *ResponseMeta) ShouldWrapDataFieldOfThePayload() bool {
+	return true
 }
 
 var apiURL = "https://api.opsgenie.com"
@@ -238,6 +246,10 @@ func handleErrorIfExist(response *http.Response) error {
 	return nil
 }
 
+func (cli *OpsGenieClient) setApiUrl(url string) {
+	cli.Config.apiUrl = url
+}
+
 func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, error) {
 	var buf io.ReadWriter
 	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
@@ -307,27 +319,35 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 }
 
 func parse(response *http.Response, result apiResult) error {
+	var payload []byte
 	if response == nil {
 		return errors.New("No response received")
 	}
 	body, err := ioutil.ReadAll(response.Body)
-	resultMap := make(map[string]interface{})
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(body, &resultMap)
+
+	if result.ShouldWrapDataFieldOfThePayload() {
+		resultMap := make(map[string]interface{})
+		err = json.Unmarshal(body, &resultMap)
+		if err != nil {
+			return handleParsingErrors(err)
+		}
+		if value, ok := resultMap["data"]; ok {
+			payload, err = json.Marshal(value)
+			if err != nil {
+				return handleParsingErrors(err)
+			}
+		} else {
+			payload = body
+		}
+	} else {
+		payload = body
+	}
+	err = json.Unmarshal(payload, &result)
 	if err != nil {
 		return handleParsingErrors(err)
-	}
-	if value, ok := resultMap["data"]; ok {
-		data, err := json.Marshal(value)
-		if err != nil {
-			return handleParsingErrors(err)
-		}
-		err = json.Unmarshal(data, result)
-		if err != nil {
-			return handleParsingErrors(err)
-		}
 	}
 	setResponseMeta(response, result)
 

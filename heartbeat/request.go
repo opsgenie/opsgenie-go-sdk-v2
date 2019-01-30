@@ -2,6 +2,7 @@ package heartbeat
 
 import (
 	"errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 type PingRequest struct {
@@ -59,15 +60,15 @@ func (lr listRequest) Method() string {
 }
 
 type UpdateRequest struct {
-	Name          string    `json:"name"`
-	Description   string    `json:"description,omitempty"`
-	Interval      int       `json:"interval"`
-	IntervalUnit  Unit      `json:"intervalUnit"`
-	Enabled       bool      `json:"enabled,omitempty"`
-	OwnerTeam     OwnerTeam `json:"ownerTeam"`
-	AlertMessage  string    `json:"alertMessage,omitempty"`
-	AlertTag      string    `json:"alertTags,omitempty"`
-	AlertPriority string    `json:"alertPriority,omitempty"`
+	Name          string       `json:"name"`
+	Description   string       `json:"description,omitempty"`
+	Interval      int          `json:"interval"`
+	IntervalUnit  Unit         `json:"intervalUnit"`
+	Enabled       bool         `json:"enabled,omitempty"`
+	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
+	AlertMessage  string       `json:"alertMessage,omitempty"`
+	AlertTag      string       `json:"alertTags,omitempty"`
+	AlertPriority string       `json:"alertPriority,omitempty"`
 }
 
 func (r UpdateRequest) Validate() (bool, error) {
@@ -95,15 +96,15 @@ func (r UpdateRequest) Method() string {
 }
 
 type AddRequest struct {
-	Name          string    `json:"name"`
-	Description   string    `json:"description,omitempty"`
-	Interval      int       `json:"interval"`
-	IntervalUnit  Unit      `json:"intervalUnit"`
-	Enabled       bool      `json:"enabled,omitempty"`
-	OwnerTeam     OwnerTeam `json:"ownerTeam"`
-	AlertMessage  string    `json:"alertMessage,omitempty"`
-	AlertTag      string    `json:"alertTags,omitempty"`
-	AlertPriority string    `json:"alertPriority,omitempty"`
+	Name          string       `json:"name"`
+	Description   string       `json:"description,omitempty"`
+	Interval      int          `json:"interval"`
+	IntervalUnit  Unit         `json:"intervalUnit"`
+	Enabled       bool         `json:"enabled,omitempty"`
+	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
+	AlertMessage  string       `json:"alertMessage,omitempty"`
+	AlertTag      string       `json:"alertTags,omitempty"`
+	AlertPriority string       `json:"alertPriority,omitempty"`
 }
 
 func (r AddRequest) Validate() (bool, error) {
