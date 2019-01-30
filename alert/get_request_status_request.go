@@ -6,12 +6,12 @@ type GetAsyncRequestStatusRequest struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-func (r GetAsyncRequestStatusRequest) Validate() (bool, error) {
+func (r GetAsyncRequestStatusRequest) Validate() error {
 	if r.RequestID == "" {
-		return false, errors.New("requestId cannot be empty")
+		return errors.New("requestId cannot be empty")
 	}
 
-	return true, nil
+	return nil
 }
 
 func (r GetAsyncRequestStatusRequest) Endpoint() string {

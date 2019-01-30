@@ -27,7 +27,7 @@ type request struct {
 }
 
 type ApiRequest interface {
-	Validate() (bool, error)
+	Validate() error
 	Endpoint() string
 	Method() string
 }
@@ -307,7 +307,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 
 	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.Endpoint())
-	if ok, err := request.Validate(); !ok {
+	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
 		return err
 	}

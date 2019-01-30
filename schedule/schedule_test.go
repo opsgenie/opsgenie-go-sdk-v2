@@ -40,61 +40,53 @@ func TestBuildCreateRequest(t *testing.T) {
 			WithTimeRestriction(tr))
 
 	assert.Equal(t, expectedCreateRequest, createRequest)
-	isOk, _ := createRequest.Validate()
-	assert.True(t, isOk)
+	err := createRequest.Validate()
+	assert.Nil(t, err)
 
 }
 
 func TestCreateRequest_Validate(t *testing.T) {
-	var isValid bool
 	var err error
 	createRequest := &CreateRequest{}
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Name cannot be empty.").Error())
 
 	createRequest.Name = "asd"
 	rotation := &og.Rotation{}
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Rotation type cannot be empty.").Error())
 
 	rotation.Type = og.Hourly
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Rotation start date cannot be empty.").Error())
 
 	rotation.StartDate = "sDate"
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Rotation participants cannot be empty.").Error())
 
 	rotation = rotation.WithParticipants(og.Participant{})
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Participant type cannot be empty.").Error())
 
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.User})
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("For participant type user either username or id must be provided.").Error())
 
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team})
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("For participant type team either team name or id must be provided.").Error())
 
 	tr := og.TimeRestriction{}
@@ -102,8 +94,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Time restriction type is not valid.").Error())
 
 	tr = og.TimeRestriction{Type: og.TimeOfDay}
@@ -111,8 +102,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Restrictions can not be empty.").Error())
 
 	restrictions := []og.Restriction{
@@ -123,8 +113,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("EndMin field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -135,8 +124,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("StartHour field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -147,8 +135,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("StartMin field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -159,8 +146,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("EndHour field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -171,8 +157,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("EndDay field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -183,8 +168,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.False(t, isValid)
+	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("StartDay field cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
@@ -195,15 +179,13 @@ func TestCreateRequest_Validate(t *testing.T) {
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
-	isValid, err = createRequest.Validate()
-	assert.True(t, isValid)
+	err = createRequest.Validate()
 
 }
 
 func TestGetRequest_Validate(t *testing.T) {
 	getRequest := &GetRequest{}
-	isValid, err := getRequest.Validate()
+	err := getRequest.Validate()
 
-	assert.False(t, isValid)
 	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
 }

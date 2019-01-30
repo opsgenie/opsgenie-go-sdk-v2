@@ -8,12 +8,12 @@ type DeleteAlertRequest struct {
 	params string
 }
 
-func (r DeleteAlertRequest) Validate() (bool, error) {
-	valid, err := r.Identifier.Validate()
+func (r DeleteAlertRequest) Validate() error {
+	err := r.Identifier.Validate()
 	if err != nil {
-		return valid, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 func (r DeleteAlertRequest) Endpoint() string {

@@ -12,13 +12,13 @@ type Identifier struct {
 	params string
 }
 
-func (r Identifier) Validate() (bool, error) {
+func (r Identifier) Validate() error {
 
 	if r.ID == "" && r.Alias == "" && r.TinyID == "" {
-		return false, errors.New("ID, TinyID or Alias should be provided")
+		return errors.New("ID, TinyID or Alias should be provided")
 	}
 
-	return true, nil
+	return nil
 }
 
 func (r Identifier) Endpoint() string {

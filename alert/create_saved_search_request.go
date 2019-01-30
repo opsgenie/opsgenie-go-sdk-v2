@@ -12,20 +12,20 @@ type CreateSavedSearchRequest struct {
 	Teams       []Team `json:"teams,omitempty"`
 }
 
-func (r CreateSavedSearchRequest) Validate() (bool, error) {
+func (r CreateSavedSearchRequest) Validate() error {
 	if r.Name == "" {
-		return false, errors.New("name cannot be empty")
+		return errors.New("name cannot be empty")
 	}
 
 	if r.Query == "" {
-		return false, errors.New("query cannot be empty")
+		return errors.New("query cannot be empty")
 	}
 
 	if r.Owner.ID == "" && r.Owner.Username == "" {
-		return false, errors.New("owner cannot be empty")
+		return errors.New("owner cannot be empty")
 	}
 
-	return true, nil
+	return nil
 }
 
 func (r CreateSavedSearchRequest) Endpoint() string {

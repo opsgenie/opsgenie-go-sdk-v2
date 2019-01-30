@@ -16,25 +16,25 @@ type UpdateSavedSearchRequest struct {
 	params      string
 }
 
-func (r UpdateSavedSearchRequest) Validate() (bool, error) {
+func (r UpdateSavedSearchRequest) Validate() error {
 
 	if r.ID == "" && r.Name == "" {
-		return false, errors.New("ID or Name should be provided")
+		return errors.New("ID or Name should be provided")
 	}
 
 	if r.NewName == "" {
-		return false, errors.New("name cannot be empty")
+		return errors.New("name cannot be empty")
 	}
 
 	if r.Query == "" {
-		return false, errors.New("query cannot be empty")
+		return errors.New("query cannot be empty")
 	}
 
 	if r.Owner.ID == "" && r.Owner.Username == "" {
-		return false, errors.New("owner cannot be empty")
+		return errors.New("owner cannot be empty")
 	}
 
-	return true, nil
+	return nil
 }
 
 func (r UpdateSavedSearchRequest) Endpoint() string {

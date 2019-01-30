@@ -20,11 +20,11 @@ type CreateAlertRequest struct {
 	Note        string            `json:"note,omitempty"`
 }
 
-func (r CreateAlertRequest) Validate() (bool, error) {
+func (r CreateAlertRequest) Validate() error {
 	if r.Message == "" {
-		return false, errors.New("message cannot be empty")
+		return errors.New("message cannot be empty")
 	}
-	return true, nil
+	return nil
 }
 
 func (r CreateAlertRequest) Endpoint() string {

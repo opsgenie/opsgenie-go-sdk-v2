@@ -16,15 +16,15 @@ type CreateRequest struct {
 	Rotations   []og.Rotation `json:"rotations,omitempty"`
 }
 
-func (cr CreateRequest) Validate() (bool, error) {
+func (cr CreateRequest) Validate() error {
 	if cr.Name == "" {
-		return false, errors.New("Name cannot be empty.")
+		return errors.New("Name cannot be empty.")
 	}
-	_, err := validateRotations(cr.Rotations)
+	err := validateRotations(cr.Rotations)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 func (cr CreateRequest) Endpoint() string {
@@ -40,12 +40,12 @@ type GetRequest struct {
 	IdentifierValue string
 }
 
-func (gr GetRequest) Validate() (bool, error) {
+func (gr GetRequest) Validate() error {
 	err := validateIdentifier(gr.IdentifierValue)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 func (gr GetRequest) Endpoint() string {
@@ -70,17 +70,16 @@ type UpdateRequest struct {
 	Rotations       []og.Rotation `json:"rotations,omitempty"`
 }
 
-func (ur UpdateRequest) Validate() (bool, error) {
+func (ur UpdateRequest) Validate() error {
 	err := validateIdentifier(ur.IdentifierValue)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
-	_, err = validateRotations(ur.Rotations)
+	err = validateRotations(ur.Rotations)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 func (ur UpdateRequest) Endpoint() string {
@@ -99,12 +98,12 @@ type DeleteRequest struct {
 	IdentifierValue string
 }
 
-func (dr DeleteRequest) Validate() (bool, error) {
+func (dr DeleteRequest) Validate() error {
 	err := validateIdentifier(dr.IdentifierValue)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
+	return nil
 }
 
 func (dr DeleteRequest) Endpoint() string {
@@ -122,8 +121,8 @@ type ListRequest struct {
 	Expand bool
 }
 
-func (lr ListRequest) Validate() (bool, error) {
-	return true, nil
+func (lr ListRequest) Validate() error {
+	return nil
 }
 
 func (lr ListRequest) Endpoint() string {
@@ -146,19 +145,18 @@ type GetTimelineRequest struct {
 	Date            string
 }
 
-func (tr GetTimelineRequest) Validate() (bool, error) {
+func (tr GetTimelineRequest) Validate() error {
 	err := validateIdentifier(tr.IdentifierValue)
 	if err != nil {
-		return false, err
+		return err
 	}
-	return true, nil
 	if tr.Interval <= 0 {
 		tr.Interval = 1
 	}
 	if tr.IntervalUnit != Days && tr.IntervalUnit != Months {
 		tr.IntervalUnit = Weeks
 	}
-	return true, nil
+	return nil
 }
 
 func (tr GetTimelineRequest) Endpoint() string {
@@ -222,84 +220,84 @@ func (ur *UpdateRequest) WithRotation(rotation *og.Rotation) *UpdateRequest {
 	return ur
 }
 
-func validateRotations(rotations []og.Rotation) (bool, error) {
+func validateRotations(rotations []og.Rotation) error {
 	for _, rot := range rotations {
 		if rot.Type == "" {
-			return false, errors.New("Rotation type cannot be empty.")
+			return errors.New("Rotation type cannot be empty.")
 		}
 		if rot.StartDate == "" {
-			return false, errors.New("Rotation start date cannot be empty.")
+			return errors.New("Rotation start date cannot be empty.")
 		}
 		if len(rot.Participants) == 0 {
-			return false, errors.New("Rotation participants cannot be empty.")
+			return errors.New("Rotation participants cannot be empty.")
 		}
-		_, err := validateParticipants(rot)
+		err := validateParticipants(rot)
 		if err != nil {
-			return false, err
+			return err
 		}
 		if &rot.TimeRestriction != nil {
-			_, err := validateRestrictions(rot.TimeRestriction)
+			err := validateRestrictions(rot.TimeRestriction)
 			if err != nil {
-				return false, err
+				return err
 			}
 		}
 	}
-	return true, nil
+	return nil
 }
 
-func validateParticipants(rotation og.Rotation) (bool, error) {
+func validateParticipants(rotation og.Rotation) error {
 	for _, participant := range rotation.Participants {
 		if participant.Type == "" {
-			return false, errors.New("Participant type cannot be empty.")
+			return errors.New("Participant type cannot be empty.")
 		}
 		if participant.Type == og.User && participant.Username == "" && participant.Id == "" {
-			return false, errors.New("For participant type user either username or id must be provided.")
+			return errors.New("For participant type user either username or id must be provided.")
 		}
 		if participant.Type == og.Team && participant.Name == "" && participant.Id == "" {
-			return false, errors.New("For participant type team either team name or id must be provided.")
+			return errors.New("For participant type team either team name or id must be provided.")
 		}
 	}
-	return true, nil
+	return nil
 }
 
-func validateRestrictions(timeRestriction og.TimeRestriction) (bool, error) {
+func validateRestrictions(timeRestriction og.TimeRestriction) error {
 	if timeRestriction.Type != og.WeekdayAndTimeOfDay && timeRestriction.Type != og.TimeOfDay {
-		return false, errors.New("Time restriction type is not valid.")
+		return errors.New("Time restriction type is not valid.")
 	}
 	if len(timeRestriction.Restrictions) == 0 {
-		return false, errors.New("Restrictions can not be empty.")
+		return errors.New("Restrictions can not be empty.")
 	}
 	for _, restriction := range timeRestriction.Restrictions {
-		_, err := validateTimeBaseRestriction(restriction)
+		err := validateTimeBaseRestriction(restriction)
 		if err != nil {
-			return false, err
+			return err
 		}
 		if timeRestriction.Type == og.WeekdayAndTimeOfDay {
 			if restriction.EndDay == "" {
-				return false, errors.New("EndDay field cannot be empty.")
+				return errors.New("EndDay field cannot be empty.")
 			}
 			if restriction.StartDay == "" {
-				return false, errors.New("StartDay field cannot be empty.")
+				return errors.New("StartDay field cannot be empty.")
 			}
 		}
 	}
-	return true, nil
+	return nil
 }
 
-func validateTimeBaseRestriction(timeBasedRestriction og.Restriction) (bool, error) {
+func validateTimeBaseRestriction(timeBasedRestriction og.Restriction) error {
 	if timeBasedRestriction.EndMin <= 0 {
-		return false, errors.New("EndMin field cannot be empty.")
+		return errors.New("EndMin field cannot be empty.")
 	}
 	if timeBasedRestriction.StartHour <= 0 {
-		return false, errors.New("StartHour field cannot be empty.")
+		return errors.New("StartHour field cannot be empty.")
 	}
 	if timeBasedRestriction.StartMin <= 0 {
-		return false, errors.New("StartMin field cannot be empty.")
+		return errors.New("StartMin field cannot be empty.")
 	}
 	if timeBasedRestriction.EndHour <= 0 {
-		return false, errors.New("EndHour field cannot be empty.")
+		return errors.New("EndHour field cannot be empty.")
 	}
-	return true, nil
+	return nil
 }
 
 func validateIdentifier(identifier string) error {

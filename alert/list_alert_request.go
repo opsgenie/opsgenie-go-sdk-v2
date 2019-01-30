@@ -16,9 +16,9 @@ type ListAlertRequest struct {
 	params               string
 }
 
-func (r ListAlertRequest) Validate() (bool, error) {
+func (r ListAlertRequest) Validate() error {
 
-	return true, nil
+	return nil
 }
 
 func (r ListAlertRequest) Endpoint() string {

@@ -3,9 +3,9 @@ package alert
 type ListSavedSearchRequest struct {
 }
 
-func (ssr ListSavedSearchRequest) Validate() (bool, error) {
+func (ssr ListSavedSearchRequest) Validate() error {
 
-	return true, nil
+	return nil
 }
 
 func (ssr ListSavedSearchRequest) Endpoint() string {

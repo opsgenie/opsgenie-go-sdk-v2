@@ -9,14 +9,14 @@ type PingRequest struct {
 	HeartbeatName string
 }
 
-func nameValidation(name string) (bool, error) {
+func nameValidation(name string) error {
 	if name == "" {
-		return false, errors.New("HeartbeatName cannot be empty")
+		return errors.New("HeartbeatName cannot be empty")
 	}
-	return true, nil
+	return nil
 }
 
-func (pr PingRequest) Validate() (bool, error) {
+func (pr PingRequest) Validate() error {
 	return nameValidation(pr.HeartbeatName)
 }
 
@@ -32,7 +32,7 @@ type GetRequest struct {
 	HeartbeatName string
 }
 
-func (gr GetRequest) Validate() (bool, error) {
+func (gr GetRequest) Validate() error {
 	return nameValidation(gr.HeartbeatName)
 }
 
@@ -47,8 +47,8 @@ func (gr GetRequest) Method() string {
 type listRequest struct {
 }
 
-func (lr listRequest) Validate() (bool, error) {
-	return true, nil
+func (lr listRequest) Validate() error {
+	return nil
 }
 
 func (lr listRequest) Endpoint() string {
@@ -71,20 +71,20 @@ type UpdateRequest struct {
 	AlertPriority string       `json:"alertPriority,omitempty"`
 }
 
-func (r UpdateRequest) Validate() (bool, error) {
+func (r UpdateRequest) Validate() error {
 	if r.Name == "" {
-		return false, errors.New("Invalid request. Name cannot be empty. ")
+		return errors.New("Invalid request. Name cannot be empty. ")
 	}
 	if &r.OwnerTeam == nil || (r.OwnerTeam.Id == "" && r.OwnerTeam.Name == "") {
-		return false, errors.New("Invalid request. Owner team cannot be empty. ")
+		return errors.New("Invalid request. Owner team cannot be empty. ")
 	}
 	if r.Interval < 1 {
-		return false, errors.New("Invalid request. Interval cannot be smaller than 1. ")
+		return errors.New("Invalid request. Interval cannot be smaller than 1. ")
 	}
 	if r.IntervalUnit == "" {
-		return false, errors.New("Invalid request. IntervalUnit cannot be empty. ")
+		return errors.New("Invalid request. IntervalUnit cannot be empty. ")
 	}
-	return true, nil
+	return nil
 }
 
 func (r UpdateRequest) Endpoint() string {
@@ -107,20 +107,20 @@ type AddRequest struct {
 	AlertPriority string       `json:"alertPriority,omitempty"`
 }
 
-func (r AddRequest) Validate() (bool, error) {
+func (r AddRequest) Validate() error {
 	if r.Name == "" {
-		return false, errors.New("Invalid request. Name cannot be empty. ")
+		return errors.New("Invalid request. Name cannot be empty. ")
 	}
 	if &r.OwnerTeam == nil || (r.OwnerTeam.Id == "" && r.OwnerTeam.Name == "") {
-		return false, errors.New("Invalid request. Owner team cannot be empty. ")
+		return errors.New("Invalid request. Owner team cannot be empty. ")
 	}
 	if r.Interval < 1 {
-		return false, errors.New("Invalid request. Interval cannot be smaller than 1. ")
+		return errors.New("Invalid request. Interval cannot be smaller than 1. ")
 	}
 	if r.IntervalUnit == "" {
-		return false, errors.New("Invalid request. IntervalUnit cannot be empty. ")
+		return errors.New("Invalid request. IntervalUnit cannot be empty. ")
 	}
-	return true, nil
+	return nil
 }
 
 func (r AddRequest) Endpoint() string {
@@ -143,11 +143,11 @@ type enableRequest struct {
 	heartbeatName string
 }
 
-func (r enableRequest) Validate() (bool, error) {
+func (r enableRequest) Validate() error {
 	if r.heartbeatName == "" {
-		return false, errors.New("Invalid request. Name cannot be empty. ")
+		return errors.New("Invalid request. Name cannot be empty. ")
 	}
-	return true, nil
+	return nil
 }
 
 func (r enableRequest) Endpoint() string {
@@ -162,11 +162,11 @@ type disableRequest struct {
 	heartbeatName string
 }
 
-func (r disableRequest) Validate() (bool, error) {
+func (r disableRequest) Validate() error {
 	if r.heartbeatName == "" {
-		return false, errors.New("Invalid request. Name cannot be empty. ")
+		return errors.New("Invalid request. Name cannot be empty. ")
 	}
-	return true, nil
+	return nil
 }
 
 func (r disableRequest) Endpoint() string {

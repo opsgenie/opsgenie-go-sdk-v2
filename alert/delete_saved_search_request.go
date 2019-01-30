@@ -11,11 +11,11 @@ type DeleteSavedSearchRequest struct {
 	params string
 }
 
-func (r DeleteSavedSearchRequest) Validate() (bool, error) {
+func (r DeleteSavedSearchRequest) Validate() error {
 	if r.ID == "" && r.Name == "" {
-		return false, errors.New("ID or Name should be provided")
+		return errors.New("ID or Name should be provided")
 	}
-	return true, nil
+	return nil
 }
 
 func (r DeleteSavedSearchRequest) Endpoint() string {

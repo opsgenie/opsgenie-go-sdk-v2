@@ -9,7 +9,7 @@ type Client struct {
 	restClient *client.OpsGenieClient
 }
 
-func NewClient(config client.Config) (*Client, error) {
+func NewClient(config *client.Config) (*Client, error) {
 
 	restClient, err := client.NewOpsGenieClient(
 		config,
