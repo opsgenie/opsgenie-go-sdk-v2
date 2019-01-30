@@ -35,7 +35,9 @@ func TestBuildCreateRequest(t *testing.T) {
 	tr := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay}
 	tr.WithRestrictions(restriction1, restriction2)
 	createRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: true, OwnerTeam: ownerTeam}
-	createRequest.WithRotation(rotation1.WithParticipants(*participant1, *participant2)).WithRotation(rotation2.WithParticipants(*participant1, *participant2).WithTimeRestriction(tr))
+	createRequest.WithRotation(rotation1.WithParticipants(*participant1, *participant2)).
+		WithRotation(rotation2.WithParticipants(*participant1, *participant2).
+			WithTimeRestriction(tr))
 
 	assert.Equal(t, expectedCreateRequest, createRequest)
 	isOk, _ := createRequest.Validate()

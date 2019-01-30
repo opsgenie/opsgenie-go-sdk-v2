@@ -319,7 +319,6 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 }
 
 func parse(response *http.Response, result apiResult) error {
-	var payload []byte
 	if response == nil {
 		return errors.New("No response received")
 	}
@@ -328,6 +327,7 @@ func parse(response *http.Response, result apiResult) error {
 		return err
 	}
 
+	payload := body
 	if result.ShouldWrapDataFieldOfThePayload() {
 		resultMap := make(map[string]interface{})
 		err = json.Unmarshal(body, &resultMap)
@@ -339,11 +339,7 @@ func parse(response *http.Response, result apiResult) error {
 			if err != nil {
 				return handleParsingErrors(err)
 			}
-		} else {
-			payload = body
 		}
-	} else {
-		payload = body
 	}
 	err = json.Unmarshal(payload, &result)
 	if err != nil {
