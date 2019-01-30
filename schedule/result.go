@@ -17,7 +17,7 @@ type GetResult struct {
 	Schedule Schedule `json:"data,omitempty"`
 }
 
-func (gr *GetResult) ShouldWrapDataFieldOfThePayload() bool {
+func (gr *GetResult) UnwrapDataFieldOfPayload() bool {
 	return false
 }
 
@@ -33,7 +33,7 @@ type DeleteResult struct {
 	Result string `json:"result,omitempty"`
 }
 
-func (dr *DeleteResult) ShouldWrapDataFieldOfThePayload() bool {
+func (dr *DeleteResult) UnwrapDataFieldOfPayload() bool {
 	return false
 }
 
@@ -43,7 +43,7 @@ type ListResult struct {
 	ExpandableFields []string   `json:"expandable,omitempty"`
 }
 
-func (lr *ListResult) ShouldWrapDataFieldOfThePayload() bool {
+func (lr *ListResult) UnwrapDataFieldOfPayload() bool {
 	return false
 }
 

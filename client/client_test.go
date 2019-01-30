@@ -31,7 +31,7 @@ type aResultWantsDataFieldsToBeParsed struct {
 	Teams []Team `json:"data"`
 }
 
-func (result *aResultWantsDataFieldsToBeParsed) ShouldWrapDataFieldOfThePayload() bool {
+func (result *aResultWantsDataFieldsToBeParsed) UnwrapDataFieldOfPayload() bool {
 	return false
 }
 

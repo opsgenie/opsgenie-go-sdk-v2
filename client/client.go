@@ -32,16 +32,18 @@ type ApiRequest interface {
 	Method() string
 }
 
-type apiResult interface {
+type ApiResult interface {
 	setRequestID(requestId string)
 	setResponseTime(responseTime float32)
 	setRateLimitState(state string)
-	ShouldWrapDataFieldOfThePayload() bool
+	UnwrapDataFieldOfPayload() bool
+	Parse(response *http.Response, result ApiResult) error
+	validateResponseMeta() error
 }
 
 type ResponseMeta struct {
-	RequestID      string
-	ResponseTime   float32
+	RequestID      string  `json:"requestId"`
+	ResponseTime   float32 `json:"took"`
 	RateLimitState string
 }
 
@@ -57,10 +59,31 @@ func (rm *ResponseMeta) setRateLimitState(state string) {
 	rm.RateLimitState = state
 }
 
+func (rm *ResponseMeta) validateResponseMeta() error {
+	errMessage := "Could not set"
+
+	if len(rm.RequestID) == 0 {
+		errMessage = " requestId,"
+	}
+	if len(rm.RateLimitState) == 0 {
+		errMessage = errMessage + " rate limit state,"
+	}
+	if rm.ResponseTime == 0 {
+		errMessage = errMessage + " response time,"
+	}
+
+	if errMessage != "Could not set" {
+		errMessage = errMessage[:len(errMessage)-1] + "."
+		return errors.New(errMessage)
+	}
+
+	return nil
+}
+
 //indicates that data field is wrapped before starting to parsing process
 //by default it is set to true
 //the results that are want to parse the payload according to the data field of the payload should override this method and return false
-func (rm *ResponseMeta) ShouldWrapDataFieldOfThePayload() bool {
+func (rm *ResponseMeta) UnwrapDataFieldOfPayload() bool {
 	return true
 }
 
@@ -195,18 +218,21 @@ func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
 	return cli.RetryableClient.Do(request.Request)
 }
 
-func setResponseMeta(httpResponse *http.Response, result apiResult) {
+func setResponseMeta(httpResponse *http.Response, result ApiResult) {
 	requestID := httpResponse.Header.Get("X-Request-Id")
-	result.setRequestID(requestID)
+
+	if len(requestID) > 0 {
+		result.setRequestID(requestID)
+	}
 
 	rateLimitState := httpResponse.Header.Get("X-RateLimit-State")
 	result.setRateLimitState(rateLimitState)
 
 	responseTime, err := strconv.ParseFloat(httpResponse.Header.Get("X-Response-Time"), 32)
+
 	if err == nil {
 		result.setResponseTime(float32(responseTime))
 	}
-
 }
 
 type ApiError struct {
@@ -278,7 +304,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 
 }
 
-func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result apiResult) error {
+func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 
 	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.Endpoint())
 	if ok, err := request.Validate(); !ok {
@@ -308,17 +334,26 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 
-	err = parse(response, result)
+	err = result.Parse(response, result)
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
 		return err
 	}
 
+	setResponseMeta(response, result)
+	err = result.validateResponseMeta()
+
+	if err != nil {
+		cli.Config.Logger.Warn(err.Error())
+	}
+
 	cli.Config.Logger.Debugf("Request processed. The result: %+v", result)
-	return err
+	return nil
 }
 
-func parse(response *http.Response, result apiResult) error {
+func (r *ResponseMeta) Parse(response *http.Response, result ApiResult) error {
+
+	var payload []byte
 	if response == nil {
 		return errors.New("No response received")
 	}
@@ -327,8 +362,7 @@ func parse(response *http.Response, result apiResult) error {
 		return err
 	}
 
-	payload := body
-	if result.ShouldWrapDataFieldOfThePayload() {
+	if result.UnwrapDataFieldOfPayload() {
 		resultMap := make(map[string]interface{})
 		err = json.Unmarshal(body, &resultMap)
 		if err != nil {
@@ -339,13 +373,18 @@ func parse(response *http.Response, result apiResult) error {
 			if err != nil {
 				return handleParsingErrors(err)
 			}
+		} else {
+			payload = body
 		}
+	} else {
+		payload = body
 	}
-	err = json.Unmarshal(payload, &result)
+
+	err = json.Unmarshal(payload, result)
+
 	if err != nil {
 		return handleParsingErrors(err)
 	}
-	setResponseMeta(response, result)
 
 	return nil
 }
