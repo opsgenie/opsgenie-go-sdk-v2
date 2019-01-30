@@ -6,16 +6,37 @@ type OwnerTeam struct {
 }
 
 type Rotation struct {
-	Name         string
-	StartDate    string
-	EndDate      string
-	Type         RotationType
-	Length       uint32
-	Participants []Participant
+	Name            string          `json:"name,omitempty"`
+	StartDate       string          `json:"startDate,omitempty"`
+	EndDate         string          `json:"endDate,omitempty"`
+	Type            RotationType    `json:"type,omitempty"`
+	Length          uint32          `json:"length,omitempty"`
+	Participants    []Participant   `json:"participants,omitempty"`
+	TimeRestriction TimeRestriction `json:"timeRestriction,omitempty"`
 }
 
 func (r *Rotation) Validate() {
 
+}
+
+func (r Rotation) WithParticipant(participant Participant) *Rotation {
+	r.Participants = append(r.Participants, participant)
+	return &r
+}
+
+func (r Rotation) WithParticipants(participant ...Participant) *Rotation {
+	r.Participants = participant
+	return &r
+}
+
+func (r Rotation) WithTimeRestriction(timeRestriction TimeRestriction) *Rotation {
+	r.TimeRestriction = timeRestriction
+	return &r
+}
+
+func (tr *TimeRestriction) WithRestrictions(restrictions ...Restriction) *TimeRestriction {
+	tr.Restrictions = restrictions
+	return tr
 }
 
 type RotationType string
@@ -50,50 +71,23 @@ type Identifier interface {
 	identifierType() string
 }
 
-type Participant interface {
-	participantType() string
-}
-
-type UserParticipant struct {
-	Username string
-	Id       string
-}
-
-func (up *UserParticipant) participantType() string {
-	return "user"
-}
-
-type TeamParticipant struct {
-	Name string
-	Id   string
-}
-
-func (up *TeamParticipant) participantType() string {
-	return "team"
+type Participant struct {
+	Type     ParticipantType `json:"type, omitempty"`
+	Name     string          `json:"name,omitempty"`
+	Id       string          `json:"id,omitempty"`
+	Username string          `json:"username, omitempty"`
 }
 
 type TimeRestriction struct {
-	Type         RestrictionType
-	Restrictions []Restriction
+	Type         RestrictionType `json:"type,omitempty"`
+	Restrictions []Restriction   `json:"restrictions,omitempty"`
 }
 
-type Restriction interface {
-}
-
-type RestrictionTimeBased struct {
-	Restriction
-	StartHour uint32
-	StartMin  uint32
-	EndHour   uint32
-	EndMin    uint32
-}
-
-type RestrictionWeekBased struct {
-	Restriction
-	StartDay  Day
-	StartHour uint32
-	StartMin  uint32
-	EndHour   uint32
-	EndDay    Day
-	EndMin    uint32
+type Restriction struct {
+	StartDay  Day    `json:"startDay,omitempty"`
+	StartHour uint32 `json:"startHour,omitempty"`
+	StartMin  uint32 `json:"startMin,omitempty"`
+	EndHour   uint32 `json:"endHour,omitempty"`
+	EndDay    Day    `json:"endDay,omitempty"`
+	EndMin    uint32 `json:"endMin,omitempty"`
 }
