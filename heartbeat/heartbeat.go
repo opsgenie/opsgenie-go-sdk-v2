@@ -3,21 +3,7 @@ package heartbeat
 import (
 	"context"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
-
-type Heartbeat struct {
-	Name          string       `json:"name"`
-	Description   string       `json:"description"`
-	Interval      int          `json:"interval"`
-	Enabled       bool         `json:"enabled"`
-	IntervalUnit  string       `json:"intervalUnit"`
-	Expired       bool         `json:"expired"`
-	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
-	AlertTags     []string     `json:"alertTags"`
-	AlertPriority string       `json:"alertPriority"`
-	AlertMessage  string       `json:"alertMessage"`
-}
 
 type Client struct {
 	executor client.OpsGenieClient
@@ -33,8 +19,9 @@ func NewClient(config *client.Config) (*Client, error) {
 	return client, nil
 }
 
-func (client *Client) Ping(request PingRequest, context context.Context) (*PingResult, error) {
+func (client *Client) Ping(context context.Context, heartbeatName string) (*PingResult, error) {
 	pingResult := &PingResult{}
+	request := pingRequest{HeartbeatName: heartbeatName}
 	err := client.executor.Exec(context, request, pingResult)
 	if err != nil {
 		return nil, err
@@ -42,8 +29,9 @@ func (client *Client) Ping(request PingRequest, context context.Context) (*PingR
 	return pingResult, nil
 }
 
-func (client *Client) Get(request GetRequest, context context.Context) (*GetResult, error) {
+func (client *Client) Get(context context.Context, heartbeatName string) (*GetResult, error) {
 	getResult := &GetResult{}
+	request := getRequest{HeartbeatName: heartbeatName}
 	err := client.executor.Exec(context, request, getResult)
 	if err != nil {
 		return nil, err
@@ -53,50 +41,46 @@ func (client *Client) Get(request GetRequest, context context.Context) (*GetResu
 
 func (client *Client) List(context context.Context) (*ListResult, error) {
 	request := listRequest{}
-	lr := &listResponse{}
 	listResult := &ListResult{}
-	err := client.executor.Exec(nil, request, lr)
+	err := client.executor.Exec(context, request, listResult)
 	if err != nil {
 		return nil, err
 	}
-	listResult.Took = lr.Took
-	listResult.Heartbeats = lr.Data.Heartbeats
-	listResult.RequestId = lr.RequestId
 	return listResult, nil
 }
 
-func (client *Client) Update(request UpdateRequest, context context.Context) (*UpdateResult, error) {
-	updateResult := &UpdateResult{}
-	err := client.executor.Exec(nil, request, updateResult)
+func (client *Client) Update(context context.Context, request UpdateRequest) (*HeartbeatInfo, error) {
+	updateResult := &HeartbeatInfo{}
+	err := client.executor.Exec(context, request, updateResult)
 	if err != nil {
 		return nil, err
 	}
 	return updateResult, nil
 }
 
-func (client *Client) Add(request AddRequest, context context.Context) (*AddResult, error) {
+func (client *Client) Add(context context.Context, request AddRequest) (*AddResult, error) {
 	result := &AddResult{}
-	err := client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) Enable(heartbeatName string, context context.Context) (*EnableResult, error) {
-	result := &EnableResult{}
+func (client *Client) Enable(context context.Context, heartbeatName string) (*HeartbeatInfo, error) {
+	result := &HeartbeatInfo{}
 	request := enableRequest{heartbeatName: heartbeatName}
-	err := client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) Disable(heartbeatName string, context context.Context) (*DisableResult, error) {
-	result := &DisableResult{}
+func (client *Client) Disable(context context.Context, heartbeatName string) (*HeartbeatInfo, error) {
+	result := &HeartbeatInfo{}
 	request := disableRequest{heartbeatName: heartbeatName}
-	err := client.executor.Exec(nil, request, result)
+	err := client.executor.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}

@@ -1,71 +1,46 @@
 package heartbeat
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+)
 
-type PingResult struct {
-	client.ResultMetaData
-	Message   string  `json:"result"`
-	Took      float32 `json:"took"`
-	RequestId string  `json:"requestId"`
+type Heartbeat struct {
+	Name          string       `json:"name"`
+	Description   string       `json:"description"`
+	Interval      int          `json:"interval"`
+	Enabled       bool         `json:"enabled"`
+	IntervalUnit  string       `json:"intervalUnit"`
+	Expired       bool         `json:"expired"`
+	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
+	AlertTags     []string     `json:"alertTags"`
+	AlertPriority string       `json:"alertPriority"`
+	AlertMessage  string       `json:"alertMessage"`
 }
 
-type GetResult struct {
-	client.ResultMetaData
-	Took      float32   `json:"took"`
-	Heartbeat Heartbeat `json:"data"`
-	RequestId string    `json:"requestId"`
-}
-
-type heartbeats struct {
-	client.ResultMetaData
-	Heartbeats []Heartbeat `json:"heartbeats"`
-}
-
-type listResponse struct {
-	client.ResultMetaData
-	Took      float32    `json:"took"`
-	Data      heartbeats `json:"data"`
-	RequestId string     `json:"requestId"`
-}
-
-type ListResult struct {
-	client.ResultMetaData
-	Took       float32     `json:"took"`
-	Heartbeats []Heartbeat `json:"data"`
-	RequestId  string      `json:"requestId"`
-}
-
-type UpdateResult struct {
-	client.ResultMetaData
-	Took      float32           `json:"took"`
-	Metadata  HeartbeatMetadata `json:"data"`
-	RequestId string            `json:"requestId"`
-}
-
-type HeartbeatMetadata struct {
+type HeartbeatInfo struct {
 	client.ResultMetaData
 	Name    string `json:"name"`
 	Enabled bool   `json:"enabled"`
 	Expired bool   `json:"expired"`
 }
 
+type PingResult struct {
+	client.ResultMetaData
+	Message string `json:"result"`
+}
+
+type GetResult struct {
+	client.ResultMetaData
+	Heartbeat
+}
+
+type ListResult struct {
+	client.ResultMetaData
+	Heartbeats []Heartbeat `json:"heartbeats"`
+}
+
 type AddResult struct {
 	client.ResultMetaData
-	Took      float32   `json:"took"`
-	Heartbeat Heartbeat `json:"data"`
-	RequestId string    `json:"requestId"`
-}
-
-type EnableResult struct {
-	client.ResultMetaData
-	Took      float32           `json:"took"`
-	Metadata  HeartbeatMetadata `json:"data"`
-	RequestId string            `json:"requestId"`
-}
-
-type DisableResult struct {
-	client.ResultMetaData
-	Took      float32           `json:"took"`
-	Metadata  HeartbeatMetadata `json:"data"`
-	RequestId string            `json:"requestId"`
+	Heartbeat
 }

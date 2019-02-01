@@ -5,7 +5,7 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
-type PingRequest struct {
+type pingRequest struct {
 	HeartbeatName string
 }
 
@@ -16,31 +16,31 @@ func nameValidation(name string) error {
 	return nil
 }
 
-func (pr PingRequest) Validate() error {
+func (pr pingRequest) Validate() error {
 	return nameValidation(pr.HeartbeatName)
 }
 
-func (pr PingRequest) Endpoint() string {
+func (pr pingRequest) Endpoint() string {
 	return "/v2/heartbeats/" + pr.HeartbeatName + "/ping"
 }
 
-func (pr PingRequest) Method() string {
+func (pr pingRequest) Method() string {
 	return "GET"
 }
 
-type GetRequest struct {
+type getRequest struct {
 	HeartbeatName string
 }
 
-func (gr GetRequest) Validate() error {
+func (gr getRequest) Validate() error {
 	return nameValidation(gr.HeartbeatName)
 }
 
-func (gr GetRequest) Endpoint() string {
+func (gr getRequest) Endpoint() string {
 	return "/v2/heartbeats/" + gr.HeartbeatName
 }
 
-func (gr GetRequest) Method() string {
+func (gr getRequest) Method() string {
 	return "GET"
 }
 
