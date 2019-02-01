@@ -6,14 +6,14 @@ import (
 )
 
 type CreateResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Id      string `json:"id,omitempty"`
 	Name    string `json:"name,omitempty"`
 	Enabled bool   `json:"enabled,omitempty"`
 }
 
 type GetResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Schedule Schedule `json:"data,omitempty"`
 }
 
@@ -22,14 +22,14 @@ func (gr *GetResult) UnwrapDataFieldOfPayload() bool {
 }
 
 type UpdateResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Id      string `json:"id,omitempty"`
 	Name    string `json:"name,omitempty"`
 	Enabled bool   `json:"enabled,omitempty"`
 }
 
 type DeleteResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Result string `json:"result,omitempty"`
 }
 
@@ -38,7 +38,7 @@ func (dr *DeleteResult) UnwrapDataFieldOfPayload() bool {
 }
 
 type ListResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Schedule         []Schedule `json:"data,omitempty"`
 	ExpandableFields []string   `json:"expandable,omitempty"`
 }
@@ -48,7 +48,7 @@ func (lr *ListResult) UnwrapDataFieldOfPayload() bool {
 }
 
 type TimelineResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	ScheduleInfo       Info         `json:"_parent"`
 	Description        string       `json:"description"`
 	OwnerTeam          og.OwnerTeam `json:"ownerTeam,omitempty"`

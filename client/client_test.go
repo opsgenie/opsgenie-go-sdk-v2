@@ -21,13 +21,13 @@ type Log struct {
 }
 
 type aResultDoesNotWantDataFieldsToBeParsed struct {
-	ResponseMeta
+	ResultMetaData
 	Logs   []Log  `json:"logs"`
 	Offset string `json:"offset"`
 }
 
 type aResultWantsDataFieldsToBeParsed struct {
-	ResponseMeta
+	ResultMetaData
 	Teams []Team `json:"data"`
 }
 
@@ -135,11 +135,12 @@ type testRequest struct {
 	ExtraField     string
 }
 
-func (tr testRequest) Validate() (bool, error) {
+func (tr testRequest) Validate() error {
 	if tr.MandatoryField == "" {
-		return false, errors.New("mandatory field cannot be empty")
+		return errors.New("mandatory field cannot be empty")
 	}
-	return true, nil
+
+	return nil
 }
 
 func (tr testRequest) Endpoint() string {
@@ -151,7 +152,7 @@ func (tr testRequest) Method() string {
 }
 
 type testResult struct {
-	ResponseMeta
+	ResultMetaData
 	Data string
 }
 
