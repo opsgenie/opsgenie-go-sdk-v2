@@ -194,8 +194,7 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 }
 
 func printInfoLog(client *OpsGenieClient) {
-	client.Config.Logger.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
-		client.Config.ApiKey,
+	client.Config.Logger.Infof("Client is configured with ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
 		client.Config.apiUrl,
 		client.Config.ProxyUrl,
 		client.Config.Logger.GetLevel().String(),
@@ -270,10 +269,6 @@ func handleErrorIfExist(response *http.Response) error {
 		return apiError
 	}
 	return nil
-}
-
-func (cli *OpsGenieClient) setApiUrl(url string) {
-	cli.Config.apiUrl = url
 }
 
 func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, error) {

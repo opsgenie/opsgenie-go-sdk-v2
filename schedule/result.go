@@ -5,6 +5,15 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
+type Schedule struct {
+	Id          string        `json:"id"`
+	Name        string        `json:"name"`
+	Description string        `json:"description,omitempty"`
+	Timezone    string        `json:"timezone,omitempty"`
+	Enabled     bool          `json:"enabled"`
+	OwnerTeam   *og.OwnerTeam `json:"ownerTeam,omitempty"`
+	Rotations   []og.Rotation `json:"rotations,omitempty"`
+}
 type CreateResult struct {
 	client.ResultMetaData
 	Id      string `json:"id,omitempty"`

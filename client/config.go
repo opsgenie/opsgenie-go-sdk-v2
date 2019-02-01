@@ -8,6 +8,7 @@ import (
 	"net/url"
 )
 
+//todo
 type Config struct {
 	ApiKey string
 

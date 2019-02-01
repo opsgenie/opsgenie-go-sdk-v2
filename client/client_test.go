@@ -64,9 +64,13 @@ func TestParsingWithDataField(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, err := NewOpsGenieClient(&Config{
+	ogClient, err := NewOpsGenieClient(&Config{})
+	assert.Equal(t, err.Error(), errors.New("API key cannot be blank").Error())
+
+	ogClient, err = NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
+	assert.Nil(t, err)
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultWantsDataFieldsToBeParsed{}
@@ -176,6 +180,22 @@ func TestExec(t *testing.T) {
 	if err != nil {
 		t.Fail()
 	}
+}
+
+func TestParsingErrorExec(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey: "apiKey",
+	})
+
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+	ogClient.Config.apiUrl = ts.URL
+	err = ogClient.Exec(nil, request, result)
+	assert.Contains(t, err.Error(), "Response could not be parsed, unexpected end of JSON input")
 }
 
 func TestExecWhenRequestIsNotValid(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 )
 
 func TestValidateApiKey(t *testing.T) {
-	conf := &Config{ApiKey: ""}
+	conf := Default()
 	err := conf.Validate()
 	assert.Equal(t, err.Error(), "API key cannot be blank.")
 }
@@ -24,4 +24,8 @@ func TestValidateProxyUrl(t *testing.T) {
 	conf.ProxyUrl = "googleasdcom"
 	err := conf.Validate()
 	assert.Contains(t, err.Error(), "is not a valid url")
+
+	conf.ProxyUrl = "https://a.com"
+	err = conf.Validate()
+	assert.Nil(t, err)
 }
