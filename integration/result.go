@@ -5,7 +5,7 @@ import (
 )
 
 type ListResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Integrations []GenericFields `json:"data"`
 }
 
@@ -22,7 +22,7 @@ type GenericFields struct {
 }
 
 type GetResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Data map[string]interface{} `json:"data"`
 }
 
@@ -31,19 +31,19 @@ func (rm *GetResult) UnwrapDataFieldOfPayload() bool {
 }
 
 type APIBasedIntegrationResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	GenericFields
 	ApiKey string `json:"apiKey"`
 }
 
 type EmailBasedIntegrationResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	GenericFields
 	EmailAddress string `json:"emailAddress"`
 }
 
 type UpdateResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Data map[string]interface{} `json:"data"`
 }
 
@@ -52,27 +52,27 @@ func (rm *UpdateResult) UnwrapDataFieldOfPayload() bool {
 }
 
 type DeleteResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Result string `json:"result"`
 }
 
 type EnableResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	GenericFields
 }
 
 type DisableResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	GenericFields
 }
 
 type AuthenticateResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Result string `json:"result"`
 }
 
 type ActionsResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Parent      ParentIntegration   `json:"_parent"`
 	Ignore      []IgnoreAction      `json:"ignore"`
 	Create      []CreateAction      `json:"create"`
