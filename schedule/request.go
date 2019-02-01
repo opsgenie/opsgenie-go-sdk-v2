@@ -250,6 +250,9 @@ func validateParticipants(rotation og.Rotation) error {
 		if participant.Type == "" {
 			return errors.New("Participant type cannot be empty.")
 		}
+		if !(participant.Type == og.User || participant.Type == og.Team) {
+			return errors.New("Participant type should be one of these: 'User', 'Team'")
+		}
 		if participant.Type == og.User && participant.Username == "" && participant.Id == "" {
 			return errors.New("For participant type user either username or id must be provided.")
 		}
