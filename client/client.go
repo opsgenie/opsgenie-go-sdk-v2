@@ -33,36 +33,36 @@ type ApiRequest interface {
 }
 
 type ApiResult interface {
-	setRequestID(requestId string)
+	setRequestId(requestId string)
 	setResponseTime(responseTime float32)
 	setRateLimitState(state string)
 	UnwrapDataFieldOfPayload() bool
 	Parse(response *http.Response, result ApiResult) error
-	validateResponseMeta() error
+	ValidateResultMetaData() error
 }
 
-type ResponseMeta struct {
-	RequestID      string  `json:"requestId"`
+type ResultMetaData struct {
+	RequestId      string  `json:"requestId"`
 	ResponseTime   float32 `json:"took"`
 	RateLimitState string
 }
 
-func (rm *ResponseMeta) setRequestID(requestID string) {
-	rm.RequestID = requestID
+func (rm *ResultMetaData) setRequestId(requestId string) {
+	rm.RequestId = requestId
 }
 
-func (rm *ResponseMeta) setResponseTime(responseTime float32) {
+func (rm *ResultMetaData) setResponseTime(responseTime float32) {
 	rm.ResponseTime = responseTime
 }
 
-func (rm *ResponseMeta) setRateLimitState(state string) {
+func (rm *ResultMetaData) setRateLimitState(state string) {
 	rm.RateLimitState = state
 }
 
-func (rm *ResponseMeta) validateResponseMeta() error {
+func (rm *ResultMetaData) ValidateResultMetaData() error {
 	errMessage := "Could not set"
 
-	if len(rm.RequestID) == 0 {
+	if len(rm.RequestId) == 0 {
 		errMessage = " requestId,"
 	}
 	if len(rm.RateLimitState) == 0 {
@@ -83,7 +83,7 @@ func (rm *ResponseMeta) validateResponseMeta() error {
 //indicates that data field is wrapped before starting to parsing process
 //by default it is set to true
 //the results that are want to parse the payload according to the data field of the payload should override this method and return false
-func (rm *ResponseMeta) UnwrapDataFieldOfPayload() bool {
+func (rm *ResultMetaData) UnwrapDataFieldOfPayload() bool {
 	return true
 }
 
@@ -219,10 +219,10 @@ func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
 }
 
 func setResponseMeta(httpResponse *http.Response, result ApiResult) {
-	requestID := httpResponse.Header.Get("X-Request-Id")
+	requestId := httpResponse.Header.Get("X-Request-Id")
 
-	if len(requestID) > 0 {
-		result.setRequestID(requestID)
+	if len(requestId) > 0 {
+		result.setRequestId(requestId)
 	}
 
 	rateLimitState := httpResponse.Header.Get("X-RateLimit-State")
@@ -341,7 +341,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	}
 
 	setResponseMeta(response, result)
-	err = result.validateResponseMeta()
+	err = result.ValidateResultMetaData()
 
 	if err != nil {
 		cli.Config.Logger.Warn(err.Error())
@@ -351,8 +351,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	return nil
 }
 
-func (r *ResponseMeta) Parse(response *http.Response, result ApiResult) error {
-
+func (rm *ResultMetaData) Parse(response *http.Response, result ApiResult) error {
 	var payload []byte
 	if response == nil {
 		return errors.New("No response received")
