@@ -2,9 +2,11 @@ package alert
 
 import (
 	"errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type CreateAlertRequest struct {
+	client.BaseRequest
 	Message     string            `json:"message"`
 	Alias       string            `json:"alias,omitempty"`
 	Description string            `json:"description,omitempty"`
@@ -22,7 +24,10 @@ type CreateAlertRequest struct {
 
 func (r CreateAlertRequest) Validate() error {
 	if r.Message == "" {
-		return errors.New("message cannot be empty")
+		return errors.New("message can not be empty")
+	}
+	if r.Alias == "" {
+		return errors.New("alias can not be empty")
 	}
 	return nil
 }
@@ -34,88 +39,4 @@ func (r CreateAlertRequest) Endpoint() string {
 
 func (r CreateAlertRequest) Method() string {
 	return "POST"
-}
-
-func (r *CreateAlertRequest) Init() {
-
-	if r.Responders != nil {
-		var convertedResponders []Responder
-		for _, r := range r.Responders {
-			switch r.(type) {
-			case *Team:
-				{
-					team := r.(*Team)
-					responder := &ResponderDTO{
-						Id:   team.ID,
-						Name: team.Name,
-						Type: "team",
-					}
-					convertedResponders = append(convertedResponders, responder)
-				}
-			case *User:
-				{
-					user := r.(*User)
-					responder := &ResponderDTO{
-						Id:       user.ID,
-						Username: user.Username,
-						Type:     "user",
-					}
-					convertedResponders = append(convertedResponders, responder)
-				}
-			case *Escalation:
-				{
-					escalation := r.(*Escalation)
-					responder := &ResponderDTO{
-						Id:   escalation.ID,
-						Name: escalation.Name,
-						Type: "escalation",
-					}
-					convertedResponders = append(convertedResponders, responder)
-
-				}
-			case *Schedule:
-				{
-					schedule := r.(*Schedule)
-					responder := &ResponderDTO{
-						Id:   schedule.ID,
-						Name: schedule.Name,
-						Type: "schedule",
-					}
-					convertedResponders = append(convertedResponders, responder)
-
-				}
-			}
-		}
-		r.Responders = convertedResponders
-
-	}
-
-	if r.VisibleTo != nil {
-		var convertedVisibleTo []Responder
-		for _, r := range r.VisibleTo {
-			switch r.(type) {
-			case *Team:
-				{
-					team := r.(*Team)
-					responder := &ResponderDTO{
-						Id:   team.ID,
-						Name: team.Name,
-						Type: "team",
-					}
-					convertedVisibleTo = append(convertedVisibleTo, responder)
-				}
-			case *User:
-				{
-					user := r.(*User)
-					responder := &ResponderDTO{
-						Id:       user.ID,
-						Username: user.Username,
-						Type:     "user",
-					}
-					convertedVisibleTo = append(convertedVisibleTo, responder)
-				}
-			}
-		}
-		r.VisibleTo = convertedVisibleTo
-	}
 }

@@ -2,6 +2,7 @@ package integration
 
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 type ListResult struct {
@@ -77,10 +78,10 @@ type ParentIntegration struct {
 }
 
 type GenericActionFields struct {
-	Type   string `json:"type"`
-	Name   string `json:"name"`
-	Order  int    `json:"order"`
-	Filter Filter `json:"filter"`
+	Type   string    `json:"type"`
+	Name   string    `json:"name"`
+	Order  int       `json:"order"`
+	Filter og.Filter `json:"filter"`
 }
 
 type CreateAction struct {
@@ -129,21 +130,8 @@ type IgnoreAction struct {
 	GenericActionFields
 }
 
-type Filter struct {
-	ConditionMatchType ConditionMatchType `json:"conditionMatchType,omitempty"`
-	Conditions         []Condition        `json:"conditions,omitempty"`
-}
-
-type Condition struct {
-	Field         string `json:"field,omitempty"`
-	IsNot         bool   `json:"isNot,omitempty"`
-	Operation     string `json:"operation,omitempty"`
-	ExpectedValue string `json:"expectedValue,omitempty"`
-}
-
 type RecipientType string
 type ActionType string
-type ConditionMatchType string
 
 const (
 	User       RecipientType = "user"
@@ -157,10 +145,6 @@ const (
 	Close       ActionType = "close"
 	Acknowledge ActionType = "acknowledge"
 	AddNote     ActionType = "AddNote"
-
-	MatchAll           ConditionMatchType = "Match All"
-	MatchAnyCondition  ConditionMatchType = "Match Any Condition"
-	MatchAllConditions ConditionMatchType = "Match All Conditions"
 )
 
 type Recipient struct {

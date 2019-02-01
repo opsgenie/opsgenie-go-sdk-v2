@@ -2,10 +2,12 @@ package heartbeat
 
 import (
 	"errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 type pingRequest struct {
+	client.BaseRequest
 	HeartbeatName string
 }
 
@@ -29,6 +31,7 @@ func (pr pingRequest) Method() string {
 }
 
 type getRequest struct {
+	client.BaseRequest
 	HeartbeatName string
 }
 
@@ -45,6 +48,7 @@ func (gr getRequest) Method() string {
 }
 
 type listRequest struct {
+	client.BaseRequest
 }
 
 func (lr listRequest) Validate() error {
@@ -60,6 +64,7 @@ func (lr listRequest) Method() string {
 }
 
 type UpdateRequest struct {
+	client.BaseRequest
 	Name          string       `json:"name"`
 	Description   string       `json:"description,omitempty"`
 	Interval      int          `json:"interval"`
@@ -96,6 +101,7 @@ func (r UpdateRequest) Method() string {
 }
 
 type AddRequest struct {
+	client.BaseRequest
 	Name          string       `json:"name"`
 	Description   string       `json:"description,omitempty"`
 	Interval      int          `json:"interval"`
@@ -140,6 +146,7 @@ const (
 )
 
 type enableRequest struct {
+	client.BaseRequest
 	heartbeatName string
 }
 
@@ -159,6 +166,7 @@ func (r enableRequest) Method() string {
 }
 
 type disableRequest struct {
+	client.BaseRequest
 	heartbeatName string
 }
 

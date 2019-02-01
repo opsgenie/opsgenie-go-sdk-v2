@@ -1,11 +1,13 @@
 package integration
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 )
 
 type GetRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -25,6 +27,7 @@ func (r GetRequest) Method() string {
 }
 
 type listRequest struct {
+	client.BaseRequest
 }
 
 func (lr listRequest) Validate() error {
@@ -40,6 +43,7 @@ func (lr listRequest) Method() string {
 }
 
 type APIBasedIntegrationRequest struct {
+	client.BaseRequest
 	Name                        string        `json:"name"`
 	Type                        string        `json:"type"`
 	AllowWriteAccess            bool          `json:"allowWriteAccess,omitempty"`
@@ -70,6 +74,7 @@ func (r APIBasedIntegrationRequest) Method() string {
 }
 
 type EmailBasedIntegrationRequest struct {
+	client.BaseRequest
 	Name                        string      `json:"name"`
 	Type                        string      `json:"type"`
 	EmailUsername               string      `json:"emailUsername"`
@@ -138,7 +143,15 @@ func (r OtherFields) Method() string {
 	return "PUT"
 }
 
+func (r OtherFields) Metadata(apiRequest client.ApiRequest) map[string]interface{} {
+	headers := make(map[string]interface{})
+	headers["Content-Type"] = "application/json; charset=utf-8"
+
+	return headers
+}
+
 type DeleteIntegrationRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -158,6 +171,7 @@ func (r DeleteIntegrationRequest) Method() string {
 }
 
 type EnableIntegrationRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -177,6 +191,7 @@ func (r EnableIntegrationRequest) Method() string {
 }
 
 type DisableIntegrationRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -196,6 +211,7 @@ func (r DisableIntegrationRequest) Method() string {
 }
 
 type AuthenticateIntegrationRequest struct {
+	client.BaseRequest
 	Type string `json:"type"`
 }
 
@@ -215,6 +231,7 @@ func (r AuthenticateIntegrationRequest) Method() string {
 }
 
 type GetIntegrationActionsRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -234,6 +251,7 @@ func (r GetIntegrationActionsRequest) Method() string {
 }
 
 type CreateIntegrationActionsRequest struct {
+	client.BaseRequest
 	Id                               string
 	Type                             ActionType        `json:"type"`
 	Name                             string            `json:"name"`
@@ -241,7 +259,7 @@ type CreateIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           Filter            `json:"filter,omitempty"`
+	Filter                           og.Filter         `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -285,6 +303,7 @@ func (r CreateIntegrationActionsRequest) Method() string {
 }
 
 type UpdateAllIntegrationActionsRequest struct {
+	client.BaseRequest
 	Id                               string
 	Type                             ActionType        `json:"type"`
 	Name                             string            `json:"name"`
@@ -292,7 +311,7 @@ type UpdateAllIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           Filter            `json:"filter,omitempty"`
+	Filter                           og.Filter         `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -368,9 +387,9 @@ func validateActionType(actionType ActionType) error {
 		"'Create','Close','Acknowledge','AddNote'")
 }
 
-func validateConditionMatchType(matchType ConditionMatchType) error {
+func validateConditionMatchType(matchType og.ConditionMatchType) error {
 	switch matchType {
-	case MatchAll, MatchAllConditions, MatchAnyCondition, "":
+	case og.MatchAll, og.MatchAllConditions, og.MatchAnyCondition, "":
 		return nil
 	}
 	return errors.New("Action type should be one of these: " +

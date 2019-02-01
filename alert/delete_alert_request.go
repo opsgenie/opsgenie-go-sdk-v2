@@ -1,15 +1,20 @@
 package alert
 
-import "net/url"
+import (
+	"net/url"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type DeleteAlertRequest struct {
-	*Identifier
+	client.BaseRequest
+	IdentifierType  AlertIdentifier
+	IdentifierValue string
 	Source string
 	params string
 }
 
 func (r DeleteAlertRequest) Validate() error {
-	err := r.Identifier.Validate()
+	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
 	}
@@ -27,7 +32,7 @@ func (r DeleteAlertRequest) Method() string {
 
 func (r DeleteAlertRequest) setParams(request DeleteAlertRequest) string {
 
-	request.params = request.Identifier.setParams(*request.Identifier)
+	request.params = setIdentifierToParams(request)
 
 	if r.Source != "" {
 		params := url.Values{}
@@ -36,6 +41,33 @@ func (r DeleteAlertRequest) setParams(request DeleteAlertRequest) string {
 	}
 
 	request.params = request.params + ""
+
+	return request.params
+
+}
+
+func setIdentifierToParams(request DeleteAlertRequest) string {
+
+	params := url.Values{}
+	inlineParam := request.IdentifierValue
+
+	if request.IdentifierType == ALERTID {
+		params.Add("identifierType", "id")
+	}
+
+	if  request.IdentifierType == ALIAS  {
+		params.Add("identifierType", "alias")
+	}
+
+	if request.IdentifierType == TINYID {
+		params.Add("identifierType", "tiny")
+	}
+
+	if len(params)!=0 {
+		request.params = inlineParam + "?" + params.Encode()
+	} else {
+		request.params = inlineParam + ""
+	}
 
 	return request.params
 

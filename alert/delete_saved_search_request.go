@@ -1,19 +1,21 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"net/url"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type DeleteSavedSearchRequest struct {
-	ID     string `json:"-"` //todo check this json
-	Name   string `json:"-"`
+	client.BaseRequest
+	IdentifierType  SearchIdentifierType
+	IdentifierValue string
 	params string
 }
 
 func (r DeleteSavedSearchRequest) Validate() error {
-	if r.ID == "" && r.Name == "" {
-		return errors.New("ID or Name should be provided")
+	err := validateIdentifier(r.IdentifierValue)
+	if err != nil {
+		return err
 	}
 	return nil
 }
@@ -30,19 +32,16 @@ func (r DeleteSavedSearchRequest) Method() string {
 func (r DeleteSavedSearchRequest) setParams(request DeleteSavedSearchRequest) string {
 
 	params := url.Values{}
-	inlineParam := ""
+	inlineParam := request.IdentifierValue
 
-	if request.Name != "" {
-		inlineParam = r.Name
+	if request.IdentifierType == NAME {
 		params.Add("identifierType", "name")
-	}
 
-	if request.ID != "" {
-		inlineParam = r.ID
+	} else if  request.IdentifierType == ID  {
 		params.Add("identifierType", "id")
 	}
 
-	if params != nil {
+	if len(params)!=0 {
 		request.params = inlineParam + "?" + params.Encode()
 	} else {
 		request.params = inlineParam + ""

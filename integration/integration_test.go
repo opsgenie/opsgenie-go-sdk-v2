@@ -4,6 +4,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 func TestGetRequest_Validate(t *testing.T) {
@@ -260,13 +261,13 @@ func TestConditionMatchType_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("Action type should be one of these: "+
 		"'MatchAll','MatchAllConditions','MatchAnyCondition'").Error())
 
-	err = validateConditionMatchType(MatchAll)
+	err = validateConditionMatchType(og.MatchAll)
 	assert.Nil(t, err)
 
-	err = validateConditionMatchType(MatchAllConditions)
+	err = validateConditionMatchType(og.MatchAllConditions)
 	assert.Nil(t, err)
 
-	err = validateConditionMatchType(MatchAnyCondition)
+	err = validateConditionMatchType(og.MatchAnyCondition)
 	assert.Nil(t, err)
 
 	err = validateConditionMatchType("")

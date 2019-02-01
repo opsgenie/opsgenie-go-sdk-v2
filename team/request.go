@@ -2,6 +2,7 @@ package team
 
 import (
 	"errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"net/url"
 	"strconv"
 )
@@ -19,6 +20,7 @@ type Member struct {
 }
 
 type CreateTeamRequest struct {
+	client.BaseRequest
 	Description string   `json:"description,omitempty"`
 	Name        string   `json:"name,omitempty"`
 	Members     []Member `json:"members,omitempty"`
@@ -42,6 +44,7 @@ func (r CreateTeamRequest) Method() string {
 }
 
 type ListTeamRequest struct {
+	client.BaseRequest
 }
 
 func (r ListTeamRequest) Validate() error {
@@ -59,6 +62,7 @@ func (r ListTeamRequest) Method() string {
 }
 
 type DeleteTeamRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 }
@@ -84,6 +88,7 @@ func (r DeleteTeamRequest) Method() string {
 }
 
 type GetTeamRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 }
@@ -110,6 +115,7 @@ func (r GetTeamRequest) Method() string {
 }
 
 type UpdateTeamRequest struct {
+	client.BaseRequest
 	Id          string   `json:"id,omitempty"`
 	Description string   `json:"description,omitempty"`
 	Name        string   `json:"name,omitempty"`
@@ -133,6 +139,7 @@ func (r UpdateTeamRequest) Method() string {
 }
 
 type ListTeamLogsRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 	Limit           int    `json:"limit,omitempty"`
@@ -182,7 +189,7 @@ func (r ListTeamLogsRequest) setParams() string {
 		params.Add("order", string(r.Order))
 	}
 
-	if params != nil {
+	if len(params)!=0 {
 		r.params = r.params + "&" + params.Encode()
 	} else {
 		r.params = r.params + ""
@@ -199,6 +206,7 @@ type Right struct {
 }
 
 type CreateTeamRoleRequest struct {
+	client.BaseRequest
 	TeamIdentifierType  Identifier
 	TeamIdentifierValue string
 	Name                string  `json:"name"`
@@ -236,6 +244,7 @@ func (r CreateTeamRoleRequest) Method() string {
 }
 
 type GetTeamRoleRequest struct {
+	client.BaseRequest
 	TeamID   string
 	TeamName string
 	RoleID   string
@@ -276,6 +285,7 @@ func (r GetTeamRoleRequest) Method() string {
 }
 
 type UpdateTeamRoleRequest struct {
+	client.BaseRequest
 	TeamID   string
 	TeamName string
 	RoleID   string
@@ -318,6 +328,7 @@ func (r UpdateTeamRoleRequest) Method() string {
 }
 
 type DeleteTeamRoleRequest struct {
+	client.BaseRequest
 	TeamID   string
 	TeamName string
 	RoleID   string
@@ -358,6 +369,7 @@ func (r DeleteTeamRoleRequest) Method() string {
 }
 
 type ListTeamRoleRequest struct {
+	client.BaseRequest
 	TeamIdentifierType  Identifier
 	TeamIdentifierValue string
 }

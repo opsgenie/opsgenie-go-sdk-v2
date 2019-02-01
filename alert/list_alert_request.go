@@ -1,11 +1,13 @@
 package alert
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"net/url"
 	"strconv"
 )
 
 type ListAlertRequest struct {
+	client.BaseRequest
 	Limit                int
 	Sort                 SortField
 	Offset               int
@@ -13,7 +15,6 @@ type ListAlertRequest struct {
 	Query                string
 	SearchIdentifier     string
 	SearchIdentifierType SearchIdentifierType
-	params               string
 }
 
 func (r ListAlertRequest) Validate() error {
@@ -23,60 +24,48 @@ func (r ListAlertRequest) Validate() error {
 
 func (r ListAlertRequest) Endpoint() string {
 
-	return "/v2/alerts" + r.setParams(r)
+	return "/v2/alerts" + r.getParams()
 }
 
 func (r ListAlertRequest) Method() string {
 	return "GET"
 }
 
-func (r ListAlertRequest) setParams(request ListAlertRequest) string {
+func (r ListAlertRequest) getParams() string {
 
 	params := url.Values{}
 
-	if request.Limit != 0 {
-		params.Add("limit", strconv.Itoa(request.Limit))
+	if r.Limit != 0 {
+		params.Add("limit", strconv.Itoa(r.Limit))
 	}
 
-	if request.Sort != "" {
-		params.Add("sort", string(request.Sort))
+	if r.Sort != "" {
+		params.Add("sort", string(r.Sort))
 	}
 
-	if request.Offset != 0 {
-		params.Add("offset", strconv.Itoa(request.Offset))
+	if r.Offset != 0 {
+		params.Add("offset", strconv.Itoa(r.Offset))
 	}
 
-	if request.Query != "" {
-		params.Add("query", request.Query)
+	if r.Query != "" {
+		params.Add("query", r.Query)
 	}
 
-	if request.SearchIdentifier != "" {
-		params.Add("searchIdentifier", request.SearchIdentifier)
+	if r.SearchIdentifier != "" {
+		params.Add("searchIdentifier", r.SearchIdentifier)
 	}
 
-	if request.SearchIdentifierType != "" {
-		params.Add("searchIdentifierType", string(request.SearchIdentifierType))
+	if r.SearchIdentifierType != "" {
+		params.Add("searchIdentifierType", string(r.SearchIdentifierType))
 	}
 
-	if request.Order != "" {
-		params.Add("order", string(request.Order))
+	if r.Order != "" {
+		params.Add("order", string(r.Order))
 	}
 
-	if params != nil {
-		request.params = "?" + params.Encode()
+	if len(params)!=0  {
+		return "?" + params.Encode()
 	} else {
-		request.params = ""
-	}
-
-	return request.params
-
-}
-
-func generateFullPathWithParams(url string, values url.Values) string {
-
-	if values != nil {
-		return url + "?" + values.Encode()
-	} else {
-		return url
+		return ""
 	}
 }

@@ -2,9 +2,11 @@ package alert
 
 import (
 	"github.com/pkg/errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type CreateSavedSearchRequest struct {
+	client.BaseRequest
 	Name        string `json:"name,omitempty"`
 	Query       string `json:"query,omitempty"`
 	Owner       User   `json:"owner,omitempty"`
@@ -14,15 +16,15 @@ type CreateSavedSearchRequest struct {
 
 func (r CreateSavedSearchRequest) Validate() error {
 	if r.Name == "" {
-		return errors.New("name cannot be empty")
+		return errors.New("Name can not be empty")
 	}
 
 	if r.Query == "" {
-		return errors.New("query cannot be empty")
+		return errors.New("Query can not be empty")
 	}
 
 	if r.Owner.ID == "" && r.Owner.Username == "" {
-		return errors.New("owner cannot be empty")
+		return errors.New("Owner can not be empty")
 	}
 
 	return nil

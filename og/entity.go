@@ -1,6 +1,9 @@
 package og
 
-import "github.com/pkg/errors"
+import (
+	"github.com/pkg/errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type OwnerTeam struct {
 	Id   string `json:"id,omitempty"`
@@ -8,6 +11,7 @@ type OwnerTeam struct {
 }
 
 type Rotation struct {
+	client.BaseRequest
 	Name            string           `json:"name,omitempty"`
 	StartDate       string           `json:"startDate,omitempty"`
 	EndDate         string           `json:"endDate,omitempty"`

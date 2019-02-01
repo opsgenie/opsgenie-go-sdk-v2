@@ -3,6 +3,7 @@ package schedule
 import (
 	"errors"
 	"time"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type RotationIdentifier struct {
@@ -11,6 +12,7 @@ type RotationIdentifier struct {
 }
 
 type CreateScheduleOverrideRequest struct {
+	client.BaseRequest
 	Alias                  string               `json:"alias,omitempty"`
 	User                   Responder            `json:"user,omitempty"`
 	StartDate              time.Time            `json:"startDate,omitempty"`
@@ -52,6 +54,7 @@ func (request CreateScheduleOverrideRequest) Method() string {
 }
 
 type GetScheduleOverrideRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType Identifier
 	ScheduleIdentifier     string
 	Alias                  string
@@ -81,6 +84,7 @@ func (request GetScheduleOverrideRequest) Method() string {
 }
 
 type ListScheduleOverrideRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType Identifier
 	ScheduleIdentifier     string
 }
@@ -105,6 +109,7 @@ func (request ListScheduleOverrideRequest) Method() string {
 }
 
 type DeleteScheduleOverrideRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType Identifier
 	ScheduleIdentifier     string
 	Alias                  string
@@ -134,6 +139,7 @@ func (request DeleteScheduleOverrideRequest) Method() string {
 }
 
 type UpdateScheduleOverrideRequest struct {
+	client.BaseRequest
 	Alias                  string
 	User                   Responder            `json:"user,omitempty"`
 	StartDate              time.Time            `json:"startDate,omitempty"`

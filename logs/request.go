@@ -1,12 +1,14 @@
 package logs
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 	"net/url"
 	"strconv"
 )
 
 type ListLogFilesRequest struct {
+	client.BaseRequest
 	Marker string
 	Limit  int
 	params string
@@ -45,6 +47,7 @@ func (r ListLogFilesRequest) setParams(request ListLogFilesRequest) string {
 }
 
 type GenerateLogFileDownloadLinkRequest struct {
+	client.BaseRequest
 	FileName string
 }
 

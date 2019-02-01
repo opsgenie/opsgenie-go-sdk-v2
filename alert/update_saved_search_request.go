@@ -1,13 +1,15 @@
 package alert
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 	"net/url"
 )
 
 type UpdateSavedSearchRequest struct {
-	ID          string `json:"-"`
-	Name        string `json:"-"`
+	client.BaseRequest
+	IdentifierType  SearchIdentifierType
+	IdentifierValue string
 	NewName     string `json:"name,omitempty"`
 	Query       string `json:"query,omitempty"`
 	Owner       User   `json:"owner,omitempty"`
@@ -18,20 +20,20 @@ type UpdateSavedSearchRequest struct {
 
 func (r UpdateSavedSearchRequest) Validate() error {
 
-	if r.ID == "" && r.Name == "" {
-		return errors.New("ID or Name should be provided")
+	if r.IdentifierValue == ""{
+		return errors.New("Identifier can not be empty")
 	}
 
 	if r.NewName == "" {
-		return errors.New("name cannot be empty")
+		return errors.New("Name can not be empty")
 	}
 
 	if r.Query == "" {
-		return errors.New("query cannot be empty")
+		return errors.New("Query can not be empty")
 	}
 
 	if r.Owner.ID == "" && r.Owner.Username == "" {
-		return errors.New("owner cannot be empty")
+		return errors.New("Owner can not be empty")
 	}
 
 	return nil
@@ -49,20 +51,15 @@ func (r UpdateSavedSearchRequest) Method() string {
 func (r UpdateSavedSearchRequest) setParams(request UpdateSavedSearchRequest) string {
 
 	params := url.Values{}
-	inlineParam := ""
-
-	if r.ID != "" {
-		inlineParam = r.ID
-		params.Add("identifierType", "id")
-
-	}
-
-	if r.Name != "" {
-		inlineParam = r.Name
+	inlineParam := request.IdentifierValue
+	if request.IdentifierType == NAME {
 		params.Add("identifierType", "name")
+
+	} else if  request.IdentifierType == ID  {
+		params.Add("identifierType", "id")
 	}
 
-	if params != nil {
+	if len(params)!=0 {
 		request.params = inlineParam + "?" + params.Encode()
 	} else {
 		request.params = inlineParam + ""

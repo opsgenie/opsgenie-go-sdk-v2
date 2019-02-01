@@ -1,10 +1,12 @@
 package contact
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
 
 type CreateRequest struct {
+	client.BaseRequest
 	UserIdentifier  string
 	To              string     `json:"to"`
 	MethodOfContact MethodType `json:"method"`
@@ -33,6 +35,7 @@ func (cr CreateRequest) Method() string {
 }
 
 type GetRequest struct {
+	client.BaseRequest
 	UserIdentifier    string
 	ContactIdentifier string
 }
@@ -54,6 +57,7 @@ func (gr GetRequest) Method() string {
 }
 
 type UpdateRequest struct {
+	client.BaseRequest
 	UserIdentifier    string
 	ContactIdentifier string
 	To                string `json:"to"`
@@ -82,6 +86,7 @@ func (ur UpdateRequest) Method() string {
 }
 
 type DeleteRequest struct {
+	client.BaseRequest
 	UserIdentifier    string
 	ContactIdentifier string
 }
@@ -102,6 +107,7 @@ func (dr DeleteRequest) Method() string {
 }
 
 type ListRequest struct {
+	client.BaseRequest
 	UserIdentifier string
 }
 
@@ -120,6 +126,7 @@ func (lr ListRequest) Method() string {
 }
 
 type EnableRequest struct {
+	client.BaseRequest
 	UserIdentifier    string
 	ContactIdentifier string
 }
@@ -140,6 +147,7 @@ func (er EnableRequest) Method() string {
 }
 
 type DisableRequest struct {
+	client.BaseRequest
 	UserIdentifier    string
 	ContactIdentifier string
 }

@@ -1,7 +1,20 @@
 package alert
 
-type Responder interface {
-	SetID(id string)
+type ResponderType string
+
+const (
+
+	UserResponder       ResponderType = "user"
+	TeamResponder       ResponderType = "team"
+	EscalationResponder ResponderType = "escalation"
+	ScheduleResponder   ResponderType = "schedule"
+	)
+
+type Responder struct {
+	Type     ResponderType `json:"type, omitempty"`
+	Name     string          `json:"name,omitempty"`
+	Id       string          `json:"id,omitempty"`
+	Username string          `json:"username, omitempty"`
 }
 
 type Team struct {
@@ -9,46 +22,14 @@ type Team struct {
 	Name string `json:"name,omitempty"`
 }
 
-func (t *Team) SetID(id string) {
-	t.ID = id
-}
-
-func (t *Team) SetName(name string) {
-	t.Name = name
-}
-
-func (t *Team) getID() string {
-	return t.ID
-}
-
-func (t *Team) getName() string {
-	return t.Name
-}
-
 type User struct {
 	ID       string `json:"id,omitempty"`
 	Username string `json:"username,omitempty"`
 }
 
-func (u *User) SetID(id string) {
-	u.ID = id
-}
-
-func (u *User) SetUsername(username string) {
-	u.Username = username
-}
-
 type Escalation struct {
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
-}
-
-func (e *Escalation) SetID(id string) {
-	e.ID = id
-}
-
-func (e *Escalation) SetUsername(name string) {
-	e.Name = name
 }
 
 type Schedule struct {
@@ -62,27 +43,4 @@ func (s *Schedule) SetID(id string) {
 
 func (s *Schedule) SetUsername(name string) {
 	s.Name = name
-}
-
-type ResponderDTO struct {
-	Id       string `json:"id,omitempty"`
-	Username string `json:"username,omitempty"`
-	Name     string `json:"name,omitempty"`
-	Type     string `json:"type"`
-}
-
-func (r *ResponderDTO) SetID(id string) {
-	r.Id = id
-}
-
-func (r *ResponderDTO) SetName(id string) {
-	r.Id = id
-}
-
-func (r *ResponderDTO) getName() string {
-	return r.Name
-}
-
-func (r *ResponderDTO) getID() string {
-	return r.Id
 }

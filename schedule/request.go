@@ -1,6 +1,7 @@
 package schedule
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 )
@@ -8,6 +9,7 @@ import (
 type Identifier uint32
 
 type CreateRequest struct {
+	client.BaseRequest
 	Name        string        `json:"name"`
 	Description string        `json:"description,omitempty"`
 	Timezone    string        `json:"timezone,omitempty"`
@@ -36,6 +38,7 @@ func (cr CreateRequest) Method() string {
 }
 
 type GetRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 }
@@ -60,6 +63,7 @@ func (gr GetRequest) Method() string {
 }
 
 type UpdateRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 	Name            string        `json:"name, omitempty"`
@@ -94,6 +98,7 @@ func (ur UpdateRequest) Method() string {
 }
 
 type DeleteRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 }
@@ -118,6 +123,7 @@ func (dr DeleteRequest) Method() string {
 }
 
 type ListRequest struct {
+	client.BaseRequest
 	Expand bool
 }
 
@@ -137,11 +143,12 @@ func (lr ListRequest) Method() string {
 }
 
 type GetTimelineRequest struct {
+	client.BaseRequest
 	IdentifierType  Identifier
 	IdentifierValue string
 	Expands         []ExpandType
 	Interval        uint32
-	IntervalUnit    Unit
+	IntervalUnit    og.TimeUnit
 	Date            string
 }
 
@@ -153,8 +160,8 @@ func (tr GetTimelineRequest) Validate() error {
 	if tr.Interval <= 0 {
 		tr.Interval = 1
 	}
-	if tr.IntervalUnit != Days && tr.IntervalUnit != Months {
-		tr.IntervalUnit = Weeks
+	if tr.IntervalUnit != "" && tr.IntervalUnit != og.Days && tr.IntervalUnit != og.Months && tr.IntervalUnit != og.Weeks {
+		return errors.New("Provided InternalUnit is not valid.")
 	}
 	return nil
 }
@@ -190,12 +197,6 @@ func (tr *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineRequ
 }
 
 type Unit string
-
-const (
-	Months Unit = "months"
-	Weeks  Unit = "weeks"
-	Days   Unit = "days"
-)
 
 type ExpandType string
 
@@ -261,6 +262,7 @@ func (cr CreateRotationRequest) Method() string {
 }
 
 type GetRotationRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType  Identifier
 	ScheduleIdentifierValue string
 	RotationId              string
@@ -328,6 +330,7 @@ func (r UpdateRotationRequest) Method() string {
 }
 
 type DeleteRotationRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType  Identifier
 	ScheduleIdentifierValue string
 	RotationId              string
@@ -361,6 +364,7 @@ func (r DeleteRotationRequest) Method() string {
 }
 
 type ListRotationsRequest struct {
+	client.BaseRequest
 	ScheduleIdentifierType  Identifier
 	ScheduleIdentifierValue string
 }

@@ -1,22 +1,24 @@
 package client
 
 import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"fmt"
 	"github.com/hashicorp/go-retryablehttp"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-	"io"
-	"io/ioutil"
 	"net/http"
+	"github.com/sirupsen/logrus"
+	"time"
 	"net/url"
-	"reflect"
+	"fmt"
 	"runtime"
 	"strconv"
+	"io/ioutil"
+	"encoding/json"
+	"io"
+	"mime/multipart"
+	"os"
+	"reflect"
 	"strings"
-	"time"
+	"github.com/pkg/errors"
+	"context"
+	"bytes"
 )
 
 type OpsGenieClient struct {
@@ -32,6 +34,21 @@ type ApiRequest interface {
 	Validate() error
 	Endpoint() string
 	Method() string
+	Metadata(apiRequest ApiRequest) map[string]interface{}
+}
+
+type BaseRequest struct {
+	ApiRequest
+}
+
+func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
+	headers := make(map[string]interface{})
+	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
+		headers["Content-Type"] = "application/json; charset=utf-8"
+	} else if apiRequest.Method() == "GET" {
+		headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+	}
+	return headers
 }
 
 type ApiResult interface {
@@ -266,30 +283,75 @@ func handleErrorIfExist(response *http.Response) error {
 
 func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, error) {
 	var buf io.ReadWriter
-	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
-		buf = new(bytes.Buffer)
-		err := json.NewEncoder(buf).Encode(apiRequest)
-		if err != nil {
-			return nil, err
-		}
-	}
+	var contentType = new(string)
+	var err error
+	var req = new(retryablehttp.Request)
 
-	req, err := retryablehttp.NewRequest(apiRequest.Method(), cli.Config.apiUrl+apiRequest.Endpoint(), buf)
+	details := apiRequest.Metadata(apiRequest)
+	if values, ok := details["form-data-values"].(map[string]io.Reader); ok {
+		setBodyAsFormData(&buf, values, contentType)
+	} else if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
+		err = setBodyAsJson(&buf, apiRequest, contentType, details)
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
-		req.Header.Add("Content-Type", "application/json; charset=utf-8")
+	req, err = retryablehttp.NewRequest(apiRequest.Method(), cli.Config.apiUrl+apiRequest.Endpoint(), buf)
+	if err != nil {
+		return nil, err
 	}
+
+	req.Header.Add("Content-Type", *(contentType))
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", "GenieKey "+cli.Config.ApiKey)
 	req.Header.Add("User-Agent", UserAgentHeader)
-	if apiRequest.Method() == "GET" {
-		req.Header.Add("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-	}
+
 	return &request{req}, err
 
+}
+
+func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *string, details map[string]interface{}) (error) {
+	*buf = new(bytes.Buffer)
+	*contentType = details["Content-Type"].(string)
+
+	err := json.NewEncoder(*buf).Encode(apiRequest)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentType *string) (error) {
+
+	*buf = new(bytes.Buffer)
+	writer := multipart.NewWriter(*buf)
+	defer writer.Close()
+
+	for key, reader := range values {
+		var part io.Writer
+		var err error
+		if file, ok := reader.(*os.File); ok {
+			fileStat, err := file.Stat()
+			if err != nil {
+				return err
+			}
+			part, err = writer.CreateFormFile(key, fileStat.Name());
+			if err != nil {
+				return err
+			}
+		} else {
+			part, err = writer.CreateFormField(key);
+			if err != nil {
+				return err
+			}
+		}
+		io.Copy(part, reader)
+	}
+
+	*contentType = writer.FormDataContentType()
+	return nil
 }
 
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {

@@ -1,12 +1,14 @@
 package incident
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 	"net/url"
 	"strconv"
 )
 
 type RequestStatusRequest struct {
+	client.BaseRequest
 	Id string
 }
 
@@ -26,6 +28,7 @@ func (r RequestStatusRequest) Method() string {
 }
 
 type CreateRequest struct {
+	client.BaseRequest
 	Message            string            `json:"message"`
 	Description        string            `json:"description,omitempty"`
 	Responders         []Responder       `json:"responders,omitempty"`
@@ -72,6 +75,7 @@ func (r CreateRequest) Method() string {
 }
 
 type DeleteRequest struct {
+	client.BaseRequest
 	Id         string
 	Identifier IdentifierType
 }
@@ -101,6 +105,7 @@ func (r DeleteRequest) Method() string {
 }
 
 type GetRequest struct {
+	client.BaseRequest
 	Id         string
 	Identifier IdentifierType
 }
@@ -130,6 +135,7 @@ func (r GetRequest) Method() string {
 }
 
 type ListRequest struct {
+	client.BaseRequest
 	Limit  int
 	Sort   SortField
 	Offset int
@@ -177,6 +183,7 @@ func (r ListRequest) getParams() string {
 }
 
 type CloseRequest struct {
+	client.BaseRequest
 	Id         string
 	Identifier IdentifierType
 	Note       string `json:"note,omitempty"`
@@ -207,6 +214,7 @@ func (r CloseRequest) Method() string {
 }
 
 type AddNoteRequest struct {
+	client.BaseRequest
 	Id         string
 	Identifier IdentifierType
 	Note       string `json:"note"`
@@ -237,6 +245,7 @@ func (r AddNoteRequest) Method() string {
 }
 
 type AddResponderRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string      `json:"incidentId"`
 	Note       string      `json:"note"`
@@ -275,6 +284,7 @@ func (r AddResponderRequest) Method() string {
 }
 
 type AddTagsRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Note       string   `json:"note"`
@@ -309,6 +319,7 @@ func (r AddTagsRequest) Method() string {
 }
 
 type RemoveTagsRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Note       string   `json:"note,omitempty"`
@@ -343,6 +354,7 @@ func (r RemoveTagsRequest) Method() string {
 }
 
 type AddDetailsRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Note       string            `json:"note,omitempty"`
@@ -377,6 +389,7 @@ func (r AddDetailsRequest) Method() string {
 }
 
 type RemoveDetailsRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Note       string            `json:"note,omitempty"`
@@ -411,6 +424,7 @@ func (r RemoveDetailsRequest) Method() string {
 }
 
 type UpdatePriorityRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Priority   Priority `json:"priority"`
@@ -445,6 +459,7 @@ func (r UpdatePriorityRequest) Method() string {
 }
 
 type UpdateMessageRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Message    string `json:"message"`
@@ -475,6 +490,7 @@ func (r UpdateMessageRequest) Method() string {
 }
 
 type UpdateDescriptionRequest struct {
+	client.BaseRequest
 	Identifier  IdentifierType
 	Id          string
 	Description string `json:"description"`
@@ -505,6 +521,7 @@ func (r UpdateDescriptionRequest) Method() string {
 }
 
 type ListLogsRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Limit      int
@@ -559,6 +576,7 @@ func (r ListLogsRequest) getParams() string {
 }
 
 type ListNotesRequest struct {
+	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
 	Limit      int

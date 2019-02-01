@@ -1,6 +1,9 @@
 package alert
 
+import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+
 type ListSavedSearchRequest struct {
+	client.BaseRequest
 }
 
 func (ssr ListSavedSearchRequest) Validate() error {

@@ -163,6 +163,7 @@ var (
 )
 
 type testRequest struct {
+	BaseRequest
 	MandatoryField string
 	ExtraField     string
 }
@@ -298,4 +299,37 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	assert.Contains(t, err.Error(), "Internal Server Error")
 	assert.Contains(t, err.Error(), "500")
 
+}
+
+/////////////////
+
+type BaseInter interface {
+	A()
+	B()
+}
+
+type Base struct {
+	BaseInter
+}
+
+func (base *Base) B() {
+	fmt.Println("B")
+}
+
+type Child struct {
+	Base
+}
+
+func (c *Child) A() {
+	fmt.Println("A")
+}
+
+func exec(inter BaseInter) {
+	inter.A()
+	inter.B()
+}
+
+func Test_xx(t *testing.T) {
+	c := &Child{}
+	exec(c)
 }
