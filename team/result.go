@@ -13,30 +13,30 @@ type ListedTeams struct {
 }
 
 type CreateTeamResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	ID   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
 type GetTeamResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	TeamMeta
 	Description string   `json:"description,omitempty"`
 	Members     []Member `json:"members,omitempty"`
 }
 
 type UpdateTeamResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	TeamMeta
 }
 
 type DeleteTeamResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Result string `json:"result"`
 }
 
 type ListTeamResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Teams []ListedTeams `json:"data"`
 }
 
@@ -51,7 +51,7 @@ type LogEntry struct {
 }
 
 type ListTeamLogsResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Offset string     `json:"offset,omitempty"`
 	Logs   []LogEntry `json:logs,omitempty`
 }
@@ -73,28 +73,28 @@ type GetRoleInfo struct {
 }
 
 type CreateTeamRoleResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	RoleMeta
 }
 
 type GetTeamRoleResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	RoleMeta
 	Rights []Right `json:"rights"`
 }
 
 type UpdateTeamRoleResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	RoleMeta
 }
 
 type DeleteTeamRoleResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	Result string `json:"result"`
 }
 
 type ListTeamRoleResult struct {
-	client.ResponseMeta
+	client.ResultMetaData
 	TeamRoles []GetRoleInfo `json:"data"`
 }
 

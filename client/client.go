@@ -218,7 +218,7 @@ func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
 	return cli.RetryableClient.Do(request.Request)
 }
 
-func setResponseMeta(httpResponse *http.Response, result ApiResult) {
+func setResultMetaData(httpResponse *http.Response, result ApiResult) {
 	requestId := httpResponse.Header.Get("X-Request-Id")
 
 	if len(requestId) > 0 {
@@ -340,7 +340,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 
-	setResponseMeta(response, result)
+	setResultMetaData(response, result)
 	err = result.ValidateResultMetaData()
 
 	if err != nil {
