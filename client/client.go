@@ -12,8 +12,10 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -36,70 +38,60 @@ type ApiResult interface {
 	setRequestId(requestId string)
 	setResponseTime(responseTime float32)
 	setRateLimitState(state string)
-	UnwrapDataFieldOfPayload() bool
 	Parse(response *http.Response, result ApiResult) error
-	ValidateResultMetaData() error
+	ValidateResultMetadata() error
 }
 
-type ResultMetaData struct {
+type ResultMetadata struct {
 	RequestId      string  `json:"requestId"`
 	ResponseTime   float32 `json:"took"`
 	RateLimitState string
 }
 
-func (rm *ResultMetaData) setRequestId(requestId string) {
+func (rm *ResultMetadata) setRequestId(requestId string) {
 	rm.RequestId = requestId
 }
 
-func (rm *ResultMetaData) setResponseTime(responseTime float32) {
+func (rm *ResultMetadata) setResponseTime(responseTime float32) {
 	rm.ResponseTime = responseTime
 }
 
-func (rm *ResultMetaData) setRateLimitState(state string) {
+func (rm *ResultMetadata) setRateLimitState(state string) {
 	rm.RateLimitState = state
 }
 
-func (rm *ResultMetaData) ValidateResultMetaData() error {
-	errMessage := "Could not set"
+func (rm *ResultMetadata) ValidateResultMetadata() error {
+	unsetFields := ""
 
 	if len(rm.RequestId) == 0 {
-		errMessage = " requestId,"
+		unsetFields = " requestId,"
 	}
 	if len(rm.RateLimitState) == 0 {
-		errMessage = errMessage + " rate limit state,"
+		unsetFields = unsetFields + " rate limit state,"
 	}
 	if rm.ResponseTime == 0 {
-		errMessage = errMessage + " response time,"
+		unsetFields = unsetFields + " response time,"
 	}
 
-	if errMessage != "Could not set" {
-		errMessage = errMessage[:len(errMessage)-1] + "."
-		return errors.New(errMessage)
+	if unsetFields != "" {
+		unsetFields = unsetFields[:len(unsetFields)-1] + "."
+		return errors.New("Could not set" + unsetFields)
 	}
 
 	return nil
 }
 
-//indicates that data field is wrapped before starting to parsing process
-//by default it is set to true
-//the results that are want to parse the payload according to the data field of the payload should override this method and return false
-func (rm *ResultMetaData) UnwrapDataFieldOfPayload() bool {
-	return true
-}
-
-var apiURL = "https://api.opsgenie.com"
-var euApiURL = "https://api.eu.opsgenie.com"
 var UserAgentHeader string
 
 func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
 	opsGenieClient.RetryableClient.ErrorHandler = opsGenieClient.defineErrorHandler
-	opsGenieClient.Config.apiUrl = apiURL
-	if cfg.OpsGenieAPIURL == API_URL_EU {
-		opsGenieClient.Config.apiUrl = euApiURL
+	if cfg.OpsGenieAPIURL == "" {
+		cfg.OpsGenieAPIURL = API_URL
 	}
 	if cfg.HttpClient != nil {
 		opsGenieClient.RetryableClient.HTTPClient = cfg.HttpClient
 	}
+	opsGenieClient.Config.apiUrl = string(cfg.OpsGenieAPIURL)
 }
 
 func setLogger(conf *Config) {
@@ -194,8 +186,9 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 }
 
 func printInfoLog(client *OpsGenieClient) {
-	client.Config.Logger.Infof("Client is configured with ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
-		client.Config.apiUrl,
+	client.Config.Logger.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
+		client.Config.ApiKey,
+		client.Config.OpsGenieAPIURL,
 		client.Config.ProxyUrl,
 		client.Config.Logger.GetLevel().String(),
 		client.RetryableClient.RetryMax)
@@ -217,7 +210,7 @@ func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
 	return cli.RetryableClient.Do(request.Request)
 }
 
-func setResultMetaData(httpResponse *http.Response, result ApiResult) {
+func setResultMetadata(httpResponse *http.Response, result ApiResult) {
 	requestId := httpResponse.Header.Get("X-Request-Id")
 
 	if len(requestId) > 0 {
@@ -335,8 +328,8 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 
-	setResultMetaData(response, result)
-	err = result.ValidateResultMetaData()
+	setResultMetadata(response, result)
+	err = result.ValidateResultMetadata()
 
 	if err != nil {
 		cli.Config.Logger.Warn(err.Error())
@@ -346,7 +339,20 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	return nil
 }
 
-func (rm *ResultMetaData) Parse(response *http.Response, result ApiResult) error {
+func shouldDataIgnored(result ApiResult) bool {
+	resultType := reflect.TypeOf(result)
+	elem := resultType.Elem()
+	for i := 0; i < elem.NumField(); i++ {
+		field := elem.Field(i)
+		if strings.Contains(field.Tag.Get("json"), "data") {
+			return false
+		}
+	}
+	return true
+}
+
+func (rm *ResultMetadata) Parse(response *http.Response, result ApiResult) error {
+
 	var payload []byte
 	if response == nil {
 		return errors.New("No response received")
@@ -356,7 +362,9 @@ func (rm *ResultMetaData) Parse(response *http.Response, result ApiResult) error
 		return err
 	}
 
-	if result.UnwrapDataFieldOfPayload() {
+	payload = body
+
+	if shouldDataIgnored(result) {
 		resultMap := make(map[string]interface{})
 		err = json.Unmarshal(body, &resultMap)
 		if err != nil {
@@ -367,11 +375,7 @@ func (rm *ResultMetaData) Parse(response *http.Response, result ApiResult) error
 			if err != nil {
 				return handleParsingErrors(err)
 			}
-		} else {
-			payload = body
 		}
-	} else {
-		payload = body
 	}
 
 	err = json.Unmarshal(payload, result)

@@ -30,13 +30,13 @@ type Alert struct {
 }
 
 type ListAlertResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Alerts []Alert `json:"data"`
 }
 
 // Response for async processing requests
 type AsyncRequestResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	RequestID string `json:"requestId"`
 }
 
@@ -51,6 +51,6 @@ type RequestStatus struct {
 }
 
 type GetAsyncRequestStatusResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Status RequestStatus `json:"data"`
 }

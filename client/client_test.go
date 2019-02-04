@@ -20,19 +20,20 @@ type Log struct {
 	Log        string `json:"log"`
 }
 
+type ResultWithoutDataField struct {
+	ResultMetadata
+	Result string `json:"result"`
+}
+
 type aResultDoesNotWantDataFieldsToBeParsed struct {
-	ResultMetaData
+	ResultMetadata
 	Logs   []Log  `json:"logs"`
 	Offset string `json:"offset"`
 }
 
 type aResultWantsDataFieldsToBeParsed struct {
-	ResultMetaData
+	ResultMetadata
 	Teams []Team `json:"data"`
-}
-
-func (result *aResultWantsDataFieldsToBeParsed) UnwrapDataFieldOfPayload() bool {
-	return false
 }
 
 func TestParsingWithDataField(t *testing.T) {
@@ -127,6 +128,33 @@ func TestParsingWithoutDataField(t *testing.T) {
 	assert.Equal(t, result.Offset, "123")
 }
 
+func TestParsingWhenApiDoesNotReturnDataField(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, `
+			{
+				"result": "processed",
+				"requestId": "123",
+				"took": 0.1
+			}
+		`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey: "apiKey",
+	})
+
+	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &ResultWithoutDataField{}
+	ogClient.Config.apiUrl = ts.URL
+	err = ogClient.Exec(nil, request, result)
+	if err != nil {
+		t.Fail()
+	}
+	assert.Equal(t, "processed", result.Result)
+}
+
 var (
 	BaseURL     = "https://api.opsgenie.com"
 	Endpoint    = "v2/alerts"
@@ -156,7 +184,7 @@ func (tr testRequest) Method() string {
 }
 
 type testResult struct {
-	ResultMetaData
+	ResultMetadata
 	Data string
 }
 

@@ -8,21 +8,21 @@ type SavedSearchMeta struct {
 }
 
 type CreateSavedSearchResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	SavedSearch SavedSearchMeta `json:"data"`
 }
 
 type ListSavedSearchResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	SavedSearches []SavedSearchMeta `json:"data"`
 }
 
 type UpdateSavedSearchResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	SavedSearch SavedSearchMeta `json:"data"`
 }
 
 type DeleteSavedSearchResponse struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	SavedSearch SavedSearchMeta `json:"data"`
 }

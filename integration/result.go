@@ -5,12 +5,8 @@ import (
 )
 
 type ListResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Integrations []GenericFields `json:"data"`
-}
-
-func (rm *ListResult) UnwrapDataFieldOfPayload() bool {
-	return false
 }
 
 type GenericFields struct {
@@ -22,57 +18,49 @@ type GenericFields struct {
 }
 
 type GetResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Data map[string]interface{} `json:"data"`
 }
 
-func (rm *GetResult) UnwrapDataFieldOfPayload() bool {
-	return false
-}
-
 type APIBasedIntegrationResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	GenericFields
 	ApiKey string `json:"apiKey"`
 }
 
 type EmailBasedIntegrationResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	GenericFields
 	EmailAddress string `json:"emailAddress"`
 }
 
 type UpdateResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Data map[string]interface{} `json:"data"`
 }
 
-func (rm *UpdateResult) UnwrapDataFieldOfPayload() bool {
-	return false
-}
-
 type DeleteResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Result string `json:"result"`
 }
 
 type EnableResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	GenericFields
 }
 
 type DisableResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	GenericFields
 }
 
 type AuthenticateResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Result string `json:"result"`
 }
 
 type ActionsResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Parent      ParentIntegration   `json:"_parent"`
 	Ignore      []IgnoreAction      `json:"ignore"`
 	Create      []CreateAction      `json:"create"`
