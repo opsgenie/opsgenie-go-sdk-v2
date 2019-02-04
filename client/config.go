@@ -31,11 +31,12 @@ type Config struct {
 	Logger *logrus.Logger
 }
 
-type ApiUrl uint32
+type ApiUrl string
 
 const (
-	API_URL ApiUrl = iota
-	API_URL_EU
+	API_URL         ApiUrl = "https://api.opsgenie.com"
+	API_URL_EU      ApiUrl = "https://api.eu.opsgenie.com"
+	API_URL_SANDBOX ApiUrl = "https://api.sandbox.opsgenie.com"
 )
 
 func (conf Config) Validate() error {

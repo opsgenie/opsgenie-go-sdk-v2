@@ -16,12 +16,12 @@ type Status struct {
 }
 
 type CreateResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Id string `json:"id,omitempty"`
 }
 
 type GetResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Id              string `json:"id"`
 	MethodOfContact string `json:"method"`
 	To              string `json:"to,omitempty"`
@@ -30,34 +30,26 @@ type GetResult struct {
 }
 
 type UpdateResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Id string `json:"id,omitempty"`
 }
 
 type DeleteResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Result string `json:"result,omitempty"`
 }
 
-func (dr *DeleteResult) ShouldWrapDataFieldOfThePayload() bool {
-	return false
-}
-
 type ListResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Contact []Contact `json:"data,omitempty"`
 }
 
-func (lr *ListResult) UnwrapDataFieldOfPayload() bool {
-	return false
-}
-
 type EnableResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Id string `json:"id,omitempty"`
 }
 
 type DisableResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Id string `json:"id,omitempty"`
 }

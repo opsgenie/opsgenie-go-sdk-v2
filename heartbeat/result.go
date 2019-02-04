@@ -19,28 +19,28 @@ type Heartbeat struct {
 }
 
 type HeartbeatInfo struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Name    string `json:"name"`
 	Enabled bool   `json:"enabled"`
 	Expired bool   `json:"expired"`
 }
 
 type PingResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Message string `json:"result"`
 }
 
 type GetResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Heartbeat
 }
 
 type ListResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Heartbeats []Heartbeat `json:"heartbeats"`
 }
 
 type AddResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Heartbeat
 }

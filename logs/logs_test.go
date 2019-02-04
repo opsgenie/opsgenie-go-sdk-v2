@@ -25,12 +25,12 @@ func TestGenerateLogFileDownloadLinkRequest_Validate(t *testing.T) {
 	assert.Error(t, err, "fileName cannot be empty")
 }
 
-func TestGenerateLogFileDownloadLinkResult_ValidateResultMetaData(t *testing.T) {
+func TestGenerateLogFileDownloadLinkResult_ValidateResultMetadata(t *testing.T) {
 	result := GenerateLogFileDownloadLinkResult{}
-	err := result.ValidateResultMetaData()
+	err := result.ValidateResultMetadata()
 	assert.Error(t, err, "Could not retrieve log file download link.")
 
 	result.LogFileDownloadLink = "some_link"
-	err = result.ValidateResultMetaData()
+	err = result.ValidateResultMetadata()
 	assert.NoError(t, err, "Should not create validation error.")
 }

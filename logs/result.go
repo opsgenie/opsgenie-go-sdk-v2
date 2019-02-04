@@ -8,18 +8,14 @@ import (
 )
 
 type ListLogFilesResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	Logs   []Log  `json:"data"`
 	Marker string `json:"marker"`
 }
 
 type GenerateLogFileDownloadLinkResult struct {
-	client.ResultMetaData
+	client.ResultMetadata
 	LogFileDownloadLink string `json:"logFileDownloadLink"`
-}
-
-func (lr *ListLogFilesResult) UnwrapDataFieldOfPayload() bool {
-	return false
 }
 
 func (gr *GenerateLogFileDownloadLinkResult) Parse(response *http.Response, result client.ApiResult) error {
@@ -38,7 +34,7 @@ func (gr *GenerateLogFileDownloadLinkResult) Parse(response *http.Response, resu
 	return nil
 }
 
-func (gr *GenerateLogFileDownloadLinkResult) ValidateResultMetaData() error {
+func (gr *GenerateLogFileDownloadLinkResult) ValidateResultMetadata() error {
 	if len(gr.LogFileDownloadLink) == 0 {
 		return errors.New("Could not retrieve log file download link.")
 	}
