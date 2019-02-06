@@ -20,7 +20,7 @@ func (cr CreateRequest) Validate() error {
 	if cr.Name == "" {
 		return errors.New("Name cannot be empty.")
 	}
-	err := validateRotations(cr.Rotations)
+	err := og.ValidateRotations(cr.Rotations)
 	if err != nil {
 		return err
 	}
@@ -75,7 +75,7 @@ func (ur UpdateRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	err = validateRotations(ur.Rotations)
+	err = og.ValidateRotations(ur.Rotations)
 	if err != nil {
 		return err
 	}
@@ -220,92 +220,170 @@ func (ur *UpdateRequest) WithRotation(rotation *og.Rotation) *UpdateRequest {
 	return ur
 }
 
-func validateRotations(rotations []og.Rotation) error {
-	for _, rot := range rotations {
-		if rot.Type == "" {
-			return errors.New("Rotation type cannot be empty.")
-		}
-		if rot.StartDate == "" {
-			return errors.New("Rotation start date cannot be empty.")
-		}
-		if len(rot.Participants) == 0 {
-			return errors.New("Rotation participants cannot be empty.")
-		}
-		err := validateParticipants(rot)
-		if err != nil {
-			return err
-		}
-		if &rot.TimeRestriction != nil {
-			err := validateRestrictions(rot.TimeRestriction)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-func validateParticipants(rotation og.Rotation) error {
-	for _, participant := range rotation.Participants {
-		if participant.Type == "" {
-			return errors.New("Participant type cannot be empty.")
-		}
-		if !(participant.Type == og.User || participant.Type == og.Team) {
-			return errors.New("Participant type should be one of these: 'User', 'Team'")
-		}
-		if participant.Type == og.User && participant.Username == "" && participant.Id == "" {
-			return errors.New("For participant type user either username or id must be provided.")
-		}
-		if participant.Type == og.Team && participant.Name == "" && participant.Id == "" {
-			return errors.New("For participant type team either team name or id must be provided.")
-		}
-	}
-	return nil
-}
-
-func validateRestrictions(timeRestriction og.TimeRestriction) error {
-	if timeRestriction.Type != og.WeekdayAndTimeOfDay && timeRestriction.Type != og.TimeOfDay {
-		return errors.New("Time restriction type is not valid.")
-	}
-	if len(timeRestriction.Restrictions) == 0 {
-		return errors.New("Restrictions can not be empty.")
-	}
-	for _, restriction := range timeRestriction.Restrictions {
-		err := validateTimeBaseRestriction(restriction)
-		if err != nil {
-			return err
-		}
-		if timeRestriction.Type == og.WeekdayAndTimeOfDay {
-			if restriction.EndDay == "" {
-				return errors.New("EndDay field cannot be empty.")
-			}
-			if restriction.StartDay == "" {
-				return errors.New("StartDay field cannot be empty.")
-			}
-		}
-	}
-	return nil
-}
-
-func validateTimeBaseRestriction(timeBasedRestriction og.Restriction) error {
-	if timeBasedRestriction.EndMin <= 0 {
-		return errors.New("EndMin field cannot be empty.")
-	}
-	if timeBasedRestriction.StartHour <= 0 {
-		return errors.New("StartHour field cannot be empty.")
-	}
-	if timeBasedRestriction.StartMin <= 0 {
-		return errors.New("StartMin field cannot be empty.")
-	}
-	if timeBasedRestriction.EndHour <= 0 {
-		return errors.New("EndHour field cannot be empty.")
-	}
-	return nil
-}
-
 func validateIdentifier(identifier string) error {
 	if identifier == "" {
 		return errors.New("Schedule identifier cannot be empty.")
 	}
 	return nil
+}
+
+//schedule rotation
+type CreateRotationRequest struct {
+	*og.Rotation
+	ScheduleIdentifierType  Identifier
+	ScheduleIdentifierValue string
+}
+
+func (cr CreateRotationRequest) Validate() error {
+	err := validateIdentifier(cr.ScheduleIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	err = cr.Rotation.Validate()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (cr CreateRotationRequest) Endpoint() string {
+
+	if cr.ScheduleIdentifierType == Name {
+		return "/v2/schedules/" + cr.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"
+	}
+	return "/v2/schedules/" + cr.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=id"
+
+}
+
+func (cr CreateRotationRequest) Method() string {
+	return "POST"
+}
+
+type GetRotationRequest struct {
+	ScheduleIdentifierType  Identifier
+	ScheduleIdentifierValue string
+	RotationId              string
+}
+
+func (r GetRotationRequest) Validate() error {
+
+	err := validateIdentifier(r.ScheduleIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RotationId == "" {
+		return errors.New("Rotation Id cannot be empty.")
+	}
+
+	return nil
+}
+
+func (r GetRotationRequest) Endpoint() string {
+
+	if r.ScheduleIdentifierType == Name {
+		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
+	}
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+
+}
+
+func (r GetRotationRequest) Method() string {
+	return "GET"
+}
+
+type UpdateRotationRequest struct {
+	ScheduleIdentifierType  Identifier
+	ScheduleIdentifierValue string
+	RotationId              string
+	*og.Rotation
+}
+
+func (r UpdateRotationRequest) Validate() error {
+
+	err := validateIdentifier(r.ScheduleIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RotationId == "" {
+		return errors.New("Rotation Id cannot be empty.")
+	}
+
+	return nil
+}
+
+func (r UpdateRotationRequest) Endpoint() string {
+
+	if r.ScheduleIdentifierType == Name {
+		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
+	}
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+
+}
+
+func (r UpdateRotationRequest) Method() string {
+	return "PATCH"
+}
+
+type DeleteRotationRequest struct {
+	ScheduleIdentifierType  Identifier
+	ScheduleIdentifierValue string
+	RotationId              string
+}
+
+func (r DeleteRotationRequest) Validate() error {
+
+	err := validateIdentifier(r.ScheduleIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RotationId == "" {
+		return errors.New("Rotation Id cannot be empty.")
+	}
+
+	return nil
+}
+
+func (r DeleteRotationRequest) Endpoint() string {
+
+	if r.ScheduleIdentifierType == Name {
+		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
+	}
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+
+}
+
+func (r DeleteRotationRequest) Method() string {
+	return "DELETE"
+}
+
+type ListRotationsRequest struct {
+	ScheduleIdentifierType  Identifier
+	ScheduleIdentifierValue string
+}
+
+func (r ListRotationsRequest) Validate() error {
+
+	err := validateIdentifier(r.ScheduleIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r ListRotationsRequest) Endpoint() string {
+
+	if r.ScheduleIdentifierType == Name {
+		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"
+	}
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=id"
+
+}
+
+func (r ListRotationsRequest) Method() string {
+	return "GET"
 }

@@ -23,8 +23,8 @@ func TestBuildCreateRequest(t *testing.T) {
 	timeRestriction := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
 	ownerTeam := &og.OwnerTeam{Name: "aTeam", Id: "id"}
 
-	rotation1 := &og.Rotation{Name: "rot1", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: timeRestriction}
-	rotation2 := &og.Rotation{Name: "rot2", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: timeRestriction}
+	rotation1 := &og.Rotation{Name: "rot1", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
+	rotation2 := &og.Rotation{Name: "rot2", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
 
 	rotations := []og.Rotation{
 		*rotation1, *rotation2,
@@ -188,4 +188,42 @@ func TestGetRequest_Validate(t *testing.T) {
 	err := getRequest.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
+}
+
+func TestCreateRotationRequest_Validate(t *testing.T) {
+	createRequest := &CreateRotationRequest{}
+	err := createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
+
+	rotation := &og.Rotation{}
+	createRequest.Rotation = rotation
+	createRequest.ScheduleIdentifierType = Name
+	createRequest.ScheduleIdentifierValue = "test"
+	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Rotation type cannot be empty.").Error())
+
+	rotation.Type = og.Hourly
+	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Rotation start date cannot be empty.").Error())
+
+	rotation.StartDate = "sDate"
+	participants := make([]og.Participant, 2)
+	participant1 := &og.Participant{}
+	participants[0] = *participant1
+	rotation.Participants = participants
+	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Participant type cannot be empty.").Error())
+
+}
+
+func TestGetRotationRequest_Validate(t *testing.T) {
+	getRequest := &GetRotationRequest{}
+	err := getRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
+
+	getRequest.ScheduleIdentifierType = Name
+	getRequest.ScheduleIdentifierValue = "test"
+	err = getRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Rotation Id cannot be empty.").Error())
+
 }

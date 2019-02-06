@@ -81,3 +81,26 @@ type Period struct {
 	Type      string         `json:"type,omitempty"`
 	Recipient og.Participant `json:"recipient,omitempty"`
 }
+
+type CreateRotationResult struct {
+	client.ResultMetadata
+	Id   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+type GetRotationResult struct {
+	client.ResultMetadata
+	og.Rotation
+	Info `json:"_parent,omitempty"`
+}
+
+type UpdateRotationResult struct {
+	client.ResultMetadata
+	Id   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+type ListRotationsResult struct {
+	client.ResultMetadata
+	Rotations []og.Rotation `json:"data,omitempty"`
+}
