@@ -104,6 +104,7 @@ func (r EmailBasedIntegrationRequest) Method() string {
 }
 
 type UpdateIntegrationRequest struct {
+	client.BaseRequest
 	Id                          string
 	Name                        string
 	Type                        string

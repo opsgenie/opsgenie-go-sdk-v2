@@ -141,6 +141,7 @@ type RotationType string
 type ParticipantType string
 type Day string
 type RestrictionType string
+type TimeUnit string
 
 const (
 	Daily  RotationType = "daily"
@@ -162,6 +163,16 @@ const (
 
 	TimeOfDay           RestrictionType = "time-of-day"
 	WeekdayAndTimeOfDay RestrictionType = "weekday-and-time-of-day"
+
+	MatchAll           ConditionMatchType = "Match All"
+	MatchAnyCondition  ConditionMatchType = "Match Any Condition"
+	MatchAllConditions ConditionMatchType = "Match All Conditions"
+
+	Months  TimeUnit = "months"
+	Weeks   TimeUnit = "weeks"
+	Days    TimeUnit = "days"
+	Minutes TimeUnit = "minutes"
+	Hours   TimeUnit = "hours"
 )
 
 type Identifier interface {
@@ -189,6 +200,20 @@ type Restriction struct {
 	EndDay    Day    `json:"endDay,omitempty"`
 	EndMin    uint32 `json:"endMin,omitempty"`
 }
+
+type Filter struct {
+	ConditionMatchType ConditionMatchType `json:"conditionMatchType,omitempty"`
+	Conditions         []Condition        `json:"conditions,omitempty"`
+}
+
+type Condition struct {
+	Field         string `json:"field,omitempty"`
+	IsNot         bool   `json:"isNot,omitempty"`
+	Operation     string `json:"operation,omitempty"`
+	ExpectedValue string `json:"expectedValue,omitempty"`
+}
+
+type ConditionMatchType string
 
 type NotifyType string
 
