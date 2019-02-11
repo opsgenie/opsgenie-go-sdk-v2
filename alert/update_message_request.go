@@ -1,15 +1,15 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type UpdateMessageRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Message    string          `json:"message,omitempty"`
+	Message         string `json:"message,omitempty"`
 }
 
 func (r UpdateMessageRequest) Validate() error {
@@ -22,10 +22,10 @@ func (r UpdateMessageRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateMessageRequest) Endpoint() string {
+func (r UpdateMessageRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/message?identifierType=tiny"
-	}else if r.IdentifierType == ALIAS {
+	} else if r.IdentifierType == ALIAS {
 		return "/v2/alerts/" + r.IdentifierValue + "/message?identifierType=alias"
 	}
 	return "/v2/alerts/" + r.IdentifierValue + "/message?identifierType=id"

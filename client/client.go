@@ -32,9 +32,10 @@ type request struct {
 
 type ApiRequest interface {
 	Validate() error
-	Endpoint() string
+	ResourcePath() string
 	Method() string
 	Metadata(apiRequest ApiRequest) map[string]interface{}
+	RequestParams() map[string]string
 }
 
 type BaseRequest struct {
@@ -49,6 +50,10 @@ func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
 		headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
 	}
 	return headers
+}
+
+func (r BaseRequest) RequestParams() map[string]string {
+	return nil
 }
 
 type ApiResult interface {
@@ -211,9 +216,9 @@ func printInfoLog(client *OpsGenieClient) {
 		client.RetryableClient.RetryMax)
 }
 
-func (client *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
+func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
 	if err != nil {
-		client.Config.Logger.Errorf("Unable to send the request %s ", err.Error())
+		cli.Config.Logger.Errorf("Unable to send the request %s ", err.Error())
 		if err == context.DeadlineExceeded {
 			return nil, err
 		}
@@ -297,7 +302,16 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 		return nil, err
 	}
 
-	req, err = retryablehttp.NewRequest(apiRequest.Method(), cli.Config.apiUrl+apiRequest.Endpoint(), buf)
+	queryParams := url.Values{}
+	for key, value := range apiRequest.RequestParams() {
+		queryParams.Add(key, value)
+	}
+
+	requestUrl := buildRequestUrl(cli, apiRequest, queryParams)
+
+	endpoint := requestUrl.String()
+
+	req, err = retryablehttp.NewRequest(apiRequest.Method(), endpoint, buf)
 	if err != nil {
 		return nil, err
 	}
@@ -309,6 +323,21 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 
 	return &request{req}, err
 
+}
+
+func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url.Values) url.URL {
+	requestUrl := url.URL{
+		Scheme:   "https",
+		Host:     cli.Config.apiUrl,
+		Path:     apiRequest.ResourcePath(),
+		RawQuery: queryParams.Encode(),
+	}
+
+	//test purposes only
+	if !strings.Contains(cli.Config.apiUrl, "api") {
+		requestUrl.Scheme = "http"
+	}
+	return requestUrl
 }
 
 func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *string, details map[string]interface{}) error {
@@ -356,7 +385,7 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 
-	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.Endpoint())
+	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.ResourcePath())
 	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
 		return err

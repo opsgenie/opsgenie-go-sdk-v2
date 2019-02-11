@@ -24,7 +24,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	err = createRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, createRequest.Endpoint(), "/v2/users/123/contacts")
+	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/contacts")
 	assert.Equal(t, createRequest.Method(), "POST")
 
 }
@@ -43,7 +43,7 @@ func TestGetRequest_Validate(t *testing.T) {
 	err = getRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, getRequest.Endpoint(), "/v2/users/123/contacts/1234")
+	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/contacts/1234")
 	assert.Equal(t, getRequest.Method(), "GET")
 
 }
@@ -66,7 +66,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	err = updateRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, updateRequest.Endpoint(), "/v2/users/123/contacts/1234")
+	assert.Equal(t, updateRequest.ResourcePath(), "/v2/users/123/contacts/1234")
 	assert.Equal(t, updateRequest.Method(), "PATCH")
 
 }
@@ -84,7 +84,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 	err = deleteRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, deleteRequest.Endpoint(), "/v2/users/123/contacts/1234")
+	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/contacts/1234")
 	assert.Equal(t, deleteRequest.Method(), "DELETE")
 
 }
@@ -99,7 +99,7 @@ func TestListRequest_Validate(t *testing.T) {
 	err = listRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, listRequest.Endpoint(), "/v2/users/123/contacts")
+	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/contacts")
 	assert.Equal(t, listRequest.Method(), "GET")
 
 }
@@ -118,7 +118,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 	err = enableRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, enableRequest.Endpoint(), "/v2/users/123/contacts/1234/enable")
+	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/contacts/1234/enable")
 	assert.Equal(t, enableRequest.Method(), "POST")
 
 }
@@ -137,7 +137,7 @@ func TestDisableRequest_Validate(t *testing.T) {
 	err = enableRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, enableRequest.Endpoint(), "/v2/users/123/contacts/1234/disable")
+	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/contacts/1234/disable")
 	assert.Equal(t, enableRequest.Method(), "POST")
 
 }

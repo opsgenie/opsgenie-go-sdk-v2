@@ -29,7 +29,7 @@ func (cr CreateRequest) Validate() error {
 	return nil
 }
 
-func (cr CreateRequest) Endpoint() string {
+func (cr CreateRequest) ResourcePath() string {
 	return "/v2/schedules"
 }
 
@@ -51,7 +51,7 @@ func (gr GetRequest) Validate() error {
 	return nil
 }
 
-func (gr GetRequest) Endpoint() string {
+func (gr GetRequest) ResourcePath() string {
 	if gr.IdentifierType == Name {
 		return "/v2/schedules/" + gr.IdentifierValue + "?identifierType=name"
 	}
@@ -86,7 +86,7 @@ func (ur UpdateRequest) Validate() error {
 	return nil
 }
 
-func (ur UpdateRequest) Endpoint() string {
+func (ur UpdateRequest) ResourcePath() string {
 	if ur.IdentifierType == Name {
 		return "/v2/schedules/" + ur.IdentifierValue + "?identifierType=name"
 	}
@@ -111,7 +111,7 @@ func (dr DeleteRequest) Validate() error {
 	return nil
 }
 
-func (dr DeleteRequest) Endpoint() string {
+func (dr DeleteRequest) ResourcePath() string {
 	if dr.IdentifierType == Name {
 		return "/v2/schedules/" + dr.IdentifierValue + "?identifierType=name"
 	}
@@ -131,7 +131,7 @@ func (lr ListRequest) Validate() error {
 	return nil
 }
 
-func (lr ListRequest) Endpoint() string {
+func (lr ListRequest) ResourcePath() string {
 	if lr.Expand {
 		return "/v2/schedules?expand=rotation"
 	}
@@ -166,7 +166,7 @@ func (tr GetTimelineRequest) Validate() error {
 	return nil
 }
 
-func (tr GetTimelineRequest) Endpoint() string {
+func (tr GetTimelineRequest) ResourcePath() string {
 	var endpoint string
 	if tr.IdentifierType == Name {
 		endpoint = "/v2/schedules/" + tr.IdentifierValue + "/timeline?identifierType=name"
@@ -254,7 +254,7 @@ func (cr CreateRotationRequest) Validate() error {
 	return nil
 }
 
-func (cr CreateRotationRequest) Endpoint() string {
+func (cr CreateRotationRequest) ResourcePath() string {
 
 	if cr.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + cr.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"
@@ -288,7 +288,7 @@ func (r GetRotationRequest) Validate() error {
 	return nil
 }
 
-func (r GetRotationRequest) Endpoint() string {
+func (r GetRotationRequest) ResourcePath() string {
 
 	if r.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
@@ -322,7 +322,7 @@ func (r UpdateRotationRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRotationRequest) Endpoint() string {
+func (r UpdateRotationRequest) ResourcePath() string {
 
 	if r.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
@@ -356,7 +356,7 @@ func (r DeleteRotationRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRotationRequest) Endpoint() string {
+func (r DeleteRotationRequest) ResourcePath() string {
 
 	if r.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
@@ -385,7 +385,7 @@ func (r ListRotationsRequest) Validate() error {
 	return nil
 }
 
-func (r ListRotationsRequest) Endpoint() string {
+func (r ListRotationsRequest) ResourcePath() string {
 
 	if r.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"

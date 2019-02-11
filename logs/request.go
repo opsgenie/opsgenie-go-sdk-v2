@@ -22,7 +22,7 @@ func (r ListLogFilesRequest) Validate() error {
 	return nil
 }
 
-func (r ListLogFilesRequest) Endpoint() string {
+func (r ListLogFilesRequest) ResourcePath() string {
 	return "/v2/logs/list/" + r.Marker + r.setParams(r)
 }
 
@@ -59,7 +59,7 @@ func (r GenerateLogFileDownloadLinkRequest) Validate() error {
 	return nil
 }
 
-func (r GenerateLogFileDownloadLinkRequest) Endpoint() string {
+func (r GenerateLogFileDownloadLinkRequest) ResourcePath() string {
 	return "/v2/logs/download/" + r.FileName
 }
 

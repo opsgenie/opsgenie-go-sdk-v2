@@ -2,8 +2,8 @@ package schedule
 
 import (
 	"errors"
-	"time"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"time"
 )
 
 type RotationIdentifier struct {
@@ -42,7 +42,7 @@ func (request CreateScheduleOverrideRequest) Validate() error {
 	return nil
 }
 
-func (request CreateScheduleOverrideRequest) Endpoint() string {
+func (request CreateScheduleOverrideRequest) ResourcePath() string {
 	if request.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=name"
 	}
@@ -72,7 +72,7 @@ func (request GetScheduleOverrideRequest) Validate() error {
 	return nil
 }
 
-func (request GetScheduleOverrideRequest) Endpoint() string {
+func (request GetScheduleOverrideRequest) ResourcePath() string {
 	if request.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
 	}
@@ -97,7 +97,7 @@ func (request ListScheduleOverrideRequest) Validate() error {
 	return nil
 }
 
-func (request ListScheduleOverrideRequest) Endpoint() string {
+func (request ListScheduleOverrideRequest) ResourcePath() string {
 	if request.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=name"
 	}
@@ -127,7 +127,7 @@ func (request DeleteScheduleOverrideRequest) Validate() error {
 	return nil
 }
 
-func (request DeleteScheduleOverrideRequest) Endpoint() string {
+func (request DeleteScheduleOverrideRequest) ResourcePath() string {
 	if request.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
 	}
@@ -173,7 +173,7 @@ func (request UpdateScheduleOverrideRequest) Validate() error {
 	return nil
 }
 
-func (request UpdateScheduleOverrideRequest) Endpoint() string {
+func (request UpdateScheduleOverrideRequest) ResourcePath() string {
 	if request.ScheduleIdentifierType == Name {
 		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
 	}

@@ -1,8 +1,8 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type AddTeamRequest struct {
@@ -26,7 +26,7 @@ func (r AddTeamRequest) Validate() error {
 	return nil
 }
 
-func (r AddTeamRequest) Endpoint() string {
+func (r AddTeamRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/teams?identifierType=tiny"
 	} else if r.IdentifierType == ALIAS {

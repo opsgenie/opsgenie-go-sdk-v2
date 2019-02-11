@@ -1,20 +1,20 @@
 package alert
 
 import (
-	"net/url"
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
+	"net/url"
 )
 
 type RemoveTagsRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Tags  string
-	Source string
-	User string
-	Note string
-	params string
+	Tags            string
+	Source          string
+	User            string
+	Note            string
+	params          string
 }
 
 func (r RemoveTagsRequest) Validate() error {
@@ -28,9 +28,9 @@ func (r RemoveTagsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveTagsRequest) Endpoint() string {
+func (r RemoveTagsRequest) ResourcePath() string {
 
-	return "/v2/alerts/"+r.IdentifierValue+"/tags" + r.setParams(r)
+	return "/v2/alerts/" + r.IdentifierValue + "/tags" + r.setParams(r)
 }
 
 func (r RemoveTagsRequest) Method() string {
@@ -52,7 +52,7 @@ func setIdentifierToRemoveTagRequest(request RemoveTagsRequest) string {
 		params.Add("identifierType", "id")
 	}
 
-	if  request.IdentifierType == ALIAS  {
+	if request.IdentifierType == ALIAS {
 		params.Add("identifierType", "alias")
 	}
 
@@ -76,16 +76,16 @@ func setIdentifierToRemoveTagRequest(request RemoveTagsRequest) string {
 		params.Add("note", request.Note)
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = "?" + params.Encode()
 	} else {
-		request.params =  ""
+		request.params = ""
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = "?" + params.Encode()
 	} else {
-		request.params =  ""
+		request.params = ""
 	}
 
 	return request.params

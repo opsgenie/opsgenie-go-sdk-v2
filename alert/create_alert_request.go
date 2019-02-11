@@ -32,7 +32,7 @@ func (r CreateAlertRequest) Validate() error {
 	return nil
 }
 
-func (r CreateAlertRequest) Endpoint() string {
+func (r CreateAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts"
 }

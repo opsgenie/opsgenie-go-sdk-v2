@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -75,7 +76,8 @@ func TestParsingWithDataField(t *testing.T) {
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultWantsDataFieldsToBeParsed{}
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	err = ogClient.Exec(nil, request, result)
 	if err != nil {
 		t.Fail()
@@ -118,7 +120,8 @@ func TestParsingWithoutDataField(t *testing.T) {
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultDoesNotWantDataFieldsToBeParsed{}
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	err = ogClient.Exec(nil, request, result)
 	if err != nil {
 		t.Fail()
@@ -147,7 +150,8 @@ func TestParsingWhenApiDoesNotReturnDataField(t *testing.T) {
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &ResultWithoutDataField{}
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	err = ogClient.Exec(nil, request, result)
 	if err != nil {
 		t.Fail()
@@ -176,7 +180,7 @@ func (tr testRequest) Validate() error {
 	return nil
 }
 
-func (tr testRequest) Endpoint() string {
+func (tr testRequest) ResourcePath() string {
 	return "/an-enpoint"
 }
 
@@ -203,7 +207,8 @@ func TestExec(t *testing.T) {
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	err = ogClient.Exec(nil, request, result)
 	assert.Equal(t, result.Data, "processed")
 	if err != nil {
@@ -222,7 +227,8 @@ func TestParsingErrorExec(t *testing.T) {
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	err = ogClient.Exec(nil, request, result)
 	assert.Contains(t, err.Error(), "Response could not be parsed, unexpected end of JSON input")
 }
@@ -238,7 +244,8 @@ func TestExecWhenRequestIsNotValid(t *testing.T) {
 	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 
 	request := testRequest{ExtraField: "extra"}
 	result := &testResult{}
@@ -264,7 +271,8 @@ func TestExecWhenApiReturns422(t *testing.T) {
 	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
 	})
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
@@ -290,7 +298,8 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 		ApiKey:     "apiKey",
 		RetryCount: 1,
 	})
-	ogClient.Config.apiUrl = ts.URL
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
@@ -299,37 +308,4 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	assert.Contains(t, err.Error(), "Internal Server Error")
 	assert.Contains(t, err.Error(), "500")
 
-}
-
-/////////////////
-
-type BaseInter interface {
-	A()
-	B()
-}
-
-type Base struct {
-	BaseInter
-}
-
-func (base *Base) B() {
-	fmt.Println("B")
-}
-
-type Child struct {
-	Base
-}
-
-func (c *Child) A() {
-	fmt.Println("A")
-}
-
-func exec(inter BaseInter) {
-	inter.A()
-	inter.B()
-}
-
-func Test_xx(t *testing.T) {
-	c := &Child{}
-	exec(c)
 }

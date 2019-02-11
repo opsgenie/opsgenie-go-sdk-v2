@@ -10,7 +10,7 @@ func (lr GetRequest) Validate() error {
 	return nil
 }
 
-func (lr GetRequest) Endpoint() string {
+func (lr GetRequest) ResourcePath() string {
 	return "/v2/account"
 }
 

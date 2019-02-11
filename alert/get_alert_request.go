@@ -16,10 +16,10 @@ func (r GetAlertRequest) Validate() error {
 	return nil
 }
 
-func (gr GetAlertRequest) Endpoint() string {
+func (gr GetAlertRequest) ResourcePath() string {
 	if gr.IdentifierType == TINYID {
 		return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=tiny"
-	}else if gr.IdentifierType == ALIAS {
+	} else if gr.IdentifierType == ALIAS {
 		return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=alias"
 	}
 	return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=id"

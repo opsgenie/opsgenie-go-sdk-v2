@@ -10,17 +10,17 @@ type UpdateSavedSearchRequest struct {
 	client.BaseRequest
 	IdentifierType  SearchIdentifierType
 	IdentifierValue string
-	NewName     string `json:"name,omitempty"`
-	Query       string `json:"query,omitempty"`
-	Owner       User   `json:"owner,omitempty"`
-	Description string `json:"description,omitempty"`
-	Teams       []Team `json:"teams,omitempty"`
-	params      string
+	NewName         string `json:"name,omitempty"`
+	Query           string `json:"query,omitempty"`
+	Owner           User   `json:"owner,omitempty"`
+	Description     string `json:"description,omitempty"`
+	Teams           []Team `json:"teams,omitempty"`
+	params          string
 }
 
 func (r UpdateSavedSearchRequest) Validate() error {
 
-	if r.IdentifierValue == ""{
+	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 
@@ -39,7 +39,7 @@ func (r UpdateSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateSavedSearchRequest) Endpoint() string {
+func (r UpdateSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches/" + r.setParams(r)
 }
@@ -55,11 +55,11 @@ func (r UpdateSavedSearchRequest) setParams(request UpdateSavedSearchRequest) st
 	if request.IdentifierType == NAME {
 		params.Add("identifierType", "name")
 
-	} else if  request.IdentifierType == ID  {
+	} else if request.IdentifierType == ID {
 		params.Add("identifierType", "id")
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = inlineParam + "?" + params.Encode()
 	} else {
 		request.params = inlineParam + ""

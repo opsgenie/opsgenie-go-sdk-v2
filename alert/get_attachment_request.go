@@ -24,7 +24,7 @@ func (r DeleteAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (gr DeleteAttachmentRequest) Endpoint() string {
+func (gr DeleteAttachmentRequest) ResourcePath() string {
 	if gr.IdentifierType == ALIAS {
 		return "/v2/alerts/" + gr.IdentifierValue + "/attachments/" + gr.AttachmentId + "?identifierType=alias"
 	}

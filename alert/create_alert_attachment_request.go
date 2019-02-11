@@ -4,8 +4,8 @@ import (
 	"errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"io"
-	"path"
 	"os"
+	"path"
 	"strings"
 )
 
@@ -26,9 +26,9 @@ func (r CreateAlertAttachmentRequest) Metadata(ar client.ApiRequest) map[string]
 	filePath := path.Join(r.FilePath, r.FileName)
 	file, _ := os.Open(filePath)
 
-	formDataMap["file"] = file;
-	formDataMap["user"] = strings.NewReader(r.User);
-	formDataMap["indexFile"] = strings.NewReader(r.IndexFile);
+	formDataMap["file"] = file
+	formDataMap["user"] = strings.NewReader(r.User)
+	formDataMap["indexFile"] = strings.NewReader(r.IndexFile)
 	headers["form-data-values"] = formDataMap
 
 	return headers
@@ -47,7 +47,7 @@ func (r CreateAlertAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (r CreateAlertAttachmentRequest) Endpoint() string {
+func (r CreateAlertAttachmentRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/attachments?identifierType=tiny"
 	} else if r.IdentifierType == ALIAS {

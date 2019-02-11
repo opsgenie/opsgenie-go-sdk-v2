@@ -18,7 +18,7 @@ func (r GetRequest) Validate() error {
 	return nil
 }
 
-func (r GetRequest) Endpoint() string {
+func (r GetRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id
 }
 
@@ -34,7 +34,7 @@ func (lr listRequest) Validate() error {
 	return nil
 }
 
-func (lr listRequest) Endpoint() string {
+func (lr listRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
@@ -65,7 +65,7 @@ func (r APIBasedIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r APIBasedIntegrationRequest) Endpoint() string {
+func (r APIBasedIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
@@ -95,7 +95,7 @@ func (r EmailBasedIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r EmailBasedIntegrationRequest) Endpoint() string {
+func (r EmailBasedIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
@@ -135,7 +135,7 @@ func (r OtherFields) Validate() error {
 	return nil
 }
 
-func (r OtherFields) Endpoint() string {
+func (r OtherFields) ResourcePath() string {
 	return "/v2/integrations/" + r["id"].(string)
 }
 
@@ -162,7 +162,7 @@ func (r DeleteIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteIntegrationRequest) Endpoint() string {
+func (r DeleteIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id
 }
 
@@ -182,7 +182,7 @@ func (r EnableIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r EnableIntegrationRequest) Endpoint() string {
+func (r EnableIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/enable"
 }
 
@@ -202,7 +202,7 @@ func (r DisableIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r DisableIntegrationRequest) Endpoint() string {
+func (r DisableIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/disable"
 }
 
@@ -222,7 +222,7 @@ func (r AuthenticateIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r AuthenticateIntegrationRequest) Endpoint() string {
+func (r AuthenticateIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/authenticate"
 }
 
@@ -242,7 +242,7 @@ func (r GetIntegrationActionsRequest) Validate() error {
 	return nil
 }
 
-func (r GetIntegrationActionsRequest) Endpoint() string {
+func (r GetIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 
@@ -294,7 +294,7 @@ func (r CreateIntegrationActionsRequest) Validate() error {
 	return nil
 }
 
-func (r CreateIntegrationActionsRequest) Endpoint() string {
+func (r CreateIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 
@@ -346,7 +346,7 @@ func (r UpdateAllIntegrationActionsRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateAllIntegrationActionsRequest) Endpoint() string {
+func (r UpdateAllIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 

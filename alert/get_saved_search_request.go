@@ -16,7 +16,7 @@ func (r GetSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (gr GetSavedSearchRequest) Endpoint() string {
+func (gr GetSavedSearchRequest) ResourcePath() string {
 	if gr.IdentifierType == NAME {
 		return "/v2/alerts/saved-searches/" + gr.IdentifierValue + "?identifierType=name"
 	}

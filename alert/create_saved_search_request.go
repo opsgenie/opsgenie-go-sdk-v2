@@ -1,8 +1,8 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type CreateSavedSearchRequest struct {
@@ -30,7 +30,7 @@ func (r CreateSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r CreateSavedSearchRequest) Endpoint() string {
+func (r CreateSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches"
 }

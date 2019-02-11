@@ -22,7 +22,7 @@ func (r ListAlertRequest) Validate() error {
 	return nil
 }
 
-func (r ListAlertRequest) Endpoint() string {
+func (r ListAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts" + r.getParams()
 }
@@ -63,7 +63,7 @@ func (r ListAlertRequest) getParams() string {
 		params.Add("order", string(r.Order))
 	}
 
-	if len(params)!=0  {
+	if len(params) != 0 {
 		return "?" + params.Encode()
 	} else {
 		return ""

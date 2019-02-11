@@ -1,18 +1,18 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type AddDetailsRequest struct {
 	client.BaseRequest
-	IdentifierType   AlertIdentifier
-	IdentifierValue  string
-	Details     map[string]string `json:"details,omitempty"`
-	User       		 string            `json:"user,omitempty"`
-	Source     		 string            `json:"source,omitempty"`
-	Note       		 string            `json:"note,omitempty"`
+	IdentifierType  AlertIdentifier
+	IdentifierValue string
+	Details         map[string]string `json:"details,omitempty"`
+	User            string            `json:"user,omitempty"`
+	Source          string            `json:"source,omitempty"`
+	Note            string            `json:"note,omitempty"`
 }
 
 func (r AddDetailsRequest) Validate() error {
@@ -26,10 +26,10 @@ func (r AddDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r AddDetailsRequest) Endpoint() string {
+func (r AddDetailsRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/details?identifierType=tiny"
-	}else if r.IdentifierType == ALIAS {
+	} else if r.IdentifierType == ALIAS {
 		return "/v2/alerts/" + r.IdentifierValue + "/details?identifierType=alias"
 	}
 	return "/v2/alerts/" + r.IdentifierValue + "/details?identifierType=id"

@@ -1,15 +1,15 @@
 package alert
 
 import (
-	"net/url"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/url"
 )
 
 type DeleteSavedSearchRequest struct {
 	client.BaseRequest
 	IdentifierType  SearchIdentifierType
 	IdentifierValue string
-	params string
+	params          string
 }
 
 func (r DeleteSavedSearchRequest) Validate() error {
@@ -20,7 +20,7 @@ func (r DeleteSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteSavedSearchRequest) Endpoint() string {
+func (r DeleteSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches/" + r.setParams(r)
 }
@@ -37,11 +37,11 @@ func (r DeleteSavedSearchRequest) setParams(request DeleteSavedSearchRequest) st
 	if request.IdentifierType == NAME {
 		params.Add("identifierType", "name")
 
-	} else if  request.IdentifierType == ID  {
+	} else if request.IdentifierType == ID {
 		params.Add("identifierType", "id")
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = inlineParam + "?" + params.Encode()
 	} else {
 		request.params = inlineParam + ""

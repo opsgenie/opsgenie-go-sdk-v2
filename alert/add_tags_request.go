@@ -1,18 +1,18 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type AddTagsRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Tags       		[]string 	`json:"tags,omitempty"`
-	User            string      `json:"user,omitempty"`
-	Source          string      `json:"source,omitempty"`
-	Note            string      `json:"note,omitempty"`
+	Tags            []string `json:"tags,omitempty"`
+	User            string   `json:"user,omitempty"`
+	Source          string   `json:"source,omitempty"`
+	Note            string   `json:"note,omitempty"`
 }
 
 func (r AddTagsRequest) Validate() error {
@@ -26,7 +26,7 @@ func (r AddTagsRequest) Validate() error {
 	return nil
 }
 
-func (r AddTagsRequest) Endpoint() string {
+func (r AddTagsRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/tags?identifierType=tiny"
 	} else if r.IdentifierType == ALIAS {

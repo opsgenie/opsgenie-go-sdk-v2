@@ -28,7 +28,7 @@ func (r CreateRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRequest) Endpoint() string {
+func (r CreateRequest) ResourcePath() string {
 	return "/v1/maintenance"
 }
 
@@ -48,7 +48,7 @@ func (r GetRequest) Validate() error {
 	return nil
 }
 
-func (r GetRequest) Endpoint() string {
+func (r GetRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
@@ -82,7 +82,7 @@ func (r UpdateRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRequest) Endpoint() string {
+func (r UpdateRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
@@ -102,7 +102,7 @@ func (r DeleteRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRequest) Endpoint() string {
+func (r DeleteRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
@@ -123,7 +123,7 @@ func (r ListRequest) Validate() error {
 	return nil
 }
 
-func (r ListRequest) Endpoint() string {
+func (r ListRequest) ResourcePath() string {
 	return "/v1/maintenance"
 }
 
@@ -143,7 +143,7 @@ func (r CancelRequest) Validate() error {
 	return nil
 }
 
-func (r CancelRequest) Endpoint() string {
+func (r CancelRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id + "/cancel"
 }
 

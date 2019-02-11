@@ -1,8 +1,8 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type AddResponderRequest struct {
@@ -38,7 +38,7 @@ func (r AddResponderRequest) Validate() error {
 	return nil
 }
 
-func (r AddResponderRequest) Endpoint() string {
+func (r AddResponderRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/responders?identifierType=tiny"
 	} else if r.IdentifierType == ALIAS {

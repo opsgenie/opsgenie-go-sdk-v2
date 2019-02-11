@@ -18,7 +18,7 @@ func (r GetAsyncRequestStatusRequest) Validate() error {
 	return nil
 }
 
-func (r GetAsyncRequestStatusRequest) Endpoint() string {
+func (r GetAsyncRequestStatusRequest) ResourcePath() string {
 	return "/v2/alerts/requests/" + r.RequestID
 }
 

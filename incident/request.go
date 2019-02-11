@@ -20,7 +20,7 @@ func (r RequestStatusRequest) Validate() error {
 	return nil
 }
 
-func (r RequestStatusRequest) Endpoint() string {
+func (r RequestStatusRequest) ResourcePath() string {
 	return "/v1/incidents/requests/" + r.Id
 }
 
@@ -67,7 +67,7 @@ func (r CreateRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRequest) Endpoint() string {
+func (r CreateRequest) ResourcePath() string {
 	return "/v1/incidents/create"
 }
 
@@ -91,7 +91,7 @@ func (r DeleteRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRequest) Endpoint() string {
+func (r DeleteRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -121,7 +121,7 @@ func (r GetRequest) Validate() error {
 	return nil
 }
 
-func (r GetRequest) Endpoint() string {
+func (r GetRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -151,7 +151,7 @@ func (r ListRequest) Validate() error {
 	return nil
 }
 
-func (r ListRequest) Endpoint() string {
+func (r ListRequest) ResourcePath() string {
 	return "/v1/incidents" + r.getParams()
 }
 
@@ -200,7 +200,7 @@ func (r CloseRequest) Validate() error {
 	return nil
 }
 
-func (r CloseRequest) Endpoint() string {
+func (r CloseRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/close"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -231,7 +231,7 @@ func (r AddNoteRequest) Validate() error {
 	return nil
 }
 
-func (r AddNoteRequest) Endpoint() string {
+func (r AddNoteRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/notes"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -270,7 +270,7 @@ func (r AddResponderRequest) Validate() error {
 	return nil
 }
 
-func (r AddResponderRequest) Endpoint() string {
+func (r AddResponderRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/responders"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -305,7 +305,7 @@ func (r AddTagsRequest) Validate() error {
 	return nil
 }
 
-func (r AddTagsRequest) Endpoint() string {
+func (r AddTagsRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/tags"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -340,7 +340,7 @@ func (r RemoveTagsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveTagsRequest) Endpoint() string {
+func (r RemoveTagsRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/tags?"
 	if r.Identifier == Id {
 		endpoint += "identifierType=id&"
@@ -383,7 +383,7 @@ func (r AddDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r AddDetailsRequest) Endpoint() string {
+func (r AddDetailsRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/details"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -418,7 +418,7 @@ func (r RemoveDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveDetailsRequest) Endpoint() string {
+func (r RemoveDetailsRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/details?"
 	if r.Identifier == Id {
 		endpoint += "identifierType=id&"
@@ -461,7 +461,7 @@ func (r UpdatePriorityRequest) Validate() error {
 	return nil
 }
 
-func (r UpdatePriorityRequest) Endpoint() string {
+func (r UpdatePriorityRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/priority"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -492,7 +492,7 @@ func (r UpdateMessageRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateMessageRequest) Endpoint() string {
+func (r UpdateMessageRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/message"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -523,7 +523,7 @@ func (r UpdateDescriptionRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateDescriptionRequest) Endpoint() string {
+func (r UpdateDescriptionRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/description"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -557,7 +557,7 @@ func (r ListLogsRequest) Validate() error {
 	return nil
 }
 
-func (r ListLogsRequest) Endpoint() string {
+func (r ListLogsRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/logs"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"
@@ -612,7 +612,7 @@ func (r ListNotesRequest) Validate() error {
 	return nil
 }
 
-func (r ListNotesRequest) Endpoint() string {
+func (r ListNotesRequest) ResourcePath() string {
 	endpoint := "/v1/incidents/" + r.Id + "/notes"
 	if r.Identifier == Id {
 		endpoint += "?identifierType=id"

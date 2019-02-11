@@ -18,7 +18,7 @@ func (r ListAttachmentsRequest) Validate() error {
 	return nil
 }
 
-func (gr ListAttachmentsRequest) Endpoint() string {
+func (gr ListAttachmentsRequest) ResourcePath() string {
 	if gr.IdentifierType == ALIAS {
 		return "/v2/alerts/" + gr.IdentifierValue + "/attachments?identifierType=alias"
 	}

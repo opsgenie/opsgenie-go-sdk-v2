@@ -34,7 +34,7 @@ func (r CreateTeamRequest) Validate() error {
 	return nil
 }
 
-func (r CreateTeamRequest) Endpoint() string {
+func (r CreateTeamRequest) ResourcePath() string {
 
 	return "/v2/teams"
 }
@@ -52,7 +52,7 @@ func (r ListTeamRequest) Validate() error {
 	return nil
 }
 
-func (r ListTeamRequest) Endpoint() string {
+func (r ListTeamRequest) ResourcePath() string {
 
 	return "/v2/teams"
 }
@@ -75,7 +75,7 @@ func (r DeleteTeamRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteTeamRequest) Endpoint() string {
+func (r DeleteTeamRequest) ResourcePath() string {
 
 	if r.IdentifierType == Name {
 		return "/v2/teams/" + r.IdentifierValue + "?identifierType=name"
@@ -101,17 +101,26 @@ func (r GetTeamRequest) Validate() error {
 	return nil
 }
 
-func (r GetTeamRequest) Endpoint() string {
+func (r GetTeamRequest) ResourcePath() string {
 
-	if r.IdentifierType == Name {
-		return "/v2/teams/" + r.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/teams/" + r.IdentifierValue + "?identifierType=id"
-
+	return "/v2/teams/" + r.IdentifierValue
 }
 
 func (r GetTeamRequest) Method() string {
 	return "GET"
+}
+
+func (r GetTeamRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateTeamRequest struct {
@@ -129,7 +138,7 @@ func (r UpdateTeamRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateTeamRequest) Endpoint() string {
+func (r UpdateTeamRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.Id
 }
@@ -157,7 +166,7 @@ func (r ListTeamLogsRequest) Validate() error {
 	return nil
 }
 
-func (r ListTeamLogsRequest) Endpoint() string {
+func (r ListTeamLogsRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.IdentifierValue + "/logs" + r.setParams()
 
@@ -189,7 +198,7 @@ func (r ListTeamLogsRequest) setParams() string {
 		params.Add("order", string(r.Order))
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		r.params = r.params + "&" + params.Encode()
 	} else {
 		r.params = r.params + ""
@@ -230,7 +239,7 @@ func (r CreateTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r CreateTeamRoleRequest) Endpoint() string {
+func (r CreateTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamIdentifierType == Name {
 		return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=name"
@@ -264,7 +273,7 @@ func (r GetTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r GetTeamRoleRequest) Endpoint() string {
+func (r GetTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamName != "" {
 		if r.RoleName != "" {
@@ -307,7 +316,7 @@ func (r UpdateTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateTeamRoleRequest) Endpoint() string {
+func (r UpdateTeamRoleRequest) ResourcePath() string {
 	if r.TeamName != "" {
 		if r.RoleName != "" {
 			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName + "?teamIdentifierType=name" + "&" + "identifierType=name"
@@ -347,7 +356,7 @@ func (r DeleteTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteTeamRoleRequest) Endpoint() string {
+func (r DeleteTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamName != "" {
 		if r.RoleName != "" {
@@ -382,7 +391,7 @@ func (r ListTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r ListTeamRoleRequest) Endpoint() string {
+func (r ListTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamIdentifierType == Name {
 		return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=name"

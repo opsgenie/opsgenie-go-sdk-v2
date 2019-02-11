@@ -22,7 +22,7 @@ func (pr pingRequest) Validate() error {
 	return nameValidation(pr.HeartbeatName)
 }
 
-func (pr pingRequest) Endpoint() string {
+func (pr pingRequest) ResourcePath() string {
 	return "/v2/heartbeats/" + pr.HeartbeatName + "/ping"
 }
 
@@ -39,7 +39,7 @@ func (gr getRequest) Validate() error {
 	return nameValidation(gr.HeartbeatName)
 }
 
-func (gr getRequest) Endpoint() string {
+func (gr getRequest) ResourcePath() string {
 	return "/v2/heartbeats/" + gr.HeartbeatName
 }
 
@@ -55,7 +55,7 @@ func (lr listRequest) Validate() error {
 	return nil
 }
 
-func (lr listRequest) Endpoint() string {
+func (lr listRequest) ResourcePath() string {
 	return "/v2/heartbeats"
 }
 
@@ -92,7 +92,7 @@ func (r UpdateRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRequest) Endpoint() string {
+func (r UpdateRequest) ResourcePath() string {
 	return "/v2/heartbeats/" + r.Name
 }
 
@@ -129,7 +129,7 @@ func (r AddRequest) Validate() error {
 	return nil
 }
 
-func (r AddRequest) Endpoint() string {
+func (r AddRequest) ResourcePath() string {
 	return "/v2/heartbeats"
 }
 
@@ -157,7 +157,7 @@ func (r enableRequest) Validate() error {
 	return nil
 }
 
-func (r enableRequest) Endpoint() string {
+func (r enableRequest) ResourcePath() string {
 	return "/v2/heartbeats/" + r.heartbeatName + "/enable"
 }
 
@@ -177,7 +177,7 @@ func (r disableRequest) Validate() error {
 	return nil
 }
 
-func (r disableRequest) Endpoint() string {
+func (r disableRequest) ResourcePath() string {
 	return "/v2/heartbeats/" + r.heartbeatName + "/disable"
 }
 

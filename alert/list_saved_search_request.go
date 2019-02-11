@@ -11,7 +11,7 @@ func (ssr ListSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (ssr ListSavedSearchRequest) Endpoint() string {
+func (ssr ListSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches"
 }

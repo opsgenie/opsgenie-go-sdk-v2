@@ -1,20 +1,20 @@
 package alert
 
 import (
-	"net/url"
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
+	"net/url"
 )
 
 type RemoveDetailsRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Keys    string
-	Source string
-	User string
-	Note string
-	params string
+	Keys            string
+	Source          string
+	User            string
+	Note            string
+	params          string
 }
 
 func (r RemoveDetailsRequest) Validate() error {
@@ -28,9 +28,9 @@ func (r RemoveDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveDetailsRequest) Endpoint() string {
+func (r RemoveDetailsRequest) ResourcePath() string {
 
-	return "/v2/alerts/"+r.IdentifierValue+"/details" + r.setParams(r)
+	return "/v2/alerts/" + r.IdentifierValue + "/details" + r.setParams(r)
 }
 
 func (r RemoveDetailsRequest) Method() string {
@@ -51,7 +51,7 @@ func setIdentifierToRemoveDetailsRequest(request RemoveDetailsRequest) string {
 		params.Add("identifierType", "id")
 	}
 
-	if  request.IdentifierType == ALIAS  {
+	if request.IdentifierType == ALIAS {
 		params.Add("identifierType", "alias")
 	}
 
@@ -75,10 +75,10 @@ func setIdentifierToRemoveDetailsRequest(request RemoveDetailsRequest) string {
 		params.Add("note", request.Note)
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = "?" + params.Encode()
 	} else {
-		request.params =  ""
+		request.params = ""
 	}
 
 	return request.params

@@ -1,20 +1,20 @@
 package alert
 
 import (
-	"net/url"
 	"github.com/emirpasic/gods/utils"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/url"
 )
 
 type ListAlertNotesRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Offset string
-	Direction RequestDirection
-	Order Order
-	Limit uint32
-	params string
+	Offset          string
+	Direction       RequestDirection
+	Order           Order
+	Limit           uint32
+	params          string
 }
 
 func (r ListAlertNotesRequest) Validate() error {
@@ -25,7 +25,7 @@ func (r ListAlertNotesRequest) Validate() error {
 	return nil
 }
 
-func (r ListAlertNotesRequest) Endpoint() string {
+func (r ListAlertNotesRequest) ResourcePath() string {
 	return "/v2/alerts/" + r.IdentifierValue + "/notes" + r.setIdentifierToListAlertNotesParams(r)
 }
 
@@ -33,8 +33,7 @@ func (r ListAlertNotesRequest) Method() string {
 	return "GET"
 }
 
-
-func  (r ListAlertNotesRequest) setIdentifierToListAlertNotesParams(request ListAlertNotesRequest) string {
+func (r ListAlertNotesRequest) setIdentifierToListAlertNotesParams(request ListAlertNotesRequest) string {
 
 	params := url.Values{}
 
@@ -42,7 +41,7 @@ func  (r ListAlertNotesRequest) setIdentifierToListAlertNotesParams(request List
 		params.Add("identifierType", "id")
 	}
 
-	if  request.IdentifierType == ALIAS  {
+	if request.IdentifierType == ALIAS {
 		params.Add("identifierType", "alias")
 	}
 
@@ -50,29 +49,29 @@ func  (r ListAlertNotesRequest) setIdentifierToListAlertNotesParams(request List
 		params.Add("identifierType", "tiny")
 	}
 
-	if request.Offset !="" {
+	if request.Offset != "" {
 		params.Add("offset", request.Offset)
 	}
 
-	if request.Order ==  Asc {
-		params.Add("order","asc" )
+	if request.Order == Asc {
+		params.Add("order", "asc")
 	}
-	if request.Order ==  Desc {
-		params.Add("order","desc" )
-	}
-
-	if request.Direction ==  NEXT {
-		params.Add("direction","next" )
-	}
-	if request.Direction ==  PREV {
-		params.Add("direction","prev" )
+	if request.Order == Desc {
+		params.Add("order", "desc")
 	}
 
-	if request.Limit !=0 {
+	if request.Direction == NEXT {
+		params.Add("direction", "next")
+	}
+	if request.Direction == PREV {
+		params.Add("direction", "prev")
+	}
+
+	if request.Limit != 0 {
 		params.Add("limit", utils.ToString(request.Limit))
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = "?" + params.Encode()
 	} else {
 		request.params = ""

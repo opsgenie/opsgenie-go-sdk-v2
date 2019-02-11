@@ -50,7 +50,7 @@ func TestDeleteRequest_Endpoint(t *testing.T) {
 	request := &DeleteRequest{
 		Id: "adea9e79-5527-4e49-b345-e55ae180ae59",
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59", endpoint)
 }
 
@@ -70,7 +70,7 @@ func TestGetRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Id,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59?identifierType=id", endpoint)
 }
 
@@ -111,7 +111,7 @@ func TestCloseRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Tiny,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/close?identifierType=tiny", endpoint)
 }
 
@@ -136,7 +136,7 @@ func TestAddNoteRequest_Endpoint(t *testing.T) {
 	request := &AddNoteRequest{
 		Id: "adea9e79-5527-4e49-b345-e55ae180ae59",
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/notes", endpoint)
 }
 
@@ -165,7 +165,7 @@ func TestAddResponderRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Id,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/responders?identifierType=id", endpoint)
 }
 
@@ -188,7 +188,7 @@ func TestAddTagsRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Tiny,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags?identifierType=tiny", endpoint)
 }
 
@@ -215,7 +215,7 @@ func TestRemoveTagsRequest_Endpoint(t *testing.T) {
 		Identifier: Tiny,
 		Tags:       []string{"cem", "Heimdall"},
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags?"+
 		"identifierType=tiny&tags=cem,Heimdall", endpoint)
 }
@@ -241,7 +241,7 @@ func TestAddDetailsRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Id,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/details?identifierType=id", endpoint)
 }
 
@@ -264,7 +264,7 @@ func TestRemoveDetailsRequest_Endpoint(t *testing.T) {
 		Id:   "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Keys: []string{"See", "Opsgenie", "in", "Action"},
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/"+
 		"details?keys=See,Opsgenie,in,Action", endpoint)
 }
@@ -284,7 +284,7 @@ func TestUpdatePriorityRequest_Endpoint(t *testing.T) {
 	request := &UpdatePriorityRequest{
 		Id: "adea9e79-5527-4e49-b345-e55ae180ae59",
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/priority", endpoint)
 }
 
@@ -307,7 +307,7 @@ func TestUpdateMessageRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Id,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/message?identifierType=id", endpoint)
 }
 
@@ -330,7 +330,7 @@ func TestUpdateDescriptionRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Tiny,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/description?identifierType=tiny", endpoint)
 }
 
@@ -359,7 +359,7 @@ func TestListLogsRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Tiny,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/logs?identifierType=tiny", endpoint)
 }
 
@@ -388,7 +388,7 @@ func TestListNotesRequest_Endpoint(t *testing.T) {
 		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
 		Identifier: Id,
 	}
-	endpoint := request.Endpoint()
+	endpoint := request.ResourcePath()
 	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/notes?identifierType=id", endpoint)
 }
 

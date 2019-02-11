@@ -1,16 +1,16 @@
 package alert
 
 import (
-	"net/url"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/url"
 )
 
 type DeleteAlertRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Source string
-	params string
+	Source          string
+	params          string
 }
 
 func (r DeleteAlertRequest) Validate() error {
@@ -21,7 +21,7 @@ func (r DeleteAlertRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteAlertRequest) Endpoint() string {
+func (r DeleteAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.setParams(r)
 }
@@ -55,7 +55,7 @@ func setIdentifierToParams(request DeleteAlertRequest) string {
 		params.Add("identifierType", "id")
 	}
 
-	if  request.IdentifierType == ALIAS  {
+	if request.IdentifierType == ALIAS {
 		params.Add("identifierType", "alias")
 	}
 
@@ -63,7 +63,7 @@ func setIdentifierToParams(request DeleteAlertRequest) string {
 		params.Add("identifierType", "tiny")
 	}
 
-	if len(params)!=0 {
+	if len(params) != 0 {
 		request.params = inlineParam + "?" + params.Encode()
 	} else {
 		request.params = inlineParam + ""

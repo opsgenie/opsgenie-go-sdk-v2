@@ -34,9 +34,9 @@ type Config struct {
 type ApiUrl string
 
 const (
-	API_URL         ApiUrl = "https://api.opsgenie.com"
-	API_URL_EU      ApiUrl = "https://api.eu.opsgenie.com"
-	API_URL_SANDBOX ApiUrl = "https://api.sandbox.opsgenie.com"
+	API_URL         ApiUrl = "api.opsgenie.com"
+	API_URL_EU      ApiUrl = "api.eu.opsgenie.com"
+	API_URL_SANDBOX ApiUrl = "api.sandbox.opsgenie.com"
 )
 
 func (conf Config) Validate() error {

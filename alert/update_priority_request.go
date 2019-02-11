@@ -1,15 +1,15 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type UpdatePriorityRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Priority    Priority          `json:"priority,omitempty"`
+	Priority        Priority `json:"priority,omitempty"`
 }
 
 func (r UpdatePriorityRequest) Validate() error {
@@ -26,10 +26,10 @@ func (r UpdatePriorityRequest) Validate() error {
 	return nil
 }
 
-func (r UpdatePriorityRequest) Endpoint() string {
+func (r UpdatePriorityRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=tiny"
-	}else if r.IdentifierType == ALIAS {
+	} else if r.IdentifierType == ALIAS {
 		return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=alias"
 	}
 	return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=id"

@@ -26,7 +26,7 @@ func (cr CreateRequest) Validate() error {
 	return nil
 }
 
-func (cr CreateRequest) Endpoint() string {
+func (cr CreateRequest) ResourcePath() string {
 	return "/v2/users/" + cr.UserIdentifier + "/contacts"
 }
 
@@ -48,7 +48,7 @@ func (gr GetRequest) Validate() error {
 	return nil
 }
 
-func (gr GetRequest) Endpoint() string {
+func (gr GetRequest) ResourcePath() string {
 	return "/v2/users/" + gr.UserIdentifier + "/contacts/" + gr.ContactIdentifier
 }
 
@@ -77,7 +77,7 @@ func (ur UpdateRequest) Validate() error {
 	return nil
 }
 
-func (ur UpdateRequest) Endpoint() string {
+func (ur UpdateRequest) ResourcePath() string {
 	return "/v2/users/" + ur.UserIdentifier + "/contacts/" + ur.ContactIdentifier
 }
 
@@ -98,7 +98,7 @@ func (dr DeleteRequest) Validate() error {
 	}
 	return nil
 }
-func (dr DeleteRequest) Endpoint() string {
+func (dr DeleteRequest) ResourcePath() string {
 	return "/v2/users/" + dr.UserIdentifier + "/contacts/" + dr.ContactIdentifier
 }
 
@@ -117,7 +117,7 @@ func (lr ListRequest) Validate() error {
 	}
 	return nil
 }
-func (lr ListRequest) Endpoint() string {
+func (lr ListRequest) ResourcePath() string {
 	return "/v2/users/" + lr.UserIdentifier + "/contacts"
 }
 
@@ -138,7 +138,7 @@ func (er EnableRequest) Validate() error {
 	}
 	return nil
 }
-func (er EnableRequest) Endpoint() string {
+func (er EnableRequest) ResourcePath() string {
 	return "/v2/users/" + er.UserIdentifier + "/contacts/" + er.ContactIdentifier + "/enable"
 }
 
@@ -159,7 +159,7 @@ func (dr DisableRequest) Validate() error {
 	}
 	return nil
 }
-func (dr DisableRequest) Endpoint() string {
+func (dr DisableRequest) ResourcePath() string {
 	return "/v2/users/" + dr.UserIdentifier + "/contacts/" + dr.ContactIdentifier + "/disable"
 }
 

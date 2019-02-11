@@ -1,17 +1,17 @@
 package alert
 
 import (
-	"github.com/pkg/errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type AddNoteRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	User        string            `json:"user,omitempty"`
-	Source      string            `json:"source,omitempty"`
-	Note        string            `json:"note,omitempty"`
+	User            string `json:"user,omitempty"`
+	Source          string `json:"source,omitempty"`
+	Note            string `json:"note,omitempty"`
 }
 
 func (r AddNoteRequest) Validate() error {
@@ -24,10 +24,10 @@ func (r AddNoteRequest) Validate() error {
 	return nil
 }
 
-func (r AddNoteRequest) Endpoint() string {
+func (r AddNoteRequest) ResourcePath() string {
 	if r.IdentifierType == TINYID {
 		return "/v2/alerts/" + r.IdentifierValue + "/notes?identifierType=tiny"
-	}else if r.IdentifierType == ALIAS {
+	} else if r.IdentifierType == ALIAS {
 		return "/v2/alerts/" + r.IdentifierValue + "/notes?identifierType=alias"
 	}
 	return "/v2/alerts/" + r.IdentifierValue + "/notes?identifierType=id"
