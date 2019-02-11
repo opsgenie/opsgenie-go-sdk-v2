@@ -1,9 +1,9 @@
 package alert
 
 import (
-	"github.com/emirpasic/gods/utils"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"net/url"
+	"strconv"
 )
 
 type ListAlertNotesRequest struct {
@@ -68,7 +68,7 @@ func (r ListAlertNotesRequest) setIdentifierToListAlertNotesParams(request ListA
 	}
 
 	if request.Limit != 0 {
-		params.Add("limit", utils.ToString(request.Limit))
+		params.Add("limit", strconv.Itoa(int(request.Limit)))
 	}
 
 	if len(params) != 0 {

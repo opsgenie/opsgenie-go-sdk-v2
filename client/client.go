@@ -39,7 +39,6 @@ type ApiRequest interface {
 }
 
 type BaseRequest struct {
-	ApiRequest `json:"apiRequest,omitempty"`
 }
 
 func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
