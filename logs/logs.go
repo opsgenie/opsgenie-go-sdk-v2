@@ -12,7 +12,7 @@ type Log struct {
 }
 
 type Client struct {
-	retClient *client.OpsGenieClient
+	restClient *client.OpsGenieClient
 }
 
 func NewClient(config *client.Config) (*Client, error) {
@@ -20,12 +20,12 @@ func NewClient(config *client.Config) (*Client, error) {
 		config,
 	)
 
-	OpsGenieLogsClient := &Client{
-		retClient: restClient,
-	}
-
 	if err != nil {
 		return nil, err
+	}
+
+	OpsGenieLogsClient := &Client{
+		restClient: restClient,
 	}
 
 	return OpsGenieLogsClient, nil
@@ -36,7 +36,7 @@ func NewClient(config *client.Config) (*Client, error) {
 func (lc *Client) ListLogFiles(ctx context.Context, req ListLogFilesRequest) (*ListLogFilesResult, error) {
 	listLogFilesResponse := &ListLogFilesResult{}
 
-	err := lc.retClient.Exec(ctx, req, listLogFilesResponse)
+	err := lc.restClient.Exec(ctx, req, listLogFilesResponse)
 
 	if err != nil {
 		return nil, err
@@ -48,7 +48,7 @@ func (lc *Client) ListLogFiles(ctx context.Context, req ListLogFilesRequest) (*L
 func (lc *Client) GenerateLogFileDownloadLink(ctx context.Context, req GenerateLogFileDownloadLinkRequest) (*GenerateLogFileDownloadLinkResult, error) {
 	generateLogFileDownloadLinkResponse := &GenerateLogFileDownloadLinkResult{}
 
-	err := lc.retClient.Exec(ctx, req, generateLogFileDownloadLinkResponse)
+	err := lc.restClient.Exec(ctx, req, generateLogFileDownloadLinkResponse)
 
 	if err != nil {
 		return nil, err
