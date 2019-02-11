@@ -1,24 +1,24 @@
 package client
 
 import (
-	"github.com/hashicorp/go-retryablehttp"
-	"net/http"
-	"github.com/sirupsen/logrus"
-	"time"
-	"net/url"
-	"fmt"
-	"runtime"
-	"strconv"
-	"io/ioutil"
+	"bytes"
+	"context"
 	"encoding/json"
+	"fmt"
+	"github.com/hashicorp/go-retryablehttp"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"io"
+	"io/ioutil"
 	"mime/multipart"
+	"net/http"
+	"net/url"
 	"os"
 	"reflect"
+	"runtime"
+	"strconv"
 	"strings"
-	"github.com/pkg/errors"
-	"context"
-	"bytes"
+	"time"
 )
 
 type OpsGenieClient struct {
@@ -38,7 +38,7 @@ type ApiRequest interface {
 }
 
 type BaseRequest struct {
-	ApiRequest
+	ApiRequest `json:"apiRequest,omitempty"`
 }
 
 func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
@@ -311,7 +311,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 
 }
 
-func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *string, details map[string]interface{}) (error) {
+func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *string, details map[string]interface{}) error {
 	*buf = new(bytes.Buffer)
 	*contentType = details["Content-Type"].(string)
 
@@ -323,7 +323,7 @@ func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *strin
 	return nil
 }
 
-func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentType *string) (error) {
+func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentType *string) error {
 
 	*buf = new(bytes.Buffer)
 	writer := multipart.NewWriter(*buf)
@@ -337,12 +337,12 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 			if err != nil {
 				return err
 			}
-			part, err = writer.CreateFormFile(key, fileStat.Name());
+			part, err = writer.CreateFormFile(key, fileStat.Name())
 			if err != nil {
 				return err
 			}
 		} else {
-			part, err = writer.CreateFormField(key);
+			part, err = writer.CreateFormField(key)
 			if err != nil {
 				return err
 			}

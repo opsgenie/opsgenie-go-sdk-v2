@@ -20,7 +20,7 @@ func NewClient(config *client.Config) (*Client, error) {
 	return client, nil
 }
 
-func (client *Client) GetRequestStatus(request *RequestStatusRequest, context context.Context) (*RequestStatusResult, error) {
+func (client *Client) GetRequestStatus(context context.Context, request RequestStatusRequest) (*RequestStatusResult, error) {
 	result := &RequestStatusResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -29,7 +29,7 @@ func (client *Client) GetRequestStatus(request *RequestStatusRequest, context co
 	return result, nil
 }
 
-func (client *Client) Create(request *CreateRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) Create(context context.Context, request CreateRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -38,7 +38,7 @@ func (client *Client) Create(request *CreateRequest, context context.Context) (*
 	return result, nil
 }
 
-func (client *Client) Delete(request *DeleteRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) Delete(context context.Context, request DeleteRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -47,8 +47,8 @@ func (client *Client) Delete(request *DeleteRequest, context context.Context) (*
 	return result, nil
 }
 
-func (client *Client) Get(request *GetRequest, context context.Context) (*IncidentResult, error) {
-	result := &IncidentResult{}
+func (client *Client) Get(context context.Context, request GetRequest) (*GetResult, error) {
+	result := &GetResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func (client *Client) Get(request *GetRequest, context context.Context) (*Incide
 	return result, nil
 }
 
-func (client *Client) List(request *ListRequest, context context.Context) (*ListResult, error) {
+func (client *Client) List(context context.Context, request ListRequest) (*ListResult, error) {
 	result := &ListResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -65,7 +65,7 @@ func (client *Client) List(request *ListRequest, context context.Context) (*List
 	return result, nil
 }
 
-func (client *Client) Close(request *CloseRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) Close(context context.Context, request CloseRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -74,7 +74,7 @@ func (client *Client) Close(request *CloseRequest, context context.Context) (*As
 	return result, nil
 }
 
-func (client *Client) AddNote(request *AddNoteRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) AddNote(context context.Context, request AddNoteRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -83,7 +83,7 @@ func (client *Client) AddNote(request *AddNoteRequest, context context.Context) 
 	return result, nil
 }
 
-func (client *Client) AddResponder(request *AddResponderRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) AddResponder(context context.Context, request AddResponderRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -92,7 +92,7 @@ func (client *Client) AddResponder(request *AddResponderRequest, context context
 	return result, nil
 }
 
-func (client *Client) AddTags(request *AddTagsRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) AddTags(context context.Context, request AddTagsRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -101,7 +101,7 @@ func (client *Client) AddTags(request *AddTagsRequest, context context.Context) 
 	return result, nil
 }
 
-func (client *Client) RemoveTags(request *RemoveTagsRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) RemoveTags(context context.Context, request RemoveTagsRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -110,7 +110,7 @@ func (client *Client) RemoveTags(request *RemoveTagsRequest, context context.Con
 	return result, nil
 }
 
-func (client *Client) AddDetails(request *AddDetailsRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) AddDetails(context context.Context, request AddDetailsRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -119,7 +119,7 @@ func (client *Client) AddDetails(request *AddDetailsRequest, context context.Con
 	return result, nil
 }
 
-func (client *Client) RemoveDetails(request *RemoveDetailsRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) RemoveDetails(context context.Context, request RemoveDetailsRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -128,7 +128,7 @@ func (client *Client) RemoveDetails(request *RemoveDetailsRequest, context conte
 	return result, nil
 }
 
-func (client *Client) UpdatePriority(request *UpdatePriorityRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) UpdatePriority(context context.Context, request UpdatePriorityRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -137,7 +137,7 @@ func (client *Client) UpdatePriority(request *UpdatePriorityRequest, context con
 	return result, nil
 }
 
-func (client *Client) UpdateMessage(request *UpdateMessageRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) UpdateMessage(context context.Context, request UpdateMessageRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -146,7 +146,7 @@ func (client *Client) UpdateMessage(request *UpdateMessageRequest, context conte
 	return result, nil
 }
 
-func (client *Client) UpdateDescription(request *UpdateDescriptionRequest, context context.Context) (*AsyncResult, error) {
+func (client *Client) UpdateDescription(context context.Context, request UpdateDescriptionRequest) (*AsyncResult, error) {
 	result := &AsyncResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -155,7 +155,7 @@ func (client *Client) UpdateDescription(request *UpdateDescriptionRequest, conte
 	return result, nil
 }
 
-func (client *Client) ListLogs(request *ListLogsRequest, context context.Context) (*ListLogsResult, error) {
+func (client *Client) ListLogs(context context.Context, request ListLogsRequest) (*ListLogsResult, error) {
 	result := &ListLogsResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -164,7 +164,7 @@ func (client *Client) ListLogs(request *ListLogsRequest, context context.Context
 	return result, nil
 }
 
-func (client *Client) ListNotes(request *ListNotesRequest, context context.Context) (*ListNotesResult, error) {
+func (client *Client) ListNotes(context context.Context, request ListNotesRequest) (*ListNotesResult, error) {
 	result := &ListNotesResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {

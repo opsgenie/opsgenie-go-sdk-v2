@@ -201,7 +201,7 @@ func TestRemoveTagsRequest_Validate(t *testing.T) {
 	request.Id = "adea9e79-5527-4e49-b345-e55ae180ae59"
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Tags field cannot be blank.").Error())
-	request.Tags = []string{"cem", "heimdall"}
+	request.Tags = []string{"cem", "Heimdall"}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Identifier type should be one of these: 'Id', 'Tiny' or empty.").Error())
 	request.Identifier = Id
@@ -211,10 +211,13 @@ func TestRemoveTagsRequest_Validate(t *testing.T) {
 
 func TestRemoveTagsRequest_Endpoint(t *testing.T) {
 	request := &RemoveTagsRequest{
-		Id: "adea9e79-5527-4e49-b345-e55ae180ae59",
+		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
+		Identifier: Tiny,
+		Tags:       []string{"cem", "Heimdall"},
 	}
 	endpoint := request.Endpoint()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags", endpoint)
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags?"+
+		"identifierType=tiny&tags=cem,Heimdall", endpoint)
 }
 
 func TestAddDetailsRequest_Validate(t *testing.T) {
@@ -251,20 +254,19 @@ func TestRemoveDetailsRequest_Validate(t *testing.T) {
 	request.Id = "adea9e79-5527-4e49-b345-e55ae180ae59"
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Details field cannot be blank.").Error())
-	request.Details = map[string]string{
-		"Opsgenie": "Route alerts to the right people",
-	}
+	request.Keys = []string{"Opsgenie", "Route alerts to the right people"}
 	err = request.Validate()
 	assert.Nil(t, err)
 }
 
 func TestRemoveDetailsRequest_Endpoint(t *testing.T) {
 	request := &RemoveDetailsRequest{
-		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
-		Identifier: Tiny,
+		Id:   "adea9e79-5527-4e49-b345-e55ae180ae59",
+		Keys: []string{"See", "Opsgenie", "in", "Action"},
 	}
 	endpoint := request.Endpoint()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/details?identifierType=tiny", endpoint)
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/"+
+		"details?keys=See,Opsgenie,in,Action", endpoint)
 }
 
 func TestUpdatePriorityRequestRequest_Validate(t *testing.T) {

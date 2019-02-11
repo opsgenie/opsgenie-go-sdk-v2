@@ -2,6 +2,21 @@ package incident
 
 import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
 
+type Incident struct {
+	Id              string            `json:"id"`
+	ServiceId       string            `json:"serviceId"`
+	TinyId          string            `json:"tinyId"`
+	Message         string            `json:"message"`
+	Status          string            `json:"status"`
+	Tags            []string          `json:"tags"`
+	CreatedAt       string            `json:"createdAt"`
+	UpdatedAt       string            `json:"updatedAt"`
+	Priority        Priority          `json:"priority"`
+	OwnerTeam       string            `json:"ownerTeam"`
+	Responders      []Responder       `json:"responders"`
+	ExtraProperties map[string]string `json:"extraProperties"`
+}
+
 type RequestStatusResult struct {
 	client.ResultMetadata
 	Success       bool   `json:"success"`
@@ -18,26 +33,15 @@ type AsyncResult struct {
 	Result string `json:"result"`
 }
 
-type IncidentResult struct {
+type GetResult struct {
 	client.ResultMetadata
-	Id              string            `json:"id"`
-	ServiceId       string            `json:"serviceId"`
-	TinyId          string            `json:"tinyId"`
-	Message         string            `json:"message"`
-	Status          string            `json:"status"`
-	Tags            []string          `json:"tags"`
-	CreatedAt       string            `json:"createdAt"`
-	UpdatedAt       string            `json:"updatedAt"`
-	Priority        Priority          `json:"priority"`
-	OwnerTeam       string            `json:"ownerTeam"`
-	Responders      []Responder       `json:"responders"`
-	ExtraProperties map[string]string `json:"extraProperties"`
+	Incident
 }
 
 type ListResult struct {
 	client.ResultMetadata
-	Incidents []IncidentResult `json:"data"`
-	Paging    Paging           `json:"paging"`
+	Incidents []Incident `json:"data"`
+	Paging    Paging     `json:"paging"`
 }
 
 type LogResult struct {

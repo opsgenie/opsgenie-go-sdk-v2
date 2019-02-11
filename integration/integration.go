@@ -19,7 +19,7 @@ func NewClient(config client.Config) (*Client, error) {
 	return client, nil
 }
 
-func (client *Client) Get(request GetRequest, context context.Context) (*GetResult, error) {
+func (client *Client) Get(context context.Context, request GetRequest) (*GetResult, error) {
 	result := &GetResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -38,7 +38,7 @@ func (client *Client) List(context context.Context) (*ListResult, error) {
 	return result, nil
 }
 
-func (client *Client) CreateApiBased(request APIBasedIntegrationRequest, context context.Context) (*APIBasedIntegrationResult, error) {
+func (client *Client) CreateApiBased(context context.Context, request APIBasedIntegrationRequest) (*APIBasedIntegrationResult, error) {
 	result := &APIBasedIntegrationResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -47,7 +47,7 @@ func (client *Client) CreateApiBased(request APIBasedIntegrationRequest, context
 	return result, nil
 }
 
-func (client *Client) CreateEmailBased(request EmailBasedIntegrationRequest, context context.Context) (*EmailBasedIntegrationResult, error) {
+func (client *Client) CreateEmailBased(context context.Context, request EmailBasedIntegrationRequest) (*EmailBasedIntegrationResult, error) {
 	result := &EmailBasedIntegrationResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -56,7 +56,7 @@ func (client *Client) CreateEmailBased(request EmailBasedIntegrationRequest, con
 	return result, nil
 }
 
-func (client *Client) ForceUpdateAllFields(request UpdateIntegrationRequest, context context.Context) (*UpdateResult, error) {
+func (client *Client) ForceUpdateAllFields(context context.Context, request UpdateIntegrationRequest) (*UpdateResult, error) {
 	result := &UpdateResult{}
 	if len(request.OtherFields) == 0 {
 		request.OtherFields = map[string]interface{}{}
@@ -76,7 +76,7 @@ func (client *Client) ForceUpdateAllFields(request UpdateIntegrationRequest, con
 	return result, nil
 }
 
-func (client *Client) Delete(request DeleteIntegrationRequest, context context.Context) (*DeleteResult, error) {
+func (client *Client) Delete(context context.Context, request DeleteIntegrationRequest) (*DeleteResult, error) {
 	result := &DeleteResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -85,7 +85,7 @@ func (client *Client) Delete(request DeleteIntegrationRequest, context context.C
 	return result, nil
 }
 
-func (client *Client) Enable(request EnableIntegrationRequest, context context.Context) (*EnableResult, error) {
+func (client *Client) Enable(context context.Context, request EnableIntegrationRequest) (*EnableResult, error) {
 	result := &EnableResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -94,7 +94,7 @@ func (client *Client) Enable(request EnableIntegrationRequest, context context.C
 	return result, nil
 }
 
-func (client *Client) Disable(request DisableIntegrationRequest, context context.Context) (*DisableResult, error) {
+func (client *Client) Disable(context context.Context, request DisableIntegrationRequest) (*DisableResult, error) {
 	result := &DisableResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -103,7 +103,7 @@ func (client *Client) Disable(request DisableIntegrationRequest, context context
 	return result, nil
 }
 
-func (client *Client) Authenticate(request AuthenticateIntegrationRequest, context context.Context) (*AuthenticateResult, error) {
+func (client *Client) Authenticate(context context.Context, request AuthenticateIntegrationRequest) (*AuthenticateResult, error) {
 	result := &AuthenticateResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -112,7 +112,7 @@ func (client *Client) Authenticate(request AuthenticateIntegrationRequest, conte
 	return result, nil
 }
 
-func (client *Client) GetActions(request GetIntegrationActionsRequest, context context.Context) (*ActionsResult, error) {
+func (client *Client) GetActions(context context.Context, request GetIntegrationActionsRequest) (*ActionsResult, error) {
 	result := &ActionsResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -121,7 +121,7 @@ func (client *Client) GetActions(request GetIntegrationActionsRequest, context c
 	return result, nil
 }
 
-func (client *Client) CreateActions(request CreateIntegrationActionsRequest, context context.Context) (*ActionsResult, error) {
+func (client *Client) CreateActions(context context.Context, request CreateIntegrationActionsRequest) (*ActionsResult, error) {
 	result := &ActionsResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {
@@ -130,7 +130,7 @@ func (client *Client) CreateActions(request CreateIntegrationActionsRequest, con
 	return result, nil
 }
 
-func (client *Client) UpdateAllActions(request UpdateAllIntegrationActionsRequest, context context.Context) (*ActionsResult, error) {
+func (client *Client) UpdateAllActions(context context.Context, request UpdateAllIntegrationActionsRequest) (*ActionsResult, error) {
 	result := &ActionsResult{}
 	err := client.executor.Exec(context, request, result)
 	if err != nil {

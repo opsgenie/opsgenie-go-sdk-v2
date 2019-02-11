@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 type RequestStatusRequest struct {
@@ -322,8 +323,8 @@ type RemoveTagsRequest struct {
 	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
-	Note       string   `json:"note,omitempty"`
-	Tags       []string `json:"tags"`
+	Note       string
+	Tags       []string
 }
 
 func (r RemoveTagsRequest) Validate() error {
@@ -340,17 +341,25 @@ func (r RemoveTagsRequest) Validate() error {
 }
 
 func (r RemoveTagsRequest) Endpoint() string {
-	endpoint := "/v1/incidents/" + r.Id + "/tags"
+	endpoint := "/v1/incidents/" + r.Id + "/tags?"
 	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
+		endpoint += "identifierType=id&"
 	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
+		endpoint += "identifierType=tiny&"
 	}
-	return endpoint
+	return endpoint + r.getParams()
 }
 
 func (r RemoveTagsRequest) Method() string {
 	return "DELETE"
+}
+
+func (r RemoveTagsRequest) getParams() string {
+	params := "tags=" + strings.Join(r.Tags[:], ",")
+	if r.Note != "" {
+		params += "&note=" + r.Note
+	}
+	return params
 }
 
 type AddDetailsRequest struct {
@@ -392,15 +401,15 @@ type RemoveDetailsRequest struct {
 	client.BaseRequest
 	Identifier IdentifierType
 	Id         string
-	Note       string            `json:"note,omitempty"`
-	Details    map[string]string `json:"details"`
+	Note       string
+	Keys       []string
 }
 
 func (r RemoveDetailsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
-	if len(r.Details) == 0 {
+	if len(r.Keys) == 0 {
 		return errors.New("Details field cannot be blank.")
 	}
 	if r.Identifier != "" && r.Identifier != Id && r.Identifier != Tiny {
@@ -410,17 +419,25 @@ func (r RemoveDetailsRequest) Validate() error {
 }
 
 func (r RemoveDetailsRequest) Endpoint() string {
-	endpoint := "/v1/incidents/" + r.Id + "/details"
+	endpoint := "/v1/incidents/" + r.Id + "/details?"
 	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
+		endpoint += "identifierType=id&"
 	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
+		endpoint += "identifierType=tiny&"
 	}
-	return endpoint
+	return endpoint + r.getParams()
 }
 
 func (r RemoveDetailsRequest) Method() string {
 	return "DELETE"
+}
+
+func (r RemoveDetailsRequest) getParams() string {
+	params := "keys=" + strings.Join(r.Keys[:], ",")
+	if r.Note != "" {
+		params += "&note=" + r.Note
+	}
+	return params
 }
 
 type UpdatePriorityRequest struct {
