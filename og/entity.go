@@ -78,14 +78,15 @@ func validateParticipants(rotation Rotation) error {
 	return nil
 }
 
+//todo check
 func ValidateRestrictions(timeRestriction TimeRestriction) error {
 	if timeRestriction.Type != WeekdayAndTimeOfDay && timeRestriction.Type != TimeOfDay {
 		return errors.New("Time restriction type is not valid.")
 	}
-	if len(timeRestriction.Restrictions) == 0 {
+	if len(timeRestriction.RestrictionList) == 0 {
 		return errors.New("Restrictions can not be empty.")
 	}
-	for _, restriction := range timeRestriction.Restrictions {
+	for _, restriction := range timeRestriction.RestrictionList {
 		err := validateTimeBaseRestriction(restriction)
 		if err != nil {
 			return err
@@ -102,6 +103,7 @@ func ValidateRestrictions(timeRestriction TimeRestriction) error {
 	return nil
 }
 
+//todo neden 0 olmasin dakika?
 func validateTimeBaseRestriction(timeBasedRestriction Restriction) error {
 	if timeBasedRestriction.EndMin <= 0 {
 		return errors.New("EndMin field cannot be empty.")
@@ -134,7 +136,7 @@ func (r Rotation) WithTimeRestriction(timeRestriction TimeRestriction) *Rotation
 }
 
 func (tr *TimeRestriction) WithRestrictions(restrictions ...Restriction) *TimeRestriction {
-	tr.Restrictions = restrictions
+	tr.RestrictionList = restrictions
 	return tr
 }
 
@@ -271,8 +273,9 @@ type Participant struct {
 }
 
 type TimeRestriction struct {
-	Type         RestrictionType `json:"type,omitempty"`
-	Restrictions []Restriction   `json:"restrictions,omitempty"`
+	Type            RestrictionType `json:"type,omitempty"`
+	RestrictionList []Restriction   `json:"restrictions,omitempty"`
+	Restriction     Restriction     `json:"restriction,omitempty"`
 }
 
 type Restriction struct {
@@ -295,11 +298,42 @@ type Condition struct {
 	Operation     ConditionOperation `json:"operation,omitempty"`
 	ExpectedValue string             `json:"expectedValue,omitempty"`
 	Key           string             `json:"key,omitempty"`
+	Order         uint32             `json:"order,omitempty"`
 }
 
 type ConditionMatchType string
 type ConditionFieldType string
 type ConditionOperation string
+
+type Contact struct {
+	To              string     `json:"to,omitempty"`
+	MethodOfContact MethodType `json:"method,omitempty"`
+}
+
+type MethodType string
+
+const (
+	Sms    MethodType = "sms"
+	Email  MethodType = "email"
+	Voice  MethodType = "voice"
+	Mobile MethodType = "mobile"
+)
+
+type SendAfter struct {
+	TimeAmount uint32 `json:"timeAmount,omitempty"`
+	TimeUnit   string `json:"timeUnit,omitempty"`
+}
+
+type Step struct {
+	Contact   Contact    `json:"contact,omitempty"`
+	SendAfter *SendAfter `json:"sendAfter,omitempty"`
+	Enabled   bool       `json:"enabled,omitempty"`
+}
+
+type Criteria struct {
+	CriteriaType ConditionMatchType `json:"type"`
+	Conditions   []Condition        `json:"conditions,omitempty"`
+}
 
 type NotifyType string
 
