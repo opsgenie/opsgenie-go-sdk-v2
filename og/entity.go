@@ -82,46 +82,6 @@ func validateParticipants(rotation Rotation) error {
 	return nil
 }
 
-func ValidateRestrictions(timeRestriction TimeRestriction) error {
-	if timeRestriction.Type != WeekdayAndTimeOfDay && timeRestriction.Type != TimeOfDay {
-		return errors.New("Time restriction type is not valid.")
-	}
-	if len(timeRestriction.Restrictions) == 0 {
-		return errors.New("Restrictions can not be empty.")
-	}
-	for _, restriction := range timeRestriction.Restrictions {
-		err := validateTimeBaseRestriction(restriction)
-		if err != nil {
-			return err
-		}
-		if timeRestriction.Type == WeekdayAndTimeOfDay {
-			if restriction.EndDay == "" {
-				return errors.New("EndDay field cannot be empty.")
-			}
-			if restriction.StartDay == "" {
-				return errors.New("StartDay field cannot be empty.")
-			}
-		}
-	}
-	return nil
-}
-
-func validateTimeBaseRestriction(timeBasedRestriction Restriction) error {
-	if timeBasedRestriction.EndMin <= 0 {
-		return errors.New("EndMin field cannot be empty.")
-	}
-	if timeBasedRestriction.StartHour <= 0 {
-		return errors.New("StartHour field cannot be empty.")
-	}
-	if timeBasedRestriction.StartMin <= 0 {
-		return errors.New("StartMin field cannot be empty.")
-	}
-	if timeBasedRestriction.EndHour <= 0 {
-		return errors.New("EndHour field cannot be empty.")
-	}
-	return nil
-}
-
 func (r Rotation) WithParticipant(participant Participant) *Rotation {
 	r.Participants = append(r.Participants, participant)
 	return &r
@@ -138,7 +98,7 @@ func (r Rotation) WithTimeRestriction(timeRestriction TimeRestriction) *Rotation
 }
 
 func (tr *TimeRestriction) WithRestrictions(restrictions ...Restriction) *TimeRestriction {
-	tr.Restrictions = restrictions
+	tr.RestrictionList = restrictions
 	return tr
 }
 
@@ -195,6 +155,37 @@ func ValidateConditions(conditions []Condition) error {
 			}
 		}
 	}
+	return nil
+}
+
+func ValidateRestrictions(timeRestriction *TimeRestriction) error {
+	if timeRestriction.Type == "" {
+		return errors.New("Type of time restriction must be time-of-day or weekday-and-time-of-day.")
+	}
+	if timeRestriction.Type == WeekdayAndTimeOfDay && timeRestriction.RestrictionList == nil {
+		return errors.New("Restrictions cannot be empty.")
+	}
+	if len(timeRestriction.RestrictionList) != 0 {
+		for _, restriction := range timeRestriction.RestrictionList {
+			if timeRestriction.Type == "weekday-and-time-of-day" &&
+				(restriction.EndMin < 0 ||
+					restriction.EndHour <= 0 ||
+					restriction.EndDay == "" ||
+					restriction.StartDay == "" ||
+					restriction.StartHour <= 0 ||
+					restriction.StartMin < 0) {
+				return errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.")
+			}
+		}
+	}
+	if timeRestriction.Type == TimeOfDay &&
+		(timeRestriction.Restriction.EndMin < 0 ||
+			timeRestriction.Restriction.EndHour <= 0 ||
+			timeRestriction.Restriction.StartHour <= 0 ||
+			timeRestriction.Restriction.StartMin < 0) {
+		return errors.New("startHour, startMin, endHour, endMin cannot be empty.")
+	}
+
 	return nil
 }
 
@@ -275,8 +266,9 @@ type Participant struct {
 }
 
 type TimeRestriction struct {
-	Type         RestrictionType `json:"type,omitempty"`
-	Restrictions []Restriction   `json:"restrictions,omitempty"`
+	Type            RestrictionType `json:"type,omitempty"`
+	RestrictionList []Restriction   `json:"restrictions,omitempty"`
+	Restriction     Restriction     `json:"restriction,omitempty"`
 }
 
 type Restriction struct {
@@ -305,6 +297,36 @@ type Condition struct {
 type ConditionMatchType string
 type ConditionFieldType string
 type ConditionOperation string
+
+type Contact struct {
+	To              string     `json:"to,omitempty"`
+	MethodOfContact MethodType `json:"method,omitempty"`
+}
+
+type MethodType string
+
+const (
+	Sms    MethodType = "sms"
+	Email  MethodType = "email"
+	Voice  MethodType = "voice"
+	Mobile MethodType = "mobile"
+)
+
+type SendAfter struct {
+	TimeAmount uint32 `json:"timeAmount,omitempty"`
+	TimeUnit   string `json:"timeUnit,omitempty"`
+}
+
+type Step struct {
+	Contact   Contact    `json:"contact,omitempty"`
+	SendAfter *SendAfter `json:"sendAfter,omitempty"`
+	Enabled   bool       `json:"enabled,omitempty"`
+}
+
+type Criteria struct {
+	CriteriaType ConditionMatchType `json:"type"`
+	Conditions   []Condition        `json:"conditions,omitempty"`
+}
 
 type NotifyType string
 
