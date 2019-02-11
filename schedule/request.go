@@ -148,7 +148,7 @@ type GetTimelineRequest struct {
 	IdentifierValue string
 	Expands         []ExpandType
 	Interval        uint32
-	IntervalUnit    og.TimeUnit
+	IntervalUnit    Unit
 	Date            string
 }
 
@@ -160,8 +160,8 @@ func (tr GetTimelineRequest) Validate() error {
 	if tr.Interval <= 0 {
 		tr.Interval = 1
 	}
-	if tr.IntervalUnit != "" && tr.IntervalUnit != og.Days && tr.IntervalUnit != og.Months && tr.IntervalUnit != og.Weeks {
-		return errors.New("Provided InternalUnit is not valid.")
+	if tr.IntervalUnit != Days && tr.IntervalUnit != Months {
+		tr.IntervalUnit = Weeks
 	}
 	return nil
 }
@@ -197,6 +197,12 @@ func (tr *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineRequ
 }
 
 type Unit string
+
+const (
+	Months Unit = "months"
+	Weeks  Unit = "weeks"
+	Days   Unit = "days"
+)
 
 type ExpandType string
 
