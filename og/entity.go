@@ -189,3 +189,11 @@ type Restriction struct {
 	EndDay    Day    `json:"endDay,omitempty"`
 	EndMin    uint32 `json:"endMin,omitempty"`
 }
+
+type NotifyType string
+
+const (
+	Next     NotifyType = "next"
+	Previous NotifyType = "previous"
+	Default  NotifyType = "default"
+)

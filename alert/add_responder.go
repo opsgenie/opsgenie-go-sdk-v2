@@ -9,28 +9,23 @@ type AddResponderRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Responder       []Responder `json:"responder,omitempty"`
-	User            string      `json:"user,omitempty"`
-	Source          string      `json:"source,omitempty"`
-	Note            string      `json:"note,omitempty"`
+	Responder       Responder `json:"responder,omitempty"`
+	User            string    `json:"user,omitempty"`
+	Source          string    `json:"source,omitempty"`
+	Note            string    `json:"note,omitempty"`
 }
 
 func (r AddResponderRequest) Validate() error {
-	if len(r.Responder) == 0 {
-		return errors.New("Responder list can not be empty")
-	}
 
-	for _, responder := range r.Responder {
-		if responder.Type != UserResponder && responder.Type != TeamResponder {
+	if r.Responder.Type != UserResponder && r.Responder.Type != TeamResponder {
 			return errors.New("Responder type must be user or team")
 		}
-		if responder.Type == UserResponder && responder.Id == "" && responder.Username == "" {
+	if r.Responder.Type == UserResponder && r.Responder.Id == "" && r.Responder.Username == "" {
 			return errors.New("User ID or username must be defined")
 		}
-		if responder.Type == TeamResponder && responder.Id == "" && responder.Name == "" {
+	if r.Responder.Type == TeamResponder && r.Responder.Id == "" && r.Responder.Name == "" {
 			return errors.New("Team ID or name must be defined")
 		}
-	}
 
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")

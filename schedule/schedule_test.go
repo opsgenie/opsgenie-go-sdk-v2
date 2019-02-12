@@ -183,19 +183,6 @@ func TestCreateRequest_Validate(t *testing.T) {
 
 }
 
-func TestGetTimelineRequest_Validate(t *testing.T) {
-	req := &GetTimelineRequest{}
-	req.IdentifierType = Name
-	req.IdentifierValue = "a schedule"
-	req.IntervalUnit = og.Minutes
-	err := req.Validate()
-	assert.Equal(t, err.Error(), errors.New("Provided InternalUnit is not valid.").Error())
-
-	req.IntervalUnit = og.Weeks
-	err = req.Validate()
-	assert.Nil(t, err)
-}
-
 func TestGetRequest_Validate(t *testing.T) {
 	getRequest := &GetRequest{}
 	err := getRequest.Validate()

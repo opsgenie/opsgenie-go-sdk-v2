@@ -3,18 +3,17 @@ package alert
 type ResponderType string
 
 const (
-
 	UserResponder       ResponderType = "user"
 	TeamResponder       ResponderType = "team"
 	EscalationResponder ResponderType = "escalation"
 	ScheduleResponder   ResponderType = "schedule"
-	)
+)
 
 type Responder struct {
 	Type     ResponderType `json:"type, omitempty"`
-	Name     string          `json:"name,omitempty"`
-	Id       string          `json:"id,omitempty"`
-	Username string          `json:"username, omitempty"`
+	Name     string        `json:"name,omitempty"`
+	Id       string        `json:"id,omitempty"`
+	Username string        `json:"username, omitempty"`
 }
 
 type Team struct {
