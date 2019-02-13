@@ -158,3 +158,28 @@ func (c *Client) ListRole(ctx context.Context, req ListTeamRoleRequest) (*ListTe
 
 	return listTeamRoleResponse, nil
 }
+
+//team member api
+func (c *Client) AddMember(ctx context.Context, req AddTeamMemberRequest) (*AddTeamMemberResult, error) {
+
+	addTeamMemberResponse := &AddTeamMemberResult{}
+
+	err := c.restClient.Exec(ctx, req, addTeamMemberResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return addTeamMemberResponse, nil
+}
+
+func (c *Client) RemoveMember(ctx context.Context, req RemoveTeamMemberRequest) (*RemoveTeamMemberResult, error) {
+
+	removeTeamMemberResponse := &RemoveTeamMemberResult{}
+
+	err := c.restClient.Exec(ctx, req, removeTeamMemberResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return removeTeamMemberResponse, nil
+}

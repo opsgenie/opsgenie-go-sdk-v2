@@ -480,11 +480,106 @@ func (r ListTeamRoleRequest) RequestParams() map[string]string {
 const (
 	Name Identifier = iota
 	Id
+	Username
 )
 
 func validateIdentifier(identifier string) error {
 	if identifier == "" {
-		return errors.New("team identifier cannot be empty")
+		return errors.New("team identifier can not be empty")
 	}
 	return nil
+}
+
+//team member api
+
+type AddTeamMemberRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	User                User   `json:"user,omitempty"`
+	Role                string `json:"role,omitempty"`
+}
+
+func (r AddTeamMemberRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.User.ID == "" && r.User.Username == "" {
+		return errors.New("user can not be empty")
+	}
+
+	return nil
+}
+
+func (r AddTeamMemberRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/members"
+
+}
+
+func (r AddTeamMemberRequest) Method() string {
+	return "POST"
+}
+
+func (r AddTeamMemberRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+type RemoveTeamMemberRequest struct {
+	client.BaseRequest
+	TeamIdentifierType    Identifier
+	TeamIdentifierValue   string
+	MemberIdentifierType  Identifier
+	MemberIdentifierValue string
+}
+
+func (r RemoveTeamMemberRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.MemberIdentifierValue == "" {
+		return errors.New("member identifier cannot be empty")
+	}
+
+	if r.MemberIdentifierType != Username && r.MemberIdentifierType != Id {
+		return errors.New("member identifier must be id or username")
+	}
+
+	return nil
+}
+
+func (r RemoveTeamMemberRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/members/" + r.MemberIdentifierValue
+
+}
+
+func (r RemoveTeamMemberRequest) Method() string {
+	return "DELETE"
+}
+
+func (r RemoveTeamMemberRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
 }

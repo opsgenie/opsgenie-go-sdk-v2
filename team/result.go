@@ -93,3 +93,15 @@ type ListTeamRoleResult struct {
 	client.ResultMetadata
 	TeamRoles []GetRoleInfo `json:"data"`
 }
+
+type AddTeamMemberResult struct {
+	client.ResultMetadata
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
+
+type RemoveTeamMemberResult struct {
+	client.ResultMetadata
+	ID   string `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
+}
