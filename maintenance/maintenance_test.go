@@ -11,7 +11,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	request := &CreateRequest{}
 	err := request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Time.Type should be one of these: "+
-		"'For5Minutes', 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule' or empty.").Error())
+		"'For5Minutes', 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule'").Error())
 	time := Time{
 		Type: For1Hour,
 	}
@@ -50,7 +50,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	request.Id = "e14dda76-488e-4e98-a1c7-78cda1900e27"
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Time.Type should be one of these: "+
-		"'For5Minutes', 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule' or empty.").Error())
+		"'For5Minutes', 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule'").Error())
 	request.Time = Time{
 		Type: Schedule,
 	}
@@ -107,7 +107,7 @@ func TestTime_Validate(t *testing.T) {
 	}
 	err := validateTime(tf)
 	assert.Equal(t, err.Error(), errors.New("Time.Type should be one of these: 'For5Minutes',"+
-		" 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule' or empty.").Error())
+		" 'For30Minutes', 'For1Hour', 'Indefinitely' and 'Schedule'").Error())
 	tf.Type = Indefinitely
 	err = validateTime(tf)
 	assert.Nil(t, err)

@@ -160,8 +160,8 @@ func (tr GetTimelineRequest) Validate() error {
 	if tr.Interval <= 0 {
 		tr.Interval = 1
 	}
-	if tr.IntervalUnit != Days && tr.IntervalUnit != Months {
-		tr.IntervalUnit = Weeks
+	if tr.IntervalUnit != Days && tr.IntervalUnit != Months && tr.IntervalUnit != Weeks {
+		return errors.New("Provided InternalUnit is not valid.")
 	}
 	return nil
 }

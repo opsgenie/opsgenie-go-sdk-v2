@@ -19,7 +19,7 @@ func (r UpdatePriorityRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
-	err := validatePriority(r.Priority)
+	err := ValidatePriority(r.Priority)
 	if err != nil {
 		return err
 	}
@@ -40,7 +40,7 @@ func (r UpdatePriorityRequest) Method() string {
 	return "PUT"
 }
 
-func validatePriority(priority Priority) error {
+func ValidatePriority(priority Priority) error {
 	switch priority {
 	case P1, P2, P3, P4, P5:
 		return nil

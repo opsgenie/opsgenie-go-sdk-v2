@@ -1,9 +1,9 @@
 package alert
 
 import (
-	"testing"
-	"github.com/stretchr/testify/assert"
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
+	"testing"
 	"time"
 )
 
@@ -33,8 +33,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 }
 
 func TestAcknowledgeAlertRequest_Validate(t *testing.T) {
-	acknowledgeAlertRequestWithError := &AcknowledgeAlertRequest{
-	}
+	acknowledgeAlertRequestWithError := &AcknowledgeAlertRequest{}
 	err := acknowledgeAlertRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -78,8 +77,7 @@ func TestAddNoteRequest_Validate(t *testing.T) {
 }
 
 func TestCloseAlertRequest_Validate(t *testing.T) {
-	closeAlertRequestWithError := &CloseAlertRequest{
-	}
+	closeAlertRequestWithError := &CloseAlertRequest{}
 	err := closeAlertRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -123,10 +121,9 @@ func TestCreateSavedSearchRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("Query can not be empty").Error())
 
 	createSavedSearchRequestWithoutOwner := &CreateSavedSearchRequest{
-		Name:  "name1",
-		Query: "status: open",
-		Owner: User{
-		},
+		Name:        "name1",
+		Query:       "status: open",
+		Owner:       User{},
 		Description: "Test",
 		Teams:       nil,
 	}
@@ -149,8 +146,7 @@ func TestCreateSavedSearchRequest_Validate(t *testing.T) {
 }
 
 func TestDeleteAlertRequest_Validate(t *testing.T) {
-	deleteAlertRequestWithError := &DeleteAlertRequest{
-	}
+	deleteAlertRequestWithError := &DeleteAlertRequest{}
 	err := deleteAlertRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -165,8 +161,7 @@ func TestDeleteAlertRequest_Validate(t *testing.T) {
 }
 
 func TestDeleteSavedSearchRequest_Validate(t *testing.T) {
-	deleteSavedSearchRequestWithError := &DeleteSavedSearchRequest{
-	}
+	deleteSavedSearchRequestWithError := &DeleteSavedSearchRequest{}
 	err := deleteSavedSearchRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -242,8 +237,7 @@ func TestExecuteCustomActionAlertRequest_Validate(t *testing.T) {
 }
 
 func TestGetAlertRequest_Validate(t *testing.T) {
-	getAlertRequestWithError := &GetAlertRequest{
-	}
+	getAlertRequestWithError := &GetAlertRequest{}
 	err := getAlertRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -258,8 +252,7 @@ func TestGetAlertRequest_Validate(t *testing.T) {
 }
 
 func TestGetAsyncRequestStatusRequest_Validate(t *testing.T) {
-	getAsyncRequestStatusRequestWithError := &GetAsyncRequestStatusRequest{
-	}
+	getAsyncRequestStatusRequestWithError := &GetAsyncRequestStatusRequest{}
 	err := getAsyncRequestStatusRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("RequestID can not be empty").Error())
@@ -273,8 +266,7 @@ func TestGetAsyncRequestStatusRequest_Validate(t *testing.T) {
 }
 
 func TestSnoozeAlertRequest_Validate(t *testing.T) {
-	snoozeAlertRequestWithoutIdentifier := &SnoozeAlertRequest{
-	}
+	snoozeAlertRequestWithoutIdentifier := &SnoozeAlertRequest{}
 	err := snoozeAlertRequestWithoutIdentifier.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -308,8 +300,7 @@ func TestSnoozeAlertRequest_Validate(t *testing.T) {
 }
 
 func TestUnacknowledgeAlertRequest_Validate(t *testing.T) {
-	unacknowledgeAlertRequestWithError := &UnacknowledgeAlertRequest{
-	}
+	unacknowledgeAlertRequestWithError := &UnacknowledgeAlertRequest{}
 	err := unacknowledgeAlertRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -324,8 +315,7 @@ func TestUnacknowledgeAlertRequest_Validate(t *testing.T) {
 }
 
 func TestUpdateSavedSearchRequest_Validate(t *testing.T) {
-	updateSavedSearchRequestWithoutIdentifier := &UpdateSavedSearchRequest{
-	}
+	updateSavedSearchRequestWithoutIdentifier := &UpdateSavedSearchRequest{}
 	err := updateSavedSearchRequestWithoutIdentifier.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -367,10 +357,9 @@ func TestUpdateSavedSearchRequest_Validate(t *testing.T) {
 		IdentifierType:  NAME,
 		NewName:         "name1",
 		Query:           "status: open",
-		Owner: User{
-		},
-		Description: "Test",
-		Teams:       nil,
+		Owner:           User{},
+		Description:     "Test",
+		Teams:           nil,
 	}
 	err = updateSavedSearchRequestWithoutOwner.Validate()
 
@@ -455,100 +444,11 @@ func TestAddTeamRequest_Validate(t *testing.T) {
 	assert.Equal(t, err, nil)
 }
 
-func TestAddResponderRequest_Validate(t *testing.T) {
-	addResponderRequestWithoutResponder := &AddResponderRequest{
-		IdentifierType:  ALERTID,
-		IdentifierValue: "Id",
-		Responder:       [] Responder{},
-	}
-	err := addResponderRequestWithoutResponder.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("Responder list can not be empty").Error())
-
-	addResponderRequestWithInvalidResponderType := &AddResponderRequest{
-		IdentifierType:  ALERTID,
-		IdentifierValue: "Id",
-		Responder: [] Responder{
-			{
-				Type: "escalation",
-				Name: "Test",
-			},
-		},
-	}
-	err = addResponderRequestWithInvalidResponderType.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("Responder type must be user or team").Error())
-
-	addResponderRequestWithInvalidUser := &AddResponderRequest{
-		IdentifierType: ALERTID,
-		Responder: [] Responder{
-			{
-				Type: "user",
-			},
-		},
-	}
-	err = addResponderRequestWithInvalidUser.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("User ID or username must be defined").Error())
-
-	addResponderRequestWithInvalidTeam := &AddResponderRequest{
-		IdentifierType: ALERTID,
-		Responder: [] Responder{
-			{
-				Type:     "user",
-				Username: "usertest1",
-			},
-			{
-				Type: "team",
-			},
-		},
-	}
-	err = addResponderRequestWithInvalidTeam.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("Team ID or name must be defined").Error())
-
-	addResponderRequestWithoutIdentifier := &AddResponderRequest{
-		IdentifierType: ALERTID,
-		Responder: [] Responder{
-			{
-				Type:     "user",
-				Username: "usertest1",
-			},
-			{
-				Type: "team",
-				Id:   "id1",
-			},
-		},
-	}
-	err = addResponderRequestWithoutIdentifier.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
-
-	addResponderRequest := &AddResponderRequest{
-		IdentifierValue: "tiny1",
-		IdentifierType:  TINYID,
-		Responder: [] Responder{
-			{
-				Type:     "user",
-				Username: "usertest1",
-			},
-			{
-				Type: "team",
-				Id:   "id1",
-			},
-		},
-	}
-	err = addResponderRequest.Validate()
-
-	assert.Equal(t, err, nil)
-}
-
 func TestAddTagsRequest_Validate(t *testing.T) {
 	addTagsRequestWithoutTags := &AddTagsRequest{
 		IdentifierType:  ALERTID,
 		IdentifierValue: "Id",
-		Tags: [] string{
-		},
+		Tags:            []string{},
 	}
 	err := addTagsRequestWithoutTags.Validate()
 
@@ -556,7 +456,7 @@ func TestAddTagsRequest_Validate(t *testing.T) {
 
 	addTagsRequestWithoutIdentifier := &AddTagsRequest{
 		IdentifierType: ALERTID,
-		Tags: [] string{
+		Tags: []string{
 			"tags1",
 		},
 	}
@@ -567,7 +467,7 @@ func TestAddTagsRequest_Validate(t *testing.T) {
 	addTagsRequest := &AddTagsRequest{
 		IdentifierType:  ALERTID,
 		IdentifierValue: "id1",
-		Tags: [] string{
+		Tags: []string{
 			"tags1",
 		},
 	}
@@ -759,8 +659,7 @@ func TestUpdateDescriptionRequest_Validate(t *testing.T) {
 }
 
 func TestListAlertRecipientsRequest_Validate(t *testing.T) {
-	listAlertRecipientsRequestWithError := &ListAlertRecipientRequest{
-	}
+	listAlertRecipientsRequestWithError := &ListAlertRecipientRequest{}
 	err := listAlertRecipientsRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -775,8 +674,7 @@ func TestListAlertRecipientsRequest_Validate(t *testing.T) {
 }
 
 func TestListAlertLogsRequest_Validate(t *testing.T) {
-	listAlertLogsRequestWithError := &ListAlertLogsRequest{
-	}
+	listAlertLogsRequestWithError := &ListAlertLogsRequest{}
 	err := listAlertLogsRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -791,8 +689,7 @@ func TestListAlertLogsRequest_Validate(t *testing.T) {
 }
 
 func TestListAlertNotesRequest_Validate(t *testing.T) {
-	listAlertNotesRequestWithError := &ListAlertNotesRequest{
-	}
+	listAlertNotesRequestWithError := &ListAlertNotesRequest{}
 	err := listAlertNotesRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -807,8 +704,7 @@ func TestListAlertNotesRequest_Validate(t *testing.T) {
 }
 
 func TestGetSavedSearch_Validate(t *testing.T) {
-	getSavedSearchRequestWithError := &GetSavedSearchRequest{
-	}
+	getSavedSearchRequestWithError := &GetSavedSearchRequest{}
 	err := getSavedSearchRequestWithError.Validate()
 
 	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
@@ -936,6 +832,63 @@ func TestDeleteAlertAttachmentRequest_Validate(t *testing.T) {
 		AttachmentId:    "123123",
 	}
 	err = deleteAttachmentRequest.Validate()
+
+	assert.Equal(t, err, nil)
+}
+
+func TestAddResponderRequest_Validate(t *testing.T) {
+	addResponderRequestWithInvalidResponderType := &AddResponderRequest{
+		IdentifierType:  ALERTID,
+		IdentifierValue: "Id",
+		Responder: Responder{
+			Type: "escalation",
+			Name: "Test",
+		},
+	}
+	err := addResponderRequestWithInvalidResponderType.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("Responder type must be user or team").Error())
+
+	addResponderRequestWithInvalidUser := &AddResponderRequest{
+		IdentifierType: ALERTID,
+		Responder: Responder{
+			Type: "user",
+		},
+	}
+	err = addResponderRequestWithInvalidUser.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("User ID or username must be defined").Error())
+
+	addResponderRequestWithInvalidTeam := &AddResponderRequest{
+		IdentifierType: ALERTID,
+		Responder: Responder{
+			Type: "team",
+		},
+	}
+	err = addResponderRequestWithInvalidTeam.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("Team ID or name must be defined").Error())
+
+	addResponderRequestWithoutIdentifier := &AddResponderRequest{
+		IdentifierType: ALERTID,
+		Responder: Responder{
+			Type:     "user",
+			Username: "usertest1",
+		},
+	}
+	err = addResponderRequestWithoutIdentifier.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("Identifier can not be empty").Error())
+
+	addResponderRequest := &AddResponderRequest{
+		IdentifierValue: "tiny1",
+		IdentifierType:  TINYID,
+		Responder: Responder{
+			Type: "team",
+			Id:   "id1",
+		},
+	}
+	err = addResponderRequest.Validate()
 
 	assert.Equal(t, err, nil)
 }

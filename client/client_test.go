@@ -74,7 +74,7 @@ func TestParsingWithDataField(t *testing.T) {
 	})
 	assert.Nil(t, err)
 
-	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultWantsDataFieldsToBeParsed{}
 	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
 	ogClient.Config.apiUrl = localUrl

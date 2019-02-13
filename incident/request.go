@@ -56,7 +56,7 @@ func (r CreateRequest) Validate() error {
 			return errors.New("StatusPageEntity.Title cannot be blank.")
 		}
 	}
-	err := validatePriority(r.Priority)
+	err := ValidatePriority(r.Priority)
 	if err != nil {
 		return err
 	}
@@ -454,7 +454,7 @@ func (r UpdatePriorityRequest) Validate() error {
 	if r.Identifier != "" && r.Identifier != Id && r.Identifier != Tiny {
 		return errors.New("Identifier type should be one of these: 'Id', 'Tiny' or empty.")
 	}
-	err := validatePriority(r.Priority)
+	err := ValidatePriority(r.Priority)
 	if err != nil {
 		return err
 	}
@@ -683,15 +683,6 @@ type Responder struct {
 	Id   string        `json:"id,omitempty"`
 }
 
-func validatePriority(priority Priority) error {
-	switch priority {
-	case P1, P2, P3, P4, P5, "":
-		return nil
-	}
-	return errors.New("Priority should be one of these: " +
-		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty.")
-}
-
 func validateResponders(responders []Responder) error {
 	for _, responder := range responders {
 		if responder.Type == "" {
@@ -705,4 +696,13 @@ func validateResponders(responders []Responder) error {
 		}
 	}
 	return nil
+}
+
+func ValidatePriority(priority Priority) error {
+	switch priority {
+	case P1, P2, P3, P4, P5, "":
+		return nil
+	}
+	return errors.New("Priority should be one of these: " +
+		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty")
 }

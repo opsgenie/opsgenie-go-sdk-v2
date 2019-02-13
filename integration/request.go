@@ -144,6 +144,10 @@ func (r OtherFields) Method() string {
 	return "PUT"
 }
 
+func (r OtherFields) RequestParams() map[string]string {
+	return nil
+}
+
 func (r OtherFields) Metadata(apiRequest client.ApiRequest) map[string]interface{} {
 	headers := make(map[string]interface{})
 	headers["Content-Type"] = "application/json; charset=utf-8"
@@ -260,7 +264,7 @@ type CreateIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           og.Filter         `json:"filter,omitempty"`
+	Filter                           *og.Filter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -288,9 +292,15 @@ func (r CreateIntegrationActionsRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	err = validateConditionMatchType(r.Filter.ConditionMatchType)
-	if err != nil {
-		return err
+	if r.Filter != nil {
+		err = validateConditionMatchType(r.Filter.ConditionMatchType)
+		if err != nil {
+			return err
+		}
+		err = og.ValidateFilter(*r.Filter)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
@@ -312,7 +322,7 @@ type UpdateAllIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           og.Filter         `json:"filter,omitempty"`
+	Filter                           *og.Filter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -340,9 +350,15 @@ func (r UpdateAllIntegrationActionsRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	err = validateConditionMatchType(r.Filter.ConditionMatchType)
-	if err != nil {
-		return err
+	if r.Filter != nil {
+		err = validateConditionMatchType(r.Filter.ConditionMatchType)
+		if err != nil {
+			return err
+		}
+		err = og.ValidateFilter(*r.Filter)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }

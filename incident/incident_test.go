@@ -393,12 +393,12 @@ func TestListNotesRequest_Endpoint(t *testing.T) {
 }
 
 func TestPriority_Validate(t *testing.T) {
-	err := validatePriority("cem")
+	err := ValidatePriority("cem")
 	assert.Equal(t, err.Error(), errors.New("Priority should be one of these: "+
-		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty.").Error())
-	err = validatePriority("")
+		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty").Error())
+	err = ValidatePriority("")
 	assert.Nil(t, err)
-	err = validatePriority(P2)
+	err = ValidatePriority(P2)
 	assert.Nil(t, err)
 }
 

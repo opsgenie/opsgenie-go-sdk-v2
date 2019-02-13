@@ -1,8 +1,9 @@
 package og
 
 import (
-	"github.com/pkg/errors"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type OwnerTeam struct {
@@ -37,7 +38,7 @@ func (r Rotation) Validate() error {
 		return err
 	}
 	if &r.TimeRestriction != nil {
-		err := validateRestrictions(*r.TimeRestriction)
+		err := ValidateRestrictions(*r.TimeRestriction)
 		if err != nil {
 			return err
 		}
@@ -77,7 +78,7 @@ func validateParticipants(rotation Rotation) error {
 	return nil
 }
 
-func validateRestrictions(timeRestriction TimeRestriction) error {
+func ValidateRestrictions(timeRestriction TimeRestriction) error {
 	if timeRestriction.Type != WeekdayAndTimeOfDay && timeRestriction.Type != TimeOfDay {
 		return errors.New("Time restriction type is not valid.")
 	}
@@ -137,6 +138,62 @@ func (tr *TimeRestriction) WithRestrictions(restrictions ...Restriction) *TimeRe
 	return tr
 }
 
+func ValidateFilter(filter Filter) error {
+	if filter.ConditionMatchType != MatchAll && filter.ConditionMatchType != MatchAllConditions && filter.ConditionMatchType != MatchAnyCondition {
+		return errors.New("filter condition type should be one of match-all, match-any-condition or match-all-conditions")
+	}
+	if (filter.ConditionMatchType == MatchAllConditions || filter.ConditionMatchType == MatchAnyCondition) && len(filter.Conditions) == 0 {
+		return errors.New("filter conditions cannot be empty")
+	}
+	if len(filter.Conditions) > 0 {
+		err := ValidateConditions(filter.Conditions)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func ValidateConditions(conditions []Condition) error {
+	for _, condition := range conditions {
+		if condition.Field != ExtraProperties && condition.Key != "" {
+			return errors.New("condition key is only valid for extra-properties field")
+		}
+		switch condition.Field {
+		case Message, Alias, Description, Source, Entity, Tags, Actions, Details, ExtraProperties, Recipients, Teams, Priority:
+			break
+		default:
+			return errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams or priority")
+		}
+		switch condition.Field {
+		case Actions, Tags, Recipients:
+			if condition.Operation != Contains && condition.Operation != IsEmpty && condition.Operation != Matches {
+				return errors.New(string(condition.Operation) + " is not valid operation for " + string(condition.Field))
+			}
+		case Message, Alias, Description, Source, Entity, Teams:
+			if condition.Operation != Contains && condition.Operation != IsEmpty && condition.Operation != Matches &&
+				condition.Operation != Equals && condition.Operation != StartsWith && condition.Operation != EndsWith &&
+				condition.Operation != EqualsIgnoreWhitespcae {
+				return errors.New(string(condition.Operation) + " is not valid operation for " + string(condition.Field))
+			}
+		case Details:
+			if condition.Operation != Contains && condition.Operation != IsEmpty && condition.Operation != ContainsKey &&
+				condition.Operation != ContainsValue {
+				return errors.New(string(condition.Operation) + " is not valid operation for " + string(condition.Field))
+			}
+		case Priority:
+			if condition.Operation != Equals && condition.Operation != GreaterThan && condition.Operation != LessThan {
+				return errors.New(string(condition.Operation) + " is not valid operation for " + string(condition.Field))
+			}
+			if condition.ExpectedValue != string(alert.P1) && condition.ExpectedValue != string(alert.P2) && condition.ExpectedValue != string(alert.P3) &&
+				condition.ExpectedValue != string(alert.P4) && condition.ExpectedValue != string(alert.P5) {
+				return errors.New("for field " + string(condition.Field) + " expected value should be one of P1, P2, P3, P4, P5")
+			}
+		}
+	}
+	return nil
+}
+
 type RotationType string
 type ParticipantType string
 type Day string
@@ -164,15 +221,40 @@ const (
 	TimeOfDay           RestrictionType = "time-of-day"
 	WeekdayAndTimeOfDay RestrictionType = "weekday-and-time-of-day"
 
-	MatchAll           ConditionMatchType = "Match All"
-	MatchAnyCondition  ConditionMatchType = "Match Any Condition"
-	MatchAllConditions ConditionMatchType = "Match All Conditions"
+	MatchAll           ConditionMatchType = "match-all"
+	MatchAnyCondition  ConditionMatchType = "match-any-condition"
+	MatchAllConditions ConditionMatchType = "match-all-conditions"
 
 	Months  TimeUnit = "months"
 	Weeks   TimeUnit = "weeks"
 	Days    TimeUnit = "days"
 	Minutes TimeUnit = "minutes"
 	Hours   TimeUnit = "hours"
+
+	Message         ConditionFieldType = "message"
+	Alias           ConditionFieldType = "alias"
+	Description     ConditionFieldType = "description"
+	Source          ConditionFieldType = "source"
+	Entity          ConditionFieldType = "entity"
+	Tags            ConditionFieldType = "tags"
+	Actions         ConditionFieldType = "actions"
+	Details         ConditionFieldType = "details"
+	ExtraProperties ConditionFieldType = "extra-properties"
+	Recipients      ConditionFieldType = "recipients"
+	Teams           ConditionFieldType = "teams"
+	Priority        ConditionFieldType = "priority"
+
+	Matches                ConditionOperation = "matches"
+	Contains               ConditionOperation = "contains"
+	StartsWith             ConditionOperation = "starts-with"
+	EndsWith               ConditionOperation = "ends-with"
+	Equals                 ConditionOperation = "equals"
+	ContainsKey            ConditionOperation = "contains-key"
+	ContainsValue          ConditionOperation = "contains-value"
+	GreaterThan            ConditionOperation = "greater-than"
+	LessThan               ConditionOperation = "less-than"
+	IsEmpty                ConditionOperation = "is-empty"
+	EqualsIgnoreWhitespcae ConditionOperation = "equals-ignore-whitespace"
 )
 
 type Identifier interface {
@@ -202,18 +284,21 @@ type Restriction struct {
 }
 
 type Filter struct {
-	ConditionMatchType ConditionMatchType `json:"conditionMatchType,omitempty"`
+	ConditionMatchType ConditionMatchType `json:"type,omitempty"`
 	Conditions         []Condition        `json:"conditions,omitempty"`
 }
 
 type Condition struct {
-	Field         string `json:"field,omitempty"`
-	IsNot         bool   `json:"isNot,omitempty"`
-	Operation     string `json:"operation,omitempty"`
-	ExpectedValue string `json:"expectedValue,omitempty"`
+	Field         ConditionFieldType `json:"field,omitempty"`
+	IsNot         bool               `json:"not,omitempty"`
+	Operation     ConditionOperation `json:"operation,omitempty"`
+	ExpectedValue string             `json:"expectedValue,omitempty"`
+	Key           string             `json:"key,omitempty"`
 }
 
 type ConditionMatchType string
+type ConditionFieldType string
+type ConditionOperation string
 
 type NotifyType string
 
