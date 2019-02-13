@@ -2,7 +2,6 @@ package alert
 
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"net/url"
 )
 
 type CountAlertsRequest struct {
@@ -10,44 +9,35 @@ type CountAlertsRequest struct {
 	Query                string
 	SearchIdentifier     string
 	SearchIdentifierType SearchIdentifierType
-	params               string
 }
 
 func (r CountAlertsRequest) Validate() error {
 	return nil
 }
 
-func (gr CountAlertsRequest) ResourcePath() string {
-	return "/v2/alerts/count" + gr.setParams(gr)
+func (r CountAlertsRequest) ResourcePath() string {
+	return "/v2/alerts/count"
 }
 
 func (r CountAlertsRequest) Method() string {
 	return "GET"
 }
 
-func (r CountAlertsRequest) setParams(request CountAlertsRequest) string {
+func (r CountAlertsRequest) RequestParams() map[string]string {
 
-	params := url.Values{}
-	inlineParam := ""
+	params := make(map[string]string)
 
-	if request.SearchIdentifierType == NAME {
-		params.Add("searchIdentifierType", "name")
-		params.Add("searchIdentifier", request.SearchIdentifier)
-
-	} else if request.SearchIdentifierType == ID {
-		params.Add("searchIdentifierType", "id")
-		params.Add("searchIdentifier", request.SearchIdentifier)
+	if r.SearchIdentifierType == NAME {
+		params["searchIdentifier"] = r.SearchIdentifier
+		params["searchIdentifierType"] = "name"
+	} else if r.SearchIdentifierType == ID {
+		params["searchIdentifier"] = r.SearchIdentifier
+		params["searchIdentifierType"] = "id"
 	}
 
-	if request.Query != "" {
-		params.Add("query", request.Query)
+	if r.Query != "" {
+		params["query"] = r.Query
 	}
 
-	if len(params) != 0 {
-		request.params = inlineParam + "?" + params.Encode()
-	} else {
-		request.params = inlineParam + ""
-	}
-	return request.params
-
+	return params
 }

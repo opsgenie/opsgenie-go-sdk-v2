@@ -16,7 +16,9 @@ func TestListLogFilesRequest_Endpoint(t *testing.T) {
 	request.Marker = "marker"
 	request.Limit = 10
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v2/logs/list/marker?limit=10", endpoint, "Endpoint built was not correct.")
+	params := request.RequestParams()
+	assert.Equal(t, "/v2/logs/list/marker", endpoint, "Endpoint built was not correct.")
+	assert.Equal(t, "10", params["limit"])
 }
 
 func TestGenerateLogFileDownloadLinkRequest_Validate(t *testing.T) {

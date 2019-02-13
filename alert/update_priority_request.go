@@ -27,12 +27,8 @@ func (r UpdatePriorityRequest) Validate() error {
 }
 
 func (r UpdatePriorityRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/priority?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/priority"
 
 }
 
@@ -40,6 +36,22 @@ func (r UpdatePriorityRequest) Method() string {
 	return "PUT"
 }
 
+func (r UpdatePriorityRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
+}
 func ValidatePriority(priority Priority) error {
 	switch priority {
 	case P1, P2, P3, P4, P5:

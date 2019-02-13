@@ -16,15 +16,27 @@ func (r GetAlertRequest) Validate() error {
 	return nil
 }
 
-func (gr GetAlertRequest) ResourcePath() string {
-	if gr.IdentifierType == TINYID {
-		return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=tiny"
-	} else if gr.IdentifierType == ALIAS {
-		return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=alias"
-	}
-	return "/v2/alerts/" + gr.IdentifierValue + "?identifierType=id"
+func (r GetAlertRequest) ResourcePath() string {
+	return "/v2/alerts/" + r.IdentifierValue
 }
 
 func (r GetAlertRequest) Method() string {
 	return "GET"
+}
+
+func (r GetAlertRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

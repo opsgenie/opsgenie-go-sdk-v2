@@ -3,7 +3,6 @@ package alert
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"net/url"
 )
 
 type RemoveTagsRequest struct {
@@ -14,7 +13,6 @@ type RemoveTagsRequest struct {
 	Source          string
 	User            string
 	Note            string
-	params          string
 }
 
 func (r RemoveTagsRequest) Validate() error {
@@ -30,64 +28,42 @@ func (r RemoveTagsRequest) Validate() error {
 
 func (r RemoveTagsRequest) ResourcePath() string {
 
-	return "/v2/alerts/" + r.IdentifierValue + "/tags" + r.setParams(r)
+	return "/v2/alerts/" + r.IdentifierValue + "/tags"
 }
 
 func (r RemoveTagsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveTagsRequest) setParams(request RemoveTagsRequest) string {
+func (r RemoveTagsRequest) RequestParams() map[string]string {
 
-	request.params = setIdentifierToRemoveTagRequest(request)
+	params := make(map[string]string)
 
-	return request.params
-}
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
 
-func setIdentifierToRemoveTagRequest(request RemoveTagsRequest) string {
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
 
-	params := url.Values{}
-
-	if request.IdentifierType == ALERTID {
-		params.Add("identifierType", "id")
-	}
-
-	if request.IdentifierType == ALIAS {
-		params.Add("identifierType", "alias")
-	}
-
-	if request.IdentifierType == TINYID {
-		params.Add("identifierType", "tiny")
-	}
-
-	if request.Tags != "" {
-		params.Add("tags", request.Tags)
-	}
-
-	if request.Source != "" {
-		params.Add("source", request.Source)
-	}
-
-	if request.User != "" {
-		params.Add("user", request.User)
-	}
-
-	if request.Note != "" {
-		params.Add("note", request.Note)
-	}
-
-	if len(params) != 0 {
-		request.params = "?" + params.Encode()
 	} else {
-		request.params = ""
+		params["identifierType"] = "id"
 	}
 
-	if len(params) != 0 {
-		request.params = "?" + params.Encode()
-	} else {
-		request.params = ""
+	if r.Tags != "" {
+		params["tags"] = r.Tags
 	}
 
-	return request.params
+	if r.Source != "" {
+		params["source"] = r.Source
+	}
 
+	if r.User != "" {
+		params["user"] = r.User
+	}
+
+	if r.Note != "" {
+		params["note"] = r.Note
+	}
+
+	return params
 }

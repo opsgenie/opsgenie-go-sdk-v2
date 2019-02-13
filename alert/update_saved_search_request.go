@@ -3,7 +3,6 @@ package alert
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"net/url"
 )
 
 type UpdateSavedSearchRequest struct {
@@ -15,7 +14,6 @@ type UpdateSavedSearchRequest struct {
 	Owner           User   `json:"owner,omitempty"`
 	Description     string `json:"description,omitempty"`
 	Teams           []Team `json:"teams,omitempty"`
-	params          string
 }
 
 func (r UpdateSavedSearchRequest) Validate() error {
@@ -41,30 +39,23 @@ func (r UpdateSavedSearchRequest) Validate() error {
 
 func (r UpdateSavedSearchRequest) ResourcePath() string {
 
-	return "/v2/alerts/saved-searches/" + r.setParams(r)
+	return "/v2/alerts/saved-searches/" + r.IdentifierValue
 }
 
 func (r UpdateSavedSearchRequest) Method() string {
 	return "PATCH"
 }
 
-func (r UpdateSavedSearchRequest) setParams(request UpdateSavedSearchRequest) string {
+func (r UpdateSavedSearchRequest) RequestParams() map[string]string {
 
-	params := url.Values{}
-	inlineParam := request.IdentifierValue
-	if request.IdentifierType == NAME {
-		params.Add("identifierType", "name")
+	params := make(map[string]string)
 
-	} else if request.IdentifierType == ID {
-		params.Add("identifierType", "id")
-	}
+	if r.IdentifierType == NAME {
+		params["identifierType"] = "name"
 
-	if len(params) != 0 {
-		request.params = inlineParam + "?" + params.Encode()
 	} else {
-		request.params = inlineParam + ""
+		params["identifierType"] = "id"
+
 	}
-
-	return request.params
-
+	return params
 }

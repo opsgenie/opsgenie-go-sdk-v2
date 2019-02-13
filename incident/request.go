@@ -3,7 +3,6 @@ package incident
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"net/url"
 	"strconv"
 	"strings"
 )
@@ -92,17 +91,24 @@ func (r DeleteRequest) Validate() error {
 }
 
 func (r DeleteRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id
 }
 
 func (r DeleteRequest) Method() string {
 	return "DELETE"
+}
+
+func (r DeleteRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type GetRequest struct {
@@ -122,17 +128,23 @@ func (r GetRequest) Validate() error {
 }
 
 func (r GetRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id
 }
 
 func (r GetRequest) Method() string {
 	return "GET"
+}
+
+func (r GetRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+	return params
 }
 
 type ListRequest struct {
@@ -152,35 +164,35 @@ func (r ListRequest) Validate() error {
 }
 
 func (r ListRequest) ResourcePath() string {
-	return "/v1/incidents" + r.getParams()
+	return "/v1/incidents"
 }
 
 func (r ListRequest) Method() string {
 	return "GET"
 }
 
-func (r ListRequest) getParams() string {
-	params := url.Values{}
+func (r ListRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
 	if r.Limit != 0 {
-		params.Add("limit", strconv.Itoa(r.Limit))
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
 	if r.Sort != "" {
-		params.Add("sort", string(r.Sort))
+		params["sort"] = string(r.Sort)
 	}
 	if r.Offset != 0 {
-		params.Add("offset", strconv.Itoa(r.Offset))
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
 	if r.Query != "" {
-		params.Add("query", r.Query)
+		params["query"] = r.Query
+
 	}
 	if r.Order != "" {
-		params.Add("order", string(r.Order))
+		params["order"] = string(r.Order)
+
 	}
-	if len(params) != 0 {
-		return "?" + params.Encode()
-	} else {
-		return ""
-	}
+	return params
 }
 
 type CloseRequest struct {
@@ -201,17 +213,24 @@ func (r CloseRequest) Validate() error {
 }
 
 func (r CloseRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/close"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/close"
 }
 
 func (r CloseRequest) Method() string {
 	return "POST"
+}
+
+func (r CloseRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type AddNoteRequest struct {
@@ -232,17 +251,25 @@ func (r AddNoteRequest) Validate() error {
 }
 
 func (r AddNoteRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/notes"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/notes"
+
 }
 
 func (r AddNoteRequest) Method() string {
 	return "POST"
+}
+
+func (r AddNoteRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type AddResponderRequest struct {
@@ -271,17 +298,25 @@ func (r AddResponderRequest) Validate() error {
 }
 
 func (r AddResponderRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/responders"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/responders"
+
 }
 
 func (r AddResponderRequest) Method() string {
 	return "POST"
+}
+
+func (r AddResponderRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type AddTagsRequest struct {
@@ -306,17 +341,24 @@ func (r AddTagsRequest) Validate() error {
 }
 
 func (r AddTagsRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/tags"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/tags"
 }
 
 func (r AddTagsRequest) Method() string {
 	return "POST"
+}
+
+func (r AddTagsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type RemoveTagsRequest struct {
@@ -341,23 +383,29 @@ func (r RemoveTagsRequest) Validate() error {
 }
 
 func (r RemoveTagsRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/tags?"
-	if r.Identifier == Id {
-		endpoint += "identifierType=id&"
-	} else if r.Identifier == Tiny {
-		endpoint += "identifierType=tiny&"
-	}
-	return endpoint + r.getParams()
+	return "/v1/incidents/" + r.Id + "/tags"
 }
 
 func (r RemoveTagsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveTagsRequest) getParams() string {
-	params := "tags=" + strings.Join(r.Tags[:], ",")
+func (r RemoveTagsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	//comma separated tag list
+	params["tags"] = strings.Join(r.Tags[:], ",")
+
 	if r.Note != "" {
-		params += "&note=" + r.Note
+		params["note"] = r.Note
+
 	}
 	return params
 }
@@ -384,17 +432,24 @@ func (r AddDetailsRequest) Validate() error {
 }
 
 func (r AddDetailsRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/details"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/details"
 }
 
 func (r AddDetailsRequest) Method() string {
 	return "POST"
+}
+
+func (r AddDetailsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type RemoveDetailsRequest struct {
@@ -419,23 +474,29 @@ func (r RemoveDetailsRequest) Validate() error {
 }
 
 func (r RemoveDetailsRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/details?"
-	if r.Identifier == Id {
-		endpoint += "identifierType=id&"
-	} else if r.Identifier == Tiny {
-		endpoint += "identifierType=tiny&"
-	}
-	return endpoint + r.getParams()
+	return "/v1/incidents/" + r.Id + "/details"
 }
 
 func (r RemoveDetailsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveDetailsRequest) getParams() string {
-	params := "keys=" + strings.Join(r.Keys[:], ",")
+func (r RemoveDetailsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	//comma separated key list
+	params["keys"] = strings.Join(r.Keys[:], ",")
+
 	if r.Note != "" {
-		params += "&note=" + r.Note
+		params["note"] = r.Note
+
 	}
 	return params
 }
@@ -462,17 +523,25 @@ func (r UpdatePriorityRequest) Validate() error {
 }
 
 func (r UpdatePriorityRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/priority"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/priority"
+
 }
 
 func (r UpdatePriorityRequest) Method() string {
 	return "PUT"
+}
+
+func (r UpdatePriorityRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateMessageRequest struct {
@@ -493,17 +562,25 @@ func (r UpdateMessageRequest) Validate() error {
 }
 
 func (r UpdateMessageRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/message"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/message"
+
 }
 
 func (r UpdateMessageRequest) Method() string {
 	return "POST"
+}
+
+func (r UpdateMessageRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateDescriptionRequest struct {
@@ -524,17 +601,24 @@ func (r UpdateDescriptionRequest) Validate() error {
 }
 
 func (r UpdateDescriptionRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/description"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint
+	return "/v1/incidents/" + r.Id + "/description"
 }
 
 func (r UpdateDescriptionRequest) Method() string {
 	return "POST"
+}
+
+func (r UpdateDescriptionRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type ListLogsRequest struct {
@@ -558,38 +642,38 @@ func (r ListLogsRequest) Validate() error {
 }
 
 func (r ListLogsRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/logs"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint + r.getParams()
+	return "/v1/incidents/" + r.Id + "/logs"
 }
 
 func (r ListLogsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListLogsRequest) getParams() string {
-	params := url.Values{}
+func (r ListLogsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
 	if r.Limit != 0 {
-		params.Add("limit", strconv.Itoa(r.Limit))
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
 	if r.Offset != 0 {
-		params.Add("offset", strconv.Itoa(r.Offset))
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
 	if r.Direction != "" {
-		params.Add("direction", r.Direction)
+		params["direction"] = r.Direction
+
 	}
 	if r.Order != "" {
-		params.Add("order", string(r.Order))
+		params["order"] = string(r.Order)
 	}
-	if len(params) != 0 {
-		return "?" + params.Encode()
-	} else {
-		return ""
-	}
+
+	return params
 }
 
 type ListNotesRequest struct {
@@ -613,38 +697,39 @@ func (r ListNotesRequest) Validate() error {
 }
 
 func (r ListNotesRequest) ResourcePath() string {
-	endpoint := "/v1/incidents/" + r.Id + "/notes"
-	if r.Identifier == Id {
-		endpoint += "?identifierType=id"
-	} else if r.Identifier == Tiny {
-		endpoint += "?identifierType=tiny"
-	}
-	return endpoint + r.getParams()
+	return "/v1/incidents/" + r.Id + "/notes"
+
 }
 
 func (r ListNotesRequest) Method() string {
 	return "GET"
 }
 
-func (r ListNotesRequest) getParams() string {
-	params := url.Values{}
+func (r ListNotesRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.Identifier == Tiny {
+		params["identifierType"] = "tiny"
+	} else {
+		params["identifierType"] = "id"
+	}
+
 	if r.Limit != 0 {
-		params.Add("limit", strconv.Itoa(r.Limit))
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
 	if r.Offset != 0 {
-		params.Add("offset", strconv.Itoa(r.Offset))
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
 	if r.Direction != "" {
-		params.Add("direction", r.Direction)
+		params["direction"] = r.Direction
+
 	}
 	if r.Order != "" {
-		params.Add("order", string(r.Order))
+		params["order"] = string(r.Order)
 	}
-	if len(params) != 0 {
-		return "?" + params.Encode()
-	} else {
-		return ""
-	}
+
+	return params
 }
 
 type IdentifierType string

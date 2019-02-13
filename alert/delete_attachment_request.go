@@ -5,29 +5,35 @@ import (
 	"github.com/pkg/errors"
 )
 
-type ListAttachmentsRequest struct {
+type DeleteAttachmentRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
+	AttachmentId    string
+	User            string
 }
 
-func (r ListAttachmentsRequest) Validate() error {
+func (r DeleteAttachmentRequest) Validate() error {
+	if r.AttachmentId == "" {
+		return errors.New("AttachmentId can not be empty")
+	}
+
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 	return nil
 }
 
-func (r ListAttachmentsRequest) ResourcePath() string {
+func (r DeleteAttachmentRequest) ResourcePath() string {
 
-	return "/v2/alerts/" + r.IdentifierValue + "/attachments"
+	return "/v2/alerts/" + r.IdentifierValue + "/attachments/" + r.AttachmentId
 }
 
-func (r ListAttachmentsRequest) Method() string {
-	return "GET"
+func (r DeleteAttachmentRequest) Method() string {
+	return "DELETE"
 }
 
-func (r ListAttachmentsRequest) RequestParams() map[string]string {
+func (r DeleteAttachmentRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -41,5 +47,10 @@ func (r ListAttachmentsRequest) RequestParams() map[string]string {
 		params["alertIdentifierType"] = "id"
 
 	}
+
+	if r.User != "" {
+		params["user"] = r.User
+	}
+
 	return params
 }

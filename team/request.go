@@ -3,7 +3,6 @@ package team
 import (
 	"errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"net/url"
 	"strconv"
 )
 
@@ -77,14 +76,24 @@ func (r DeleteTeamRequest) Validate() error {
 
 func (r DeleteTeamRequest) ResourcePath() string {
 
-	if r.IdentifierType == Name {
-		return "/v2/teams/" + r.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/teams/" + r.IdentifierValue + "?identifierType=id"
+	return "/v2/teams/" + r.IdentifierValue
 }
 
 func (r DeleteTeamRequest) Method() string {
 	return "DELETE"
+}
+
+func (r DeleteTeamRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type GetTeamRequest struct {
@@ -154,7 +163,6 @@ type ListTeamLogsRequest struct {
 	Limit           int    `json:"limit,omitempty"`
 	Order           string `json:"order,omitempty"`
 	Offset          int    `json:"offset,omitempty"`
-	params          string
 }
 
 func (r ListTeamLogsRequest) Validate() error {
@@ -168,7 +176,7 @@ func (r ListTeamLogsRequest) Validate() error {
 
 func (r ListTeamLogsRequest) ResourcePath() string {
 
-	return "/v2/teams/" + r.IdentifierValue + "/logs" + r.setParams()
+	return "/v2/teams/" + r.IdentifierValue + "/logs"
 
 }
 
@@ -176,36 +184,27 @@ func (r ListTeamLogsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListTeamLogsRequest) setParams() string {
+func (r ListTeamLogsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
 
 	if r.IdentifierType == Name {
-		r.params = "?identifierType=name"
+		params["identifierType"] = "name"
 	} else {
-		r.params = "?identifierType=id"
+		params["identifierType"] = "id"
 	}
-
-	params := url.Values{}
 
 	if r.Limit != 0 {
-		params.Add("limit", strconv.Itoa(r.Limit))
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
-
 	if r.Offset != 0 {
-		params.Add("offset", strconv.Itoa(r.Offset))
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
-
 	if r.Order != "" {
-		params.Add("order", string(r.Order))
+		params["order"] = string(r.Order)
 	}
 
-	if len(params) != 0 {
-		r.params = r.params + "&" + params.Encode()
-	} else {
-		r.params = r.params + ""
-	}
-
-	return r.params
-
+	return params
 }
 
 //team role api
@@ -241,15 +240,25 @@ func (r CreateTeamRoleRequest) Validate() error {
 
 func (r CreateTeamRoleRequest) ResourcePath() string {
 
-	if r.TeamIdentifierType == Name {
-		return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=name"
-	}
-	return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=id"
+	return "/v2/teams/" + r.TeamIdentifierValue + "/roles"
 
 }
 
 func (r CreateTeamRoleRequest) Method() string {
 	return "POST"
+}
+
+func (r CreateTeamRoleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type GetTeamRoleRequest struct {
@@ -277,20 +286,39 @@ func (r GetTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamName != "" {
 		if r.RoleName != "" {
-			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName + "?teamIdentifierType=name" + "&" + "identifierType=name"
+			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName
 		}
-		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID + "?teamIdentifierType=name" + "&" + "identifierType=id"
+		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID
 	}
 
-	// default team identifier is equals to team id
 	if r.RoleName != "" {
-		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName + "?teamIdentifierType=id" + "&" + "identifierType=name"
+		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName
 	}
-	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID + "?teamIdentifierType=id" + "&" + "identifierType=id"
+	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID
+
 }
 
 func (r GetTeamRoleRequest) Method() string {
 	return "GET"
+}
+
+func (r GetTeamRoleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamName != "" {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	if r.RoleName != "" {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateTeamRoleRequest struct {
@@ -317,23 +345,42 @@ func (r UpdateTeamRoleRequest) Validate() error {
 }
 
 func (r UpdateTeamRoleRequest) ResourcePath() string {
+
 	if r.TeamName != "" {
 		if r.RoleName != "" {
-			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName + "?teamIdentifierType=name" + "&" + "identifierType=name"
+			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName
 		}
-		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID + "?teamIdentifierType=name" + "&" + "identifierType=id"
+		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID
 	}
 
-	// default team identifier is equals to team id
 	if r.RoleName != "" {
-		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName + "?teamIdentifierType=id" + "&" + "identifierType=name"
+		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName
 	}
-	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID + "?teamIdentifierType=id" + "&" + "identifierType=id"
+	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID
 
 }
 
 func (r UpdateTeamRoleRequest) Method() string {
 	return "PATCH"
+}
+
+func (r UpdateTeamRoleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamName != "" {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	if r.RoleName != "" {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type DeleteTeamRoleRequest struct {
@@ -357,24 +404,41 @@ func (r DeleteTeamRoleRequest) Validate() error {
 }
 
 func (r DeleteTeamRoleRequest) ResourcePath() string {
-
 	if r.TeamName != "" {
 		if r.RoleName != "" {
-			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName + "?teamIdentifierType=name" + "&" + "identifierType=name"
+			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName
 		}
-		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID + "?teamIdentifierType=name" + "&" + "identifierType=id"
+		return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleID
 	}
 
-	// default team identifier is equals to team id
 	if r.RoleName != "" {
-		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName + "?teamIdentifierType=id" + "&" + "identifierType=name"
+		return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleName
 	}
-	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID + "?teamIdentifierType=id" + "&" + "identifierType=id"
+	return "/v2/teams/" + r.TeamID + "/roles/" + r.RoleID
 
 }
 
 func (r DeleteTeamRoleRequest) Method() string {
 	return "DELETE"
+}
+
+func (r DeleteTeamRoleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamName != "" {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	if r.RoleName != "" {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type ListTeamRoleRequest struct {
@@ -393,14 +457,24 @@ func (r ListTeamRoleRequest) Validate() error {
 
 func (r ListTeamRoleRequest) ResourcePath() string {
 
-	if r.TeamIdentifierType == Name {
-		return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=name"
-	}
-	return "/v2/teams/" + r.TeamIdentifierValue + "/roles?teamIdentifierType=id"
+	return "/v2/teams/" + r.TeamIdentifierValue + "/roles"
 }
 
 func (r ListTeamRoleRequest) Method() string {
 	return "GET"
+}
+
+func (r ListTeamRoleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 const (

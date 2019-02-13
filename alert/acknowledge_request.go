@@ -22,15 +22,28 @@ func (r AcknowledgeAlertRequest) Validate() error {
 }
 
 func (r AcknowledgeAlertRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/acknowledge?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/acknowledge?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/acknowledge?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/acknowledge"
 
 }
 
 func (r AcknowledgeAlertRequest) Method() string {
 	return "POST"
+}
+
+func (r AcknowledgeAlertRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

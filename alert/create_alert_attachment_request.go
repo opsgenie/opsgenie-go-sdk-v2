@@ -48,14 +48,27 @@ func (r CreateAlertAttachmentRequest) Validate() error {
 }
 
 func (r CreateAlertAttachmentRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/attachments?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/attachments?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/attachments?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/attachments"
 }
 
 func (r CreateAlertAttachmentRequest) Method() string {
 	return "POST"
+}
+
+func (r CreateAlertAttachmentRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["alertIdentifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["alertIdentifierType"] = "tiny"
+
+	} else {
+		params["alertIdentifierType"] = "id"
+
+	}
+	return params
 }

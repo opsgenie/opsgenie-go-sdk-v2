@@ -2,7 +2,6 @@ package alert
 
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"net/url"
 )
 
 type DeleteAlertRequest struct {
@@ -10,7 +9,6 @@ type DeleteAlertRequest struct {
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
 	Source          string
-	params          string
 }
 
 func (r DeleteAlertRequest) Validate() error {
@@ -23,52 +21,30 @@ func (r DeleteAlertRequest) Validate() error {
 
 func (r DeleteAlertRequest) ResourcePath() string {
 
-	return "/v2/alerts/" + r.setParams(r)
+	return "/v2/alerts/" + r.IdentifierValue
 }
 
 func (r DeleteAlertRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteAlertRequest) setParams(request DeleteAlertRequest) string {
+func (r DeleteAlertRequest) RequestParams() map[string]string {
 
-	request.params = setIdentifierToParams(request)
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALERTID {
+		params["identifierType"] = "id"
+
+	} else if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+	}
 
 	if r.Source != "" {
-		params := url.Values{}
-		params.Add("source", r.Source)
-		request.params = request.params + "&" + params.Encode()
+		params["source"] = r.Source
 	}
 
-	request.params = request.params + ""
-
-	return request.params
-
-}
-
-func setIdentifierToParams(request DeleteAlertRequest) string {
-
-	params := url.Values{}
-	inlineParam := request.IdentifierValue
-
-	if request.IdentifierType == ALERTID {
-		params.Add("identifierType", "id")
-	}
-
-	if request.IdentifierType == ALIAS {
-		params.Add("identifierType", "alias")
-	}
-
-	if request.IdentifierType == TINYID {
-		params.Add("identifierType", "tiny")
-	}
-
-	if len(params) != 0 {
-		request.params = inlineParam + "?" + params.Encode()
-	} else {
-		request.params = inlineParam + ""
-	}
-
-	return request.params
-
+	return params
 }

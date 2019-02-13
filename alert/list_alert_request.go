@@ -2,7 +2,6 @@ package alert
 
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"net/url"
 	"strconv"
 )
 
@@ -24,48 +23,44 @@ func (r ListAlertRequest) Validate() error {
 
 func (r ListAlertRequest) ResourcePath() string {
 
-	return "/v2/alerts" + r.getParams()
+	return "/v2/alerts"
 }
 
 func (r ListAlertRequest) Method() string {
 	return "GET"
 }
 
-func (r ListAlertRequest) getParams() string {
+func (r ListAlertRequest) RequestParams() map[string]string {
 
-	params := url.Values{}
+	params := make(map[string]string)
 
 	if r.Limit != 0 {
-		params.Add("limit", strconv.Itoa(r.Limit))
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
 
 	if r.Sort != "" {
-		params.Add("sort", string(r.Sort))
+		params["sort"] = string(r.Sort)
 	}
 
 	if r.Offset != 0 {
-		params.Add("offset", strconv.Itoa(r.Offset))
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
 
 	if r.Query != "" {
-		params.Add("query", r.Query)
+		params["query"] = r.Query
 	}
 
 	if r.SearchIdentifier != "" {
-		params.Add("searchIdentifier", r.SearchIdentifier)
+		params["searchIdentifier"] = r.SearchIdentifier
 	}
 
 	if r.SearchIdentifierType != "" {
-		params.Add("searchIdentifierType", string(r.SearchIdentifierType))
+		params["searchIdentifierType"] = string(r.SearchIdentifierType)
 	}
 
 	if r.Order != "" {
-		params.Add("order", string(r.Order))
+		params["order"] = string(r.Order)
 	}
 
-	if len(params) != 0 {
-		return "?" + params.Encode()
-	} else {
-		return ""
-	}
+	return params
 }

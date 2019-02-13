@@ -52,14 +52,25 @@ func (gr GetRequest) Validate() error {
 }
 
 func (gr GetRequest) ResourcePath() string {
-	if gr.IdentifierType == Name {
-		return "/v2/schedules/" + gr.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/schedules/" + gr.IdentifierValue + "?identifierType=id"
+
+	return "/v2/schedules/" + gr.IdentifierValue
 }
 
 func (gr GetRequest) Method() string {
 	return "GET"
+}
+
+func (gr GetRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if gr.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateRequest struct {
@@ -87,14 +98,25 @@ func (ur UpdateRequest) Validate() error {
 }
 
 func (ur UpdateRequest) ResourcePath() string {
-	if ur.IdentifierType == Name {
-		return "/v2/schedules/" + ur.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/schedules/" + ur.IdentifierValue + "?identifierType=id"
+
+	return "/v2/schedules/" + ur.IdentifierValue
 }
 
 func (ur UpdateRequest) Method() string {
 	return "PATCH"
+}
+
+func (ur UpdateRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if ur.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type DeleteRequest struct {
@@ -112,14 +134,25 @@ func (dr DeleteRequest) Validate() error {
 }
 
 func (dr DeleteRequest) ResourcePath() string {
-	if dr.IdentifierType == Name {
-		return "/v2/schedules/" + dr.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/schedules/" + dr.IdentifierValue + "?identifierType=id"
+
+	return "/v2/schedules/" + dr.IdentifierValue
 }
 
 func (dr DeleteRequest) Method() string {
 	return "DELETE"
+}
+
+func (dr DeleteRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if dr.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
 }
 
 type ListRequest struct {
@@ -132,14 +165,24 @@ func (lr ListRequest) Validate() error {
 }
 
 func (lr ListRequest) ResourcePath() string {
-	if lr.Expand {
-		return "/v2/schedules?expand=rotation"
-	}
+
 	return "/v2/schedules"
 }
 
 func (lr ListRequest) Method() string {
 	return "GET"
+}
+
+func (lr ListRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if lr.Expand {
+		params["expand"] = "rotation"
+
+	}
+
+	return params
 }
 
 type GetTimelineRequest struct {
@@ -167,28 +210,38 @@ func (tr GetTimelineRequest) Validate() error {
 }
 
 func (tr GetTimelineRequest) ResourcePath() string {
-	var endpoint string
-	if tr.IdentifierType == Name {
-		endpoint = "/v2/schedules/" + tr.IdentifierValue + "/timeline?identifierType=name"
-	} else {
-		endpoint = "/v2/schedules/" + tr.IdentifierValue + "/timeline?identifierType=id"
-	}
-	if len(tr.Expands) != 0 {
-		endpoint = endpoint + "?expand="
-	}
-	for i, expand := range tr.Expands {
-		if i != len(tr.Expands)-1 {
-			endpoint = endpoint + string(expand) + ","
-		} else {
-			endpoint = endpoint + string(expand)
-		}
 
-	}
-	return endpoint
+	return "/v2/schedules/" + tr.IdentifierValue + "/timeline"
+
 }
 
 func (tr GetTimelineRequest) Method() string {
 	return "GET"
+}
+
+func (tr GetTimelineRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if tr.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	if len(tr.Expands) != 0 {
+		expands := ""
+		for i, expand := range tr.Expands {
+			if i != len(tr.Expands)-1 {
+				expands = expands + string(expand) + ","
+			} else {
+				expands = expands + string(expand)
+			}
+		}
+		params["expand"] = expands
+	}
+
+	return params
 }
 
 func (tr *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineRequest {
@@ -241,30 +294,39 @@ type CreateRotationRequest struct {
 	ScheduleIdentifierValue string
 }
 
-func (cr CreateRotationRequest) Validate() error {
-	err := validateIdentifier(cr.ScheduleIdentifierValue)
+func (r CreateRotationRequest) Validate() error {
+	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
 		return err
 	}
 
-	err = cr.Rotation.Validate()
+	err = r.Rotation.Validate()
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (cr CreateRotationRequest) ResourcePath() string {
-
-	if cr.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + cr.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + cr.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=id"
+func (r CreateRotationRequest) ResourcePath() string {
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations"
 
 }
 
-func (cr CreateRotationRequest) Method() string {
+func (r CreateRotationRequest) Method() string {
 	return "POST"
+}
+
+func (r CreateRotationRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type GetRotationRequest struct {
@@ -289,16 +351,25 @@ func (r GetRotationRequest) Validate() error {
 }
 
 func (r GetRotationRequest) ResourcePath() string {
-
-	if r.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
 func (r GetRotationRequest) Method() string {
 	return "GET"
+}
+
+func (r GetRotationRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateRotationRequest struct {
@@ -324,15 +395,25 @@ func (r UpdateRotationRequest) Validate() error {
 
 func (r UpdateRotationRequest) ResourcePath() string {
 
-	if r.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
 func (r UpdateRotationRequest) Method() string {
 	return "PATCH"
+}
+
+func (r UpdateRotationRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type DeleteRotationRequest struct {
@@ -358,15 +439,25 @@ func (r DeleteRotationRequest) Validate() error {
 
 func (r DeleteRotationRequest) ResourcePath() string {
 
-	if r.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId + "?scheduleIdentifierType=id"
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
 func (r DeleteRotationRequest) Method() string {
 	return "DELETE"
+}
+
+func (r DeleteRotationRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type ListRotationsRequest struct {
@@ -387,13 +478,23 @@ func (r ListRotationsRequest) Validate() error {
 
 func (r ListRotationsRequest) ResourcePath() string {
 
-	if r.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations?scheduleIdentifierType=id"
+	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations"
 
 }
 
 func (r ListRotationsRequest) Method() string {
 	return "GET"
+}
+
+func (r ListRotationsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }

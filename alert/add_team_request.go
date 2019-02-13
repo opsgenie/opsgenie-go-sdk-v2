@@ -27,15 +27,28 @@ func (r AddTeamRequest) Validate() error {
 }
 
 func (r AddTeamRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/teams?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/teams?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/teams?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/teams"
 
 }
 
 func (r AddTeamRequest) Method() string {
 	return "POST"
+}
+
+func (r AddTeamRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

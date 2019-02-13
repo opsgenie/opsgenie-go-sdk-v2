@@ -43,14 +43,25 @@ func (request CreateScheduleOverrideRequest) Validate() error {
 }
 
 func (request CreateScheduleOverrideRequest) ResourcePath() string {
-	if request.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=id"
+
+	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides"
 }
 
 func (request CreateScheduleOverrideRequest) Method() string {
 	return "POST"
+}
+
+func (request CreateScheduleOverrideRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if request.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type GetScheduleOverrideRequest struct {
@@ -73,14 +84,25 @@ func (request GetScheduleOverrideRequest) Validate() error {
 }
 
 func (request GetScheduleOverrideRequest) ResourcePath() string {
-	if request.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=id"
+
+	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
 }
 
 func (request GetScheduleOverrideRequest) Method() string {
 	return "GET"
+}
+
+func (request GetScheduleOverrideRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if request.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type ListScheduleOverrideRequest struct {
@@ -98,14 +120,24 @@ func (request ListScheduleOverrideRequest) Validate() error {
 }
 
 func (request ListScheduleOverrideRequest) ResourcePath() string {
-	if request.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides?scheduleIdentifierType=id"
+	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides"
 }
 
 func (request ListScheduleOverrideRequest) Method() string {
 	return "GET"
+}
+
+func (request ListScheduleOverrideRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if request.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type DeleteScheduleOverrideRequest struct {
@@ -128,14 +160,25 @@ func (request DeleteScheduleOverrideRequest) Validate() error {
 }
 
 func (request DeleteScheduleOverrideRequest) ResourcePath() string {
-	if request.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=id"
+
+	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
 }
 
 func (request DeleteScheduleOverrideRequest) Method() string {
 	return "DELETE"
+}
+
+func (request DeleteScheduleOverrideRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if request.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 type UpdateScheduleOverrideRequest struct {
@@ -174,14 +217,25 @@ func (request UpdateScheduleOverrideRequest) Validate() error {
 }
 
 func (request UpdateScheduleOverrideRequest) ResourcePath() string {
-	if request.ScheduleIdentifierType == Name {
-		return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=name"
-	}
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias + "?scheduleIdentifierType=id"
+
+	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
 }
 
 func (request UpdateScheduleOverrideRequest) Method() string {
 	return "PUT"
+}
+
+func (request UpdateScheduleOverrideRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if request.ScheduleIdentifierType == Name {
+		params["scheduleIdentifierType"] = "name"
+	} else {
+		params["scheduleIdentifierType"] = "id"
+	}
+
+	return params
 }
 
 func validateIdentifiers(identifier string, message string) error {

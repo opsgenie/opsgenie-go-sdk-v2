@@ -16,13 +16,25 @@ func (r GetSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (gr GetSavedSearchRequest) ResourcePath() string {
-	if gr.IdentifierType == NAME {
-		return "/v2/alerts/saved-searches/" + gr.IdentifierValue + "?identifierType=name"
-	}
-	return "/v2/alerts/saved-searches/" + gr.IdentifierValue + "?identifierType=id"
+func (r GetSavedSearchRequest) ResourcePath() string {
+
+	return "/v2/alerts/saved-searches/" + r.IdentifierValue
 }
 
 func (r GetSavedSearchRequest) Method() string {
 	return "GET"
+}
+
+func (r GetSavedSearchRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == NAME {
+		params["identifierType"] = "name"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

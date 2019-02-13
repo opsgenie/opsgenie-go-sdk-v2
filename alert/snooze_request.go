@@ -28,15 +28,28 @@ func (r SnoozeAlertRequest) Validate() error {
 }
 
 func (r SnoozeAlertRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/snooze?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/snooze?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/snooze?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/snooze"
 
 }
 
 func (r SnoozeAlertRequest) Method() string {
 	return "POST"
+}
+
+func (r SnoozeAlertRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

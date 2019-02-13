@@ -71,7 +71,9 @@ func TestGetRequest_Endpoint(t *testing.T) {
 		Identifier: Id,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59?identifierType=id", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
 }
 
 func TestListRequest_Validate(t *testing.T) {
@@ -91,8 +93,12 @@ func TestListRequest_GetParams(t *testing.T) {
 		Query:  "status:closed",
 		Order:  "asc",
 	}
-	params := request.getParams()
-	assert.Equal(t, "?limit=20&offset=2&order=asc&query=status%3Aclosed&sort=isSeen", params)
+	params := request.RequestParams()
+	assert.Equal(t, "20", params["limit"])
+	assert.Equal(t, "2", params["offset"])
+	assert.Equal(t, "status:closed", params["query"])
+	assert.Equal(t, "isSeen", params["sort"])
+	assert.Equal(t, "asc", params["order"])
 }
 
 func TestCloseRequest_Validate(t *testing.T) {
@@ -112,7 +118,9 @@ func TestCloseRequest_Endpoint(t *testing.T) {
 		Identifier: Tiny,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/close?identifierType=tiny", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/close", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
 }
 
 func TestAddNoteRequest_Validate(t *testing.T) {
@@ -166,7 +174,9 @@ func TestAddResponderRequest_Endpoint(t *testing.T) {
 		Identifier: Id,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/responders?identifierType=id", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/responders", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
 }
 
 func TestAddTagsRequest_Validate(t *testing.T) {
@@ -189,7 +199,10 @@ func TestAddTagsRequest_Endpoint(t *testing.T) {
 		Identifier: Tiny,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags?identifierType=tiny", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
+
 }
 
 func TestRemoveTagsRequest_Validate(t *testing.T) {
@@ -216,8 +229,11 @@ func TestRemoveTagsRequest_Endpoint(t *testing.T) {
 		Tags:       []string{"cem", "Heimdall"},
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags?"+
-		"identifierType=tiny&tags=cem,Heimdall", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/tags", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
+	assert.Equal(t, "cem,Heimdall", params["tags"])
+
 }
 
 func TestAddDetailsRequest_Validate(t *testing.T) {
@@ -242,7 +258,9 @@ func TestAddDetailsRequest_Endpoint(t *testing.T) {
 		Identifier: Id,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/details?identifierType=id", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/details", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
 }
 
 func TestRemoveDetailsRequest_Validate(t *testing.T) {
@@ -265,8 +283,9 @@ func TestRemoveDetailsRequest_Endpoint(t *testing.T) {
 		Keys: []string{"See", "Opsgenie", "in", "Action"},
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/"+
-		"details?keys=See,Opsgenie,in,Action", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/details", endpoint)
+	assert.Equal(t, "See,Opsgenie,in,Action", params["keys"])
 }
 
 func TestUpdatePriorityRequestRequest_Validate(t *testing.T) {
@@ -308,7 +327,9 @@ func TestUpdateMessageRequest_Endpoint(t *testing.T) {
 		Identifier: Id,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/message?identifierType=id", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/message", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
 }
 
 func TestUpdateDescriptionRequest_Validate(t *testing.T) {
@@ -331,7 +352,9 @@ func TestUpdateDescriptionRequest_Endpoint(t *testing.T) {
 		Identifier: Tiny,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/description?identifierType=tiny", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/description", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
 }
 
 func TestListLogsRequest_Validate(t *testing.T) {
@@ -350,8 +373,11 @@ func TestListLogsRequest_GetParams(t *testing.T) {
 		Order:     "asc",
 		Direction: "next",
 	}
-	params := request.getParams()
-	assert.Equal(t, "?direction=next&limit=20&offset=2&order=asc", params)
+	params := request.RequestParams()
+	assert.Equal(t, "20", params["limit"])
+	assert.Equal(t, "2", params["offset"])
+	assert.Equal(t, "next", params["direction"])
+	assert.Equal(t, "asc", params["order"])
 }
 
 func TestListLogsRequest_Endpoint(t *testing.T) {
@@ -360,7 +386,9 @@ func TestListLogsRequest_Endpoint(t *testing.T) {
 		Identifier: Tiny,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/logs?identifierType=tiny", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/logs", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
 }
 
 func TestListNotesRequest_Validate(t *testing.T) {
@@ -379,8 +407,11 @@ func TestListNotesRequest_GetParams(t *testing.T) {
 		Order:     "desc",
 		Direction: "next",
 	}
-	params := request.getParams()
-	assert.Equal(t, "?direction=next&limit=10&offset=30&order=desc", params)
+	params := request.RequestParams()
+	assert.Equal(t, "10", params["limit"])
+	assert.Equal(t, "30", params["offset"])
+	assert.Equal(t, "next", params["direction"])
+	assert.Equal(t, "desc", params["order"])
 }
 
 func TestListNotesRequest_Endpoint(t *testing.T) {
@@ -389,7 +420,9 @@ func TestListNotesRequest_Endpoint(t *testing.T) {
 		Identifier: Id,
 	}
 	endpoint := request.ResourcePath()
-	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/notes?identifierType=id", endpoint)
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/notes", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
 }
 
 func TestPriority_Validate(t *testing.T) {

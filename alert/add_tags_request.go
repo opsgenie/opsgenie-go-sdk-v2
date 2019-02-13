@@ -27,15 +27,28 @@ func (r AddTagsRequest) Validate() error {
 }
 
 func (r AddTagsRequest) ResourcePath() string {
-	if r.IdentifierType == TINYID {
-		return "/v2/alerts/" + r.IdentifierValue + "/tags?identifierType=tiny"
-	} else if r.IdentifierType == ALIAS {
-		return "/v2/alerts/" + r.IdentifierValue + "/tags?identifierType=alias"
-	}
-	return "/v2/alerts/" + r.IdentifierValue + "/tags?identifierType=id"
+
+	return "/v2/alerts/" + r.IdentifierValue + "/tags"
 
 }
 
 func (r AddTagsRequest) Method() string {
 	return "POST"
+}
+
+func (r AddTagsRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
+
+	} else {
+		params["identifierType"] = "id"
+
+	}
+	return params
 }

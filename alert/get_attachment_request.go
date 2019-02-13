@@ -5,15 +5,14 @@ import (
 	"github.com/pkg/errors"
 )
 
-type DeleteAttachmentRequest struct {
+type GetAttachmentRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
 	AttachmentId    string
-	User            string
 }
 
-func (r DeleteAttachmentRequest) Validate() error {
+func (r GetAttachmentRequest) Validate() error {
 	if r.AttachmentId == "" {
 		return errors.New("AttachmentId can not be empty")
 	}
@@ -24,16 +23,28 @@ func (r DeleteAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (gr DeleteAttachmentRequest) ResourcePath() string {
-	if gr.IdentifierType == ALIAS {
-		return "/v2/alerts/" + gr.IdentifierValue + "/attachments/" + gr.AttachmentId + "?identifierType=alias"
-	}
-	if gr.IdentifierType == TINYID {
-		return "/v2/alerts/" + gr.IdentifierValue + "/attachments/" + gr.AttachmentId + "?identifierType=tiny"
-	}
-	return "/v2/alerts/" + gr.IdentifierValue + "/attachments/" + gr.AttachmentId + "?identifierType=id"
+func (r GetAttachmentRequest) ResourcePath() string {
+
+	return "/v2/alerts/" + r.IdentifierValue + "/attachments/" + r.AttachmentId
 }
 
-func (r DeleteAttachmentRequest) Method() string {
-	return "DELETE"
+func (r GetAttachmentRequest) Method() string {
+	return "GET"
+}
+
+func (r GetAttachmentRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == ALIAS {
+		params["alertIdentifierType"] = "alias"
+
+	} else if r.IdentifierType == TINYID {
+		params["alertIdentifierType"] = "tiny"
+
+	} else {
+		params["alertIdentifierType"] = "id"
+
+	}
+	return params
 }

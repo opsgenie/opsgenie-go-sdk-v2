@@ -3,7 +3,6 @@ package logs
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"net/url"
 	"strconv"
 )
 
@@ -11,7 +10,6 @@ type ListLogFilesRequest struct {
 	client.BaseRequest
 	Marker string
 	Limit  int
-	params string
 }
 
 func (r ListLogFilesRequest) Validate() error {
@@ -23,27 +21,22 @@ func (r ListLogFilesRequest) Validate() error {
 }
 
 func (r ListLogFilesRequest) ResourcePath() string {
-	return "/v2/logs/list/" + r.Marker + r.setParams(r)
+	return "/v2/logs/list/" + r.Marker
 }
 
 func (r ListLogFilesRequest) Method() string {
 	return "GET"
 }
 
-func (r ListLogFilesRequest) setParams(request ListLogFilesRequest) string {
-	params := url.Values{}
+func (r ListLogFilesRequest) RequestParams() map[string]string {
 
-	if request.Limit >= 0 {
-		params.Add("limit", strconv.Itoa(request.Limit))
+	params := make(map[string]string)
+
+	if r.Limit >= 0 {
+		params["limit"] = strconv.Itoa(r.Limit)
 	}
 
-	if len(params) > 0 {
-		request.params = "?" + params.Encode()
-	} else {
-		request.params = ""
-	}
-
-	return request.params
+	return params
 }
 
 type GenerateLogFileDownloadLinkRequest struct {

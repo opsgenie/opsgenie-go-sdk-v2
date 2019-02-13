@@ -3,7 +3,6 @@ package alert
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"net/url"
 )
 
 type RemoveDetailsRequest struct {
@@ -14,7 +13,6 @@ type RemoveDetailsRequest struct {
 	Source          string
 	User            string
 	Note            string
-	params          string
 }
 
 func (r RemoveDetailsRequest) Validate() error {
@@ -30,57 +28,42 @@ func (r RemoveDetailsRequest) Validate() error {
 
 func (r RemoveDetailsRequest) ResourcePath() string {
 
-	return "/v2/alerts/" + r.IdentifierValue + "/details" + r.setParams(r)
+	return "/v2/alerts/" + r.IdentifierValue + "/details"
 }
 
 func (r RemoveDetailsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveDetailsRequest) setParams(request RemoveDetailsRequest) string {
-	request.params = setIdentifierToRemoveDetailsRequest(request)
+func (r RemoveDetailsRequest) RequestParams() map[string]string {
 
-	return request.params
-}
+	params := make(map[string]string)
 
-func setIdentifierToRemoveDetailsRequest(request RemoveDetailsRequest) string {
+	if r.IdentifierType == ALIAS {
+		params["identifierType"] = "alias"
 
-	params := url.Values{}
+	} else if r.IdentifierType == TINYID {
+		params["identifierType"] = "tiny"
 
-	if request.IdentifierType == ALERTID {
-		params.Add("identifierType", "id")
-	}
-
-	if request.IdentifierType == ALIAS {
-		params.Add("identifierType", "alias")
-	}
-
-	if request.IdentifierType == TINYID {
-		params.Add("identifierType", "tiny")
-	}
-
-	if request.Keys != "" {
-		params.Add("keys", request.Keys)
-	}
-
-	if request.Source != "" {
-		params.Add("source", request.Source)
-	}
-
-	if request.User != "" {
-		params.Add("user", request.User)
-	}
-
-	if request.Note != "" {
-		params.Add("note", request.Note)
-	}
-
-	if len(params) != 0 {
-		request.params = "?" + params.Encode()
 	} else {
-		request.params = ""
+		params["identifierType"] = "id"
 	}
 
-	return request.params
+	if r.Keys != "" {
+		params["keys"] = r.Keys
+	}
 
+	if r.Source != "" {
+		params["source"] = r.Source
+	}
+
+	if r.User != "" {
+		params["user"] = r.User
+	}
+
+	if r.Note != "" {
+		params["note"] = r.Note
+	}
+
+	return params
 }
