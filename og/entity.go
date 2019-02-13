@@ -208,6 +208,7 @@ const (
 	User       ParticipantType = "user"
 	Team       ParticipantType = "team"
 	Escalation ParticipantType = "escalation"
+	Schedule   ParticipantType = "schedule"
 	None       ParticipantType = "none"
 
 	Monday    Day = "monday"
@@ -306,4 +307,14 @@ const (
 	Next     NotifyType = "next"
 	Previous NotifyType = "previous"
 	Default  NotifyType = "default"
+	Users    NotifyType = "users"
+	Admins   NotifyType = "admins"
+	All      NotifyType = "all"
+)
+
+type EscalationCondition string
+
+const (
+	IfNotAcked  EscalationCondition = "if-not-acked"
+	IfNotClosed EscalationCondition = "if-not-closed"
 )
