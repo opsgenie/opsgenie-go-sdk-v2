@@ -306,11 +306,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 		queryParams.Add(key, value)
 	}
 
-	requestUrl := buildRequestUrl(cli, apiRequest, queryParams)
-
-	endpoint := requestUrl.String()
-
-	req, err = retryablehttp.NewRequest(apiRequest.Method(), endpoint, buf)
+	req, err = retryablehttp.NewRequest(apiRequest.Method(), buildRequestUrl(cli, apiRequest, queryParams), buf)
 	if err != nil {
 		return nil, err
 	}
@@ -324,7 +320,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 
 }
 
-func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url.Values) url.URL {
+func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url.Values) string {
 	requestUrl := url.URL{
 		Scheme:   "https",
 		Host:     cli.Config.apiUrl,
@@ -336,7 +332,7 @@ func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url
 	if !strings.Contains(cli.Config.apiUrl, "api") {
 		requestUrl.Scheme = "http"
 	}
-	return requestUrl
+	return requestUrl.String()
 }
 
 func setBodyAsJson(buf *io.ReadWriter, apiRequest ApiRequest, contentType *string, details map[string]interface{}) error {
