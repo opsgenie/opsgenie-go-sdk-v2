@@ -1,6 +1,9 @@
 package incident
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"time"
+)
 
 type Incident struct {
 	Id              string            `json:"id"`
@@ -9,8 +12,8 @@ type Incident struct {
 	Message         string            `json:"message"`
 	Status          string            `json:"status"`
 	Tags            []string          `json:"tags"`
-	CreatedAt       string            `json:"createdAt"`
-	UpdatedAt       string            `json:"updatedAt"`
+	CreatedAt       time.Time         `json:"createdAt"`
+	UpdatedAt       time.Time         `json:"updatedAt"`
 	Priority        Priority          `json:"priority"`
 	OwnerTeam       string            `json:"ownerTeam"`
 	Responders      []Responder       `json:"responders"`
@@ -45,11 +48,11 @@ type ListResult struct {
 }
 
 type LogResult struct {
-	Log       string `json:"log"`
-	Type      string `json:"type"`
-	Owner     string `json:"owner"`
-	CreatedAt string `json:"createdAt"`
-	Offset    string `json:"offset"`
+	Log       string    `json:"log"`
+	Type      string    `json:"type"`
+	Owner     string    `json:"owner"`
+	CreatedAt time.Time `json:"createdAt"`
+	Offset    string    `json:"offset"`
 }
 
 type ListLogsResult struct {
@@ -59,10 +62,10 @@ type ListLogsResult struct {
 }
 
 type NoteResult struct {
-	Note      string `json:"note"`
-	Owner     string `json:"owner"`
-	CreatedAt string `json:"createdAt"`
-	Offset    string `json:"offset"`
+	Note      string    `json:"note"`
+	Owner     string    `json:"owner"`
+	CreatedAt time.Time `json:"createdAt"`
+	Offset    string    `json:"offset"`
 }
 
 type ListNotesResult struct {

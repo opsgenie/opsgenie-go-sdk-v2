@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 func TestBuildCreateRequest(t *testing.T) {
@@ -19,12 +20,12 @@ func TestBuildCreateRequest(t *testing.T) {
 	restrictions := make([]og.Restriction, 2)
 	restrictions[0] = restriction1
 	restrictions[1] = restriction2
-
+	startDate := time.Now()
 	timeRestriction := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
 	ownerTeam := &og.OwnerTeam{Name: "aTeam", Id: "id"}
 
-	rotation1 := &og.Rotation{Name: "rot1", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
-	rotation2 := &og.Rotation{Name: "rot2", StartDate: "sDate", EndDate: "eDate", Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
+	rotation1 := &og.Rotation{Name: "rot1", StartDate: &startDate, EndDate: nil, Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
+	rotation2 := &og.Rotation{Name: "rot2", StartDate: &startDate, EndDate: nil, Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
 
 	rotations := []og.Rotation{
 		*rotation1, *rotation2,
@@ -37,7 +38,7 @@ func TestBuildCreateRequest(t *testing.T) {
 	createRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: true, OwnerTeam: ownerTeam}
 	createRequest.WithRotation(rotation1.WithParticipants(*participant1, *participant2)).
 		WithRotation(rotation2.WithParticipants(*participant1, *participant2).
-			WithTimeRestriction(tr))
+		WithTimeRestriction(tr))
 
 	assert.Equal(t, expectedCreateRequest, createRequest)
 	err := createRequest.Validate()
@@ -63,7 +64,15 @@ func TestCreateRequest_Validate(t *testing.T) {
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Rotation start date cannot be empty.").Error())
 
-	rotation.StartDate = "sDate"
+	startDate := time.Now()
+	rotation.StartDate = &startDate
+	rotation.EndDate = &startDate
+	createRequest.Rotations = nil
+	createRequest.WithRotation(rotation)
+	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Rotation end time should be later than start time.").Error())
+
+	rotation.EndDate = nil
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
@@ -219,13 +228,27 @@ func TestCreateRotationRequest_Validate(t *testing.T) {
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Rotation start date cannot be empty.").Error())
 
-	rotation.StartDate = "sDate"
-	participants := make([]og.Participant, 2)
+	startDate := time.Now()
+	rotation.StartDate = &startDate
+	rotation.EndDate = &startDate
+	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("Rotation end time should be later than start time.").Error())
+
+	rotation.EndDate = nil
+	participants := make([]og.Participant, 1)
 	participant1 := &og.Participant{}
 	participants[0] = *participant1
 	rotation.Participants = participants
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Participant type cannot be empty.").Error())
+	participant1 = &og.Participant{
+		Type: og.Team,
+		Name: "team1",
+	}
+	participants[0] = *participant1
+	rotation.Participants = participants
+	err = createRequest.Validate()
+	assert.Equal(t, err, nil)
 
 }
 

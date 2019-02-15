@@ -3,6 +3,7 @@ package schedule
 import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"time"
 )
 
 type Schedule struct {
@@ -49,8 +50,8 @@ type TimelineResult struct {
 	ScheduleInfo       Info         `json:"_parent"`
 	Description        string       `json:"description"`
 	OwnerTeam          og.OwnerTeam `json:"ownerTeam,omitempty"`
-	StartDate          string       `json:"startDate,omitempty"`
-	EndDate            string       `json:"endDate,omitempty"`
+	StartDate          time.Time    `json:"startDate,omitempty"`
+	EndDate            time.Time    `json:"endDate,omitempty"`
 	FinalTimeline      Timeline     `json:"finalTimeline,omitempty"`
 	BaseTimeline       Timeline     `json:"baseTimeline,omitempty"`
 	OverrideTimeline   Timeline     `json:"overrideTimeline,omitempty"`
@@ -76,8 +77,8 @@ type Info struct {
 }
 
 type Period struct {
-	StartDate string         `json:"startDate,omitempty"`
-	EndDate   string         `json:"endDate,omitempty"`
+	StartDate time.Time      `json:"startDate,omitempty"`
+	EndDate   time.Time      `json:"endDate,omitempty"`
 	Type      string         `json:"type,omitempty"`
 	Recipient og.Participant `json:"recipient,omitempty"`
 }

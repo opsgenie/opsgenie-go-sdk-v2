@@ -4,6 +4,8 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
+	"time"
+	"strconv"
 )
 
 type Identifier uint32
@@ -190,9 +192,9 @@ type GetTimelineRequest struct {
 	IdentifierType  Identifier
 	IdentifierValue string
 	Expands         []ExpandType
-	Interval        uint32
+	Interval        int
 	IntervalUnit    Unit
-	Date            string
+	Date            *time.Time
 }
 
 func (tr GetTimelineRequest) Validate() error {
@@ -200,9 +202,7 @@ func (tr GetTimelineRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	if tr.Interval <= 0 {
-		tr.Interval = 1
-	}
+
 	if tr.IntervalUnit != Days && tr.IntervalUnit != Months && tr.IntervalUnit != Weeks {
 		return errors.New("Provided InternalUnit is not valid.")
 	}
@@ -241,6 +241,14 @@ func (tr GetTimelineRequest) RequestParams() map[string]string {
 		params["expand"] = expands
 	}
 
+	if tr.Interval > 1 {
+		params["interval"] = strconv.Itoa(tr.Interval)
+	}
+	params["intervalUnit"] = string(tr.IntervalUnit)
+
+	if tr.Date != nil {
+		params["date"] = tr.Date.Format("2006-01-02T15:04:05.000Z")
+	}
 	return params
 }
 

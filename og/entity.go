@@ -4,6 +4,7 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
+	"time"
 )
 
 type OwnerTeam struct {
@@ -14,8 +15,8 @@ type OwnerTeam struct {
 type Rotation struct {
 	client.BaseRequest
 	Name            string           `json:"name,omitempty"`
-	StartDate       string           `json:"startDate,omitempty"`
-	EndDate         string           `json:"endDate,omitempty"`
+	StartDate       *time.Time       `json:"startDate,omitempty"`
+	EndDate         *time.Time       `json:"endDate,omitempty"`
 	Type            RotationType     `json:"type,omitempty"`
 	Length          uint32           `json:"length,omitempty"`
 	Participants    []Participant    `json:"participants,omitempty"`
@@ -27,8 +28,11 @@ func (r Rotation) Validate() error {
 	if r.Type == "" {
 		return errors.New("Rotation type cannot be empty.")
 	}
-	if r.StartDate == "" {
+	if r.StartDate == nil {
 		return errors.New("Rotation start date cannot be empty.")
+	}
+	if r.EndDate != nil && !r.StartDate.Before(*r.EndDate) {
+		return errors.New("Rotation end time should be later than start time.")
 	}
 	if len(r.Participants) == 0 {
 		return errors.New("Rotation participants cannot be empty.")
@@ -37,7 +41,7 @@ func (r Rotation) Validate() error {
 	if err != nil {
 		return err
 	}
-	if &r.TimeRestriction != nil {
+	if r.TimeRestriction != nil {
 		err := ValidateRestrictions(*r.TimeRestriction)
 		if err != nil {
 			return err
