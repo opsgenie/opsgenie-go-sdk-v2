@@ -1,9 +1,12 @@
 package team
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+)
 
 type TeamMeta struct {
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
@@ -12,9 +15,19 @@ type ListedTeams struct {
 	Description string `json:"description,omitempty"`
 }
 
+type RoutingRuleMeta struct {
+	Id              string             `json:"id,omitempty"`
+	Name            string             `json:"name,omitempty"`
+	IsDefault       bool               `json:"isDefault,omitempty"`
+	Criteria        og.Filter          `json:"criteria,omitempty"`
+	Timezone        string             `json:"timezone,omitempty"`
+	TimeRestriction og.TimeRestriction `json:"timeRestriction,omitempty"`
+	Notify          Notify             `json:"notify,omitempty"`
+}
+
 type CreateTeamResult struct {
 	client.ResultMetadata
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
@@ -54,7 +67,7 @@ type ListTeamLogsResult struct {
 
 //team role api
 type RoleMeta struct {
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
@@ -96,12 +109,32 @@ type ListTeamRoleResult struct {
 
 type AddTeamMemberResult struct {
 	client.ResultMetadata
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
 type RemoveTeamMemberResult struct {
 	client.ResultMetadata
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
+}
+
+type RoutingRuleResult struct {
+	client.ResultMetadata
+	Id string `json:"id,omitempty"`
+}
+
+type GetRoutingRuleResult struct {
+	client.ResultMetadata
+	RoutingRuleMeta
+}
+
+type DeleteRoutingRuleResult struct {
+	client.ResultMetadata
+	Result string `json:"result"`
+}
+
+type ListRoutingRulesResult struct {
+	client.ResultMetadata
+	RoutingRules []RoutingRuleMeta `json:"data"`
 }

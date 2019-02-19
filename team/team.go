@@ -183,3 +183,76 @@ func (c *Client) RemoveMember(ctx context.Context, req RemoveTeamMemberRequest) 
 
 	return removeTeamMemberResponse, nil
 }
+
+//team routing rule api
+func (c *Client) CreateRoutingRule(ctx context.Context, req CreateRoutingRuleRequest) (*RoutingRuleResult, error) {
+
+	createRoutingRuleResponse := &RoutingRuleResult{}
+
+	err := c.restClient.Exec(ctx, req, createRoutingRuleResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return createRoutingRuleResponse, nil
+}
+
+func (c *Client) GetRoutingRule(ctx context.Context, req GetRoutingRuleRequest) (*GetRoutingRuleResult, error) {
+
+	getRoutingRuleResponse := &GetRoutingRuleResult{}
+
+	err := c.restClient.Exec(ctx, req, getRoutingRuleResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return getRoutingRuleResponse, nil
+}
+
+func (c *Client) UpdateRoutingRule(ctx context.Context, req UpdateRoutingRuleRequest) (*RoutingRuleResult, error) {
+
+	updateRoutingRuleResponse := &RoutingRuleResult{}
+
+	err := c.restClient.Exec(ctx, req, updateRoutingRuleResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return updateRoutingRuleResponse, nil
+}
+
+func (c *Client) DeleteRoutingRule(ctx context.Context, req DeleteRoutingRuleRequest) (*DeleteRoutingRuleResult, error) {
+
+	deleteRoutingRuleResponse := &DeleteRoutingRuleResult{}
+
+	err := c.restClient.Exec(ctx, req, deleteRoutingRuleResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return deleteRoutingRuleResponse, nil
+}
+
+func (c *Client) ListRoutingRules(ctx context.Context, req ListRoutingRulesRequest) (*ListRoutingRulesResult, error) {
+
+	listRoutingRulesResponse := &ListRoutingRulesResult{}
+
+	err := c.restClient.Exec(ctx, req, listRoutingRulesResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return listRoutingRulesResponse, nil
+}
+
+func (c *Client) ChangeRoutingRuleOrder(ctx context.Context, req ChangeRoutingRuleOrderRequest) (*RoutingRuleResult, error) {
+
+	changeRoutingRuleOrderResponse := &RoutingRuleResult{}
+
+	err := c.restClient.Exec(ctx, req, changeRoutingRuleOrderResponse)
+	if err != nil {
+		return nil, err
+	}
+
+	return changeRoutingRuleOrderResponse, nil
+}

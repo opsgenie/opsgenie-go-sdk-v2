@@ -3,6 +3,7 @@ package team
 import (
 	"errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"strconv"
 )
 
@@ -491,7 +492,6 @@ func validateIdentifier(identifier string) error {
 }
 
 //team member api
-
 type AddTeamMemberRequest struct {
 	client.BaseRequest
 	TeamIdentifierType  Identifier
@@ -582,4 +582,340 @@ func (r RemoveTeamMemberRequest) RequestParams() map[string]string {
 	}
 
 	return params
+}
+
+//team routing rule api
+type NotifyType string
+
+const (
+	EscalationNotifyType NotifyType = "escalation"
+	ScheduleNotifyType   NotifyType = "schedule"
+	None                 NotifyType = "none"
+)
+
+type Notify struct {
+	Type NotifyType `json:"type, omitempty"`
+	Name string     `json:"name,omitempty"`
+	Id   string     `json:"id,omitempty"`
+}
+
+type CreateRoutingRuleRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	Name                string              `json:"name,omitempty"`
+	Order               *int                `json:"order,omitempty"`
+	Timezone            string              `json:"timezone,omitempty"`
+	Criteria            *og.Filter          `json:"criteria,omitempty"`
+	TimeRestriction     *og.TimeRestriction `json:"timeRestriction,omitempty"`
+	Notify              *Notify             `json:"notify"`
+}
+
+func (r CreateRoutingRuleRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+	if r.Notify == nil {
+		return errors.New("notify can not be empty")
+	} else if r.Notify != nil {
+		err := validateNotifyType(r.Notify.Type)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.TimeRestriction != nil {
+		err := og.ValidateRestrictions(*r.TimeRestriction)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.Criteria != nil {
+		err = og.ValidateFilter(*r.Criteria)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r CreateRoutingRuleRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules"
+
+}
+
+func (r CreateRoutingRuleRequest) Method() string {
+	return "POST"
+}
+
+func (r CreateRoutingRuleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+func (r CreateRoutingRuleRequest) WithTimeRestriction(timeRestriction og.TimeRestriction) CreateRoutingRuleRequest {
+	r.TimeRestriction = &timeRestriction
+	return r
+}
+
+type GetRoutingRuleRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	RoutingRuleId       string
+}
+
+func (r GetRoutingRuleRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RoutingRuleId == "" {
+		return errors.New("routing rule id can not be empty")
+	}
+
+	return nil
+}
+
+func (r GetRoutingRuleRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
+
+}
+
+func (r GetRoutingRuleRequest) Method() string {
+	return "GET"
+}
+
+func (r GetRoutingRuleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+type UpdateRoutingRuleRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	RoutingRuleId       string
+	Name                string              `json:"name,omitempty"`
+	Timezone            string              `json:"timezone,omitempty"`
+	Criteria            *og.Filter          `json:"criteria,omitempty"`
+	TimeRestriction     *og.TimeRestriction `json:"timeRestriction,omitempty"`
+	Notify              *Notify             `json:"notify,omitempty"`
+}
+
+func (r UpdateRoutingRuleRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RoutingRuleId == "" {
+		return errors.New("routing rule id can not be empty")
+	}
+
+	if r.TimeRestriction != nil {
+		err := og.ValidateRestrictions(*r.TimeRestriction)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.Criteria != nil {
+		err = og.ValidateFilter(*r.Criteria)
+		if err != nil {
+			return err
+		}
+	}
+
+	if r.Notify != nil {
+		err := validateNotifyType(r.Notify.Type)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (r UpdateRoutingRuleRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
+
+}
+
+func (r UpdateRoutingRuleRequest) Method() string {
+	return "PATCH"
+}
+
+func (r UpdateRoutingRuleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+type DeleteRoutingRuleRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	RoutingRuleId       string
+}
+
+func (r DeleteRoutingRuleRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RoutingRuleId == "" {
+		return errors.New("routing rule id can not be empty")
+	}
+
+	return nil
+}
+
+func (r DeleteRoutingRuleRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
+
+}
+
+func (r DeleteRoutingRuleRequest) Method() string {
+	return "DELETE"
+}
+
+func (r DeleteRoutingRuleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+type ListRoutingRulesRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+}
+
+func (r ListRoutingRulesRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (r ListRoutingRulesRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules"
+
+}
+
+func (r ListRoutingRulesRequest) Method() string {
+	return "GET"
+}
+
+func (r ListRoutingRulesRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+type ChangeRoutingRuleOrderRequest struct {
+	client.BaseRequest
+	TeamIdentifierType  Identifier
+	TeamIdentifierValue string
+	RoutingRuleId       string
+	Order               *int `json:"order"`
+}
+
+func (r ChangeRoutingRuleOrderRequest) Validate() error {
+	err := validateIdentifier(r.TeamIdentifierValue)
+	if err != nil {
+		return err
+	}
+
+	if r.RoutingRuleId == "" {
+		return errors.New("routing rule id can not be empty")
+	}
+
+	if r.Order == nil {
+		return errors.New("order can not be empty")
+	}
+
+	return nil
+}
+
+func (r ChangeRoutingRuleOrderRequest) ResourcePath() string {
+
+	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId + "/change-order"
+
+}
+
+func (r ChangeRoutingRuleOrderRequest) Method() string {
+	return "POST"
+}
+
+func (r ChangeRoutingRuleOrderRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.TeamIdentifierType == Name {
+		params["teamIdentifierType"] = "name"
+	} else {
+		params["teamIdentifierType"] = "id"
+	}
+
+	return params
+}
+
+func validateNotifyType(notifyType NotifyType) error {
+	switch notifyType {
+	case EscalationNotifyType, ScheduleNotifyType, None:
+		return nil
+	}
+	return errors.New("Notify type should be one of these: " +
+		"'EscalationNotifyType','ScheduleNotifyType','None'")
 }

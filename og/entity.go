@@ -299,6 +299,7 @@ type Condition struct {
 	Operation     ConditionOperation `json:"operation,omitempty"`
 	ExpectedValue string             `json:"expectedValue,omitempty"`
 	Key           string             `json:"key,omitempty"`
+	Order         *int               `json:"order,omitempty"`
 }
 
 type ConditionMatchType string
