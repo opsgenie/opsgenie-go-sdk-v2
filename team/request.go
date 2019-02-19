@@ -626,7 +626,7 @@ func (r CreateRoutingRuleRequest) Validate() error {
 	}
 
 	if r.TimeRestriction != nil {
-		err := og.ValidateRestrictions(*r.TimeRestriction)
+		err := og.ValidateRestrictions(r.TimeRestriction)
 		if err != nil {
 			return err
 		}
@@ -736,7 +736,7 @@ func (r UpdateRoutingRuleRequest) Validate() error {
 	}
 
 	if r.TimeRestriction != nil {
-		err := og.ValidateRestrictions(*r.TimeRestriction)
+		err := og.ValidateRestrictions(r.TimeRestriction)
 		if err != nil {
 			return err
 		}

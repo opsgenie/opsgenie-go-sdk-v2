@@ -21,7 +21,7 @@ func TestBuildCreateRequest(t *testing.T) {
 	restrictions[0] = restriction1
 	restrictions[1] = restriction2
 	startDate := time.Now()
-	timeRestriction := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
+	timeRestriction := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	ownerTeam := &og.OwnerTeam{Name: "aTeam", Id: "id"}
 
 	rotation1 := &og.Rotation{Name: "rot1", StartDate: &startDate, EndDate: nil, Type: og.Weekly, Length: 5, Participants: participants, TimeRestriction: &timeRestriction}
@@ -104,7 +104,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("Time restriction type is not valid.").Error())
+	assert.Equal(t, err.Error(), errors.New("Type of time restriction must be time-of-day or weekday-and-time-of-day.").Error())
 
 	tr = og.TimeRestriction{Type: og.TimeOfDay}
 	rotation.Participants = nil
@@ -112,78 +112,78 @@ func TestCreateRequest_Validate(t *testing.T) {
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("Restrictions can not be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions := []og.Restriction{
 		og.Restriction{},
 	}
-	tr = og.TimeRestriction{Type: og.TimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("EndMin field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1},
 	}
-	tr = og.TimeRestriction{Type: og.TimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("StartHour field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1, StartHour: 5},
 	}
-	tr = og.TimeRestriction{Type: og.TimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("StartMin field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1},
 	}
-	tr = og.TimeRestriction{Type: og.TimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("EndHour field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1},
 	}
-	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("EndDay field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1, EndDay: og.Monday},
 	}
-	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("StartDay field cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
 		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1, EndDay: og.Monday, StartDay: og.Monday},
 	}
-	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, Restrictions: restrictions}
+	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
 	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
 	createRequest.Rotations = nil

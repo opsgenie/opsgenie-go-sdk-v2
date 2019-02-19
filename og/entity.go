@@ -42,7 +42,7 @@ func (r Rotation) Validate() error {
 		return err
 	}
 	if r.TimeRestriction != nil {
-		err := ValidateRestrictions(*r.TimeRestriction)
+		err := ValidateRestrictions(r.TimeRestriction)
 		if err != nil {
 			return err
 		}

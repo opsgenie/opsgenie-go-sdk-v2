@@ -579,7 +579,7 @@ func ValidateMainFields(fields *MainFields) error {
 		}
 	}
 	if fields.TimeRestriction != nil {
-		err := og.ValidateRestrictions(*fields.TimeRestriction)
+		err := og.ValidateRestrictions(fields.TimeRestriction)
 		if err != nil {
 			return err
 		}
