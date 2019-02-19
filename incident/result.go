@@ -76,6 +76,7 @@ type ListNotesResult struct {
 
 type Paging struct {
 	Next  string `json:"next"`
+	Prev  string `json:"prev"`
 	First string `json:"first"`
 	Last  string `json:"last"`
 }
