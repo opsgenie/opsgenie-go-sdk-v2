@@ -6,16 +6,16 @@ type ListSavedSearchRequest struct {
 	client.BaseRequest
 }
 
-func (ssr ListSavedSearchRequest) Validate() error {
+func (r *ListSavedSearchRequest) Validate() error {
 
 	return nil
 }
 
-func (ssr ListSavedSearchRequest) ResourcePath() string {
+func (r *ListSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches"
 }
 
-func (ssr ListSavedSearchRequest) Method() string {
+func (r *ListSavedSearchRequest) Method() string {
 	return "GET"
 }

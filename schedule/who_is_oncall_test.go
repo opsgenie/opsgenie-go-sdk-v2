@@ -1,9 +1,9 @@
 package schedule
 
 import (
-	"testing"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 func TestGetOnCallsRequest_Validate(t *testing.T) {

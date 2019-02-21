@@ -11,7 +11,7 @@ type DeleteAlertRequest struct {
 	Source          string
 }
 
-func (r DeleteAlertRequest) Validate() error {
+func (r *DeleteAlertRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -19,16 +19,16 @@ func (r DeleteAlertRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteAlertRequest) ResourcePath() string {
+func (r *DeleteAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue
 }
 
-func (r DeleteAlertRequest) Method() string {
+func (r *DeleteAlertRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteAlertRequest) RequestParams() map[string]string {
+func (r *DeleteAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

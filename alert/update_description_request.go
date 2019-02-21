@@ -12,7 +12,7 @@ type UpdateDescriptionRequest struct {
 	Description     string `json:"description,omitempty"`
 }
 
-func (r UpdateDescriptionRequest) Validate() error {
+func (r *UpdateDescriptionRequest) Validate() error {
 	if r.Description == "" {
 		return errors.New("Description can not be empty")
 	}
@@ -22,16 +22,16 @@ func (r UpdateDescriptionRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateDescriptionRequest) ResourcePath() string {
+func (r *UpdateDescriptionRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/description"
 }
 
-func (r UpdateDescriptionRequest) Method() string {
+func (r *UpdateDescriptionRequest) Method() string {
 	return "PUT"
 }
 
-func (r UpdateDescriptionRequest) RequestParams() map[string]string {
+func (r *UpdateDescriptionRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

@@ -1,9 +1,9 @@
 package user
 
 import (
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
-	"github.com/pkg/errors"
 )
 
 func TestCreateUserRequest_Validate(t *testing.T) {
@@ -31,8 +31,7 @@ func TestCreateUserRequest_Validate(t *testing.T) {
 	userRequest = &CreateRequest{
 		Username: "Name@gmail.com",
 		FullName: "Name Surname",
-		Role: &UserRoleRequest{
-		},
+		Role:     &UserRoleRequest{},
 	}
 	err = userRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User Role can not be empty").Error())
@@ -113,9 +112,7 @@ func TestDeleteUserRequest_Validate(t *testing.T) {
 }
 
 func TestListUserRequest_Validate(t *testing.T) {
-	userRequest := &ListRequest{
-
-	}
+	userRequest := &ListRequest{}
 	reqParam := userRequest.RequestParams()
 
 	assert.Equal(t, len(reqParam), 0)

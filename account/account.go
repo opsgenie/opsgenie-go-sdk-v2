@@ -1,12 +1,12 @@
 package account
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"context"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type Client struct {
-	client client.OpsGenieClient
+	client *client.OpsGenieClient
 }
 
 func NewClient(config *client.Config) (*Client, error) {
@@ -14,15 +14,13 @@ func NewClient(config *client.Config) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	client := &Client{}
-	client.client = *opsgenieClient
-	return client, nil
+	return &Client{opsgenieClient}, nil
 }
 
-func (ac *Client) Get(ctx context.Context, req GetRequest) (*GetResult, error) {
+func (c *Client) Get(ctx context.Context, req *GetRequest) (*GetResult, error) {
 	getResult := &GetResult{}
 
-	err := ac.client.Exec(ctx, req, getResult)
+	err := c.client.Exec(ctx, req, getResult)
 	if err != nil {
 		return nil, err
 	}

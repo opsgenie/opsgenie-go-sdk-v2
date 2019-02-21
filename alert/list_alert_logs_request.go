@@ -15,7 +15,7 @@ type ListAlertLogsRequest struct {
 	Limit           uint32
 }
 
-func (r ListAlertLogsRequest) Validate() error {
+func (r *ListAlertLogsRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -23,15 +23,15 @@ func (r ListAlertLogsRequest) Validate() error {
 	return nil
 }
 
-func (r ListAlertLogsRequest) ResourcePath() string {
+func (r *ListAlertLogsRequest) ResourcePath() string {
 	return "/v2/alerts/" + r.IdentifierValue + "/logs"
 }
 
-func (r ListAlertLogsRequest) Method() string {
+func (r *ListAlertLogsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListAlertLogsRequest) RequestParams() map[string]string {
+func (r *ListAlertLogsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

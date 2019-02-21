@@ -15,7 +15,7 @@ type RemoveTagsRequest struct {
 	Note            string
 }
 
-func (r RemoveTagsRequest) Validate() error {
+func (r *RemoveTagsRequest) Validate() error {
 	if r.Tags == "" {
 		return errors.New("Tags can not be empty")
 	}
@@ -26,16 +26,16 @@ func (r RemoveTagsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveTagsRequest) ResourcePath() string {
+func (r *RemoveTagsRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/tags"
 }
 
-func (r RemoveTagsRequest) Method() string {
+func (r *RemoveTagsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveTagsRequest) RequestParams() map[string]string {
+func (r *RemoveTagsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

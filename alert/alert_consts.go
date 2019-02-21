@@ -58,7 +58,6 @@ const (
 	NAME SearchIdentifierType = "name"
 )
 
-
 type AlertIdentifier uint32
 
 const (

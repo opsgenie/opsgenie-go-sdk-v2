@@ -23,7 +23,7 @@ type Rotation struct {
 	TimeRestriction *TimeRestriction `json:"timeRestriction,omitempty"`
 }
 
-func (r Rotation) Validate() error {
+func (r *Rotation) Validate() error {
 
 	if r.Type == "" {
 		return errors.New("Rotation type cannot be empty.")
@@ -64,7 +64,7 @@ func ValidateRotations(rotations []Rotation) error {
 	return nil
 }
 
-func validateParticipants(rotation Rotation) error {
+func validateParticipants(rotation *Rotation) error {
 	for _, participant := range rotation.Participants {
 		if participant.Type == "" {
 			return errors.New("Participant type cannot be empty.")
@@ -82,19 +82,19 @@ func validateParticipants(rotation Rotation) error {
 	return nil
 }
 
-func (r Rotation) WithParticipant(participant Participant) *Rotation {
+func (r *Rotation) WithParticipant(participant Participant) *Rotation {
 	r.Participants = append(r.Participants, participant)
-	return &r
+	return r
 }
 
-func (r Rotation) WithParticipants(participant ...Participant) *Rotation {
+func (r *Rotation) WithParticipants(participant ...Participant) *Rotation {
 	r.Participants = participant
-	return &r
+	return r
 }
 
-func (r Rotation) WithTimeRestriction(timeRestriction TimeRestriction) *Rotation {
+func (r *Rotation) WithTimeRestriction(timeRestriction TimeRestriction) *Rotation {
 	r.TimeRestriction = &timeRestriction
-	return &r
+	return r
 }
 
 func (tr *TimeRestriction) WithRestrictions(restrictions ...Restriction) *TimeRestriction {

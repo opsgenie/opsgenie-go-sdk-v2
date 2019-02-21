@@ -31,8 +31,8 @@ func TestCreateRequest_Validate(t *testing.T) {
 
 func TestGetRequest_Validate(t *testing.T) {
 	var err error
-	getRequest := &GetRequest{}
-	err = GetRequest{}.Validate()
+	getRequest := GetRequest{}
+	err = getRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	getRequest.UserIdentifier = "123"
@@ -51,7 +51,7 @@ func TestGetRequest_Validate(t *testing.T) {
 func TestUpdateRequest_Validate(t *testing.T) {
 	var err error
 	updateRequest := &UpdateRequest{}
-	err = GetRequest{}.Validate()
+	err = updateRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	updateRequest.UserIdentifier = "123"
@@ -73,7 +73,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 func TestDeleteRequest_Validate(t *testing.T) {
 	var err error
 	deleteRequest := &DeleteRequest{}
-	err = DeleteRequest{}.Validate()
+	err = deleteRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	deleteRequest.UserIdentifier = "123"
@@ -92,7 +92,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 func TestListRequest_Validate(t *testing.T) {
 	var err error
 	listRequest := &ListRequest{}
-	err = ListRequest{}.Validate()
+	err = listRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	listRequest.UserIdentifier = "123"
@@ -107,7 +107,7 @@ func TestListRequest_Validate(t *testing.T) {
 func TestEnableRequest_Validate(t *testing.T) {
 	var err error
 	enableRequest := &EnableRequest{}
-	err = EnableRequest{}.Validate()
+	err = enableRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	enableRequest.UserIdentifier = "123"
@@ -125,19 +125,19 @@ func TestEnableRequest_Validate(t *testing.T) {
 
 func TestDisableRequest_Validate(t *testing.T) {
 	var err error
-	enableRequest := &DisableRequest{}
-	err = DisableRequest{}.Validate()
+	disableRequest := &DisableRequest{}
+	err = disableRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
-	enableRequest.UserIdentifier = "123"
-	err = enableRequest.Validate()
+	disableRequest.UserIdentifier = "123"
+	err = disableRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("Contact identifier cannot be empty.").Error())
 
-	enableRequest.ContactIdentifier = "1234"
-	err = enableRequest.Validate()
+	disableRequest.ContactIdentifier = "1234"
+	err = disableRequest.Validate()
 	assert.Nil(t, err)
 
-	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/contacts/1234/disable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, disableRequest.ResourcePath(), "/v2/users/123/contacts/1234/disable")
+	assert.Equal(t, disableRequest.Method(), "POST")
 
 }

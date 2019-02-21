@@ -19,7 +19,7 @@ type CreateAlertAttachmentRequest struct {
 	IndexFile       string
 }
 
-func (r CreateAlertAttachmentRequest) Metadata(ar client.ApiRequest) map[string]interface{} {
+func (r *CreateAlertAttachmentRequest) Metadata(ar client.ApiRequest) map[string]interface{} {
 	headers := make(map[string]interface{})
 
 	formDataMap := make(map[string]io.Reader)
@@ -34,7 +34,7 @@ func (r CreateAlertAttachmentRequest) Metadata(ar client.ApiRequest) map[string]
 	return headers
 }
 
-func (r CreateAlertAttachmentRequest) Validate() error {
+func (r *CreateAlertAttachmentRequest) Validate() error {
 	if r.FileName == "" {
 		return errors.New("FileName can not be empty")
 	}
@@ -47,16 +47,16 @@ func (r CreateAlertAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (r CreateAlertAttachmentRequest) ResourcePath() string {
+func (r *CreateAlertAttachmentRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/attachments"
 }
 
-func (r CreateAlertAttachmentRequest) Method() string {
+func (r *CreateAlertAttachmentRequest) Method() string {
 	return "POST"
 }
 
-func (r CreateAlertAttachmentRequest) RequestParams() map[string]string {
+func (r *CreateAlertAttachmentRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

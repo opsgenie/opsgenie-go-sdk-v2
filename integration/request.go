@@ -11,18 +11,18 @@ type GetRequest struct {
 	Id string
 }
 
-func (r GetRequest) Validate() error {
+func (r *GetRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id
 }
 
-func (r GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
@@ -30,15 +30,15 @@ type listRequest struct {
 	client.BaseRequest
 }
 
-func (lr listRequest) Validate() error {
+func (r *listRequest) Validate() error {
 	return nil
 }
 
-func (lr listRequest) ResourcePath() string {
+func (r *listRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
-func (lr listRequest) Method() string {
+func (r *listRequest) Method() string {
 	return "GET"
 }
 
@@ -54,7 +54,7 @@ type APIBasedIntegrationRequest struct {
 	Recipients                  []Recipient   `json:"recipients,omitempty"`
 }
 
-func (r APIBasedIntegrationRequest) Validate() error {
+func (r *APIBasedIntegrationRequest) Validate() error {
 	if r.Name == "" || r.Type == "" {
 		return errors.New("Name and Type fields cannot be empty.")
 	}
@@ -65,11 +65,11 @@ func (r APIBasedIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r APIBasedIntegrationRequest) ResourcePath() string {
+func (r *APIBasedIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
-func (r APIBasedIntegrationRequest) Method() string {
+func (r *APIBasedIntegrationRequest) Method() string {
 	return "POST"
 }
 
@@ -84,7 +84,7 @@ type EmailBasedIntegrationRequest struct {
 	Recipients                  []Recipient `json:"recipients,omitempty"`
 }
 
-func (r EmailBasedIntegrationRequest) Validate() error {
+func (r *EmailBasedIntegrationRequest) Validate() error {
 	if r.Name == "" || r.Type == "" || r.EmailUsername == "" {
 		return errors.New("Name, Type and EmailUsername fields cannot be empty.")
 	}
@@ -95,11 +95,11 @@ func (r EmailBasedIntegrationRequest) Validate() error {
 	return nil
 }
 
-func (r EmailBasedIntegrationRequest) ResourcePath() string {
+func (r *EmailBasedIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations"
 }
 
-func (r EmailBasedIntegrationRequest) Method() string {
+func (r *EmailBasedIntegrationRequest) Method() string {
 	return "POST"
 }
 
@@ -160,18 +160,18 @@ type DeleteIntegrationRequest struct {
 	Id string
 }
 
-func (r DeleteIntegrationRequest) Validate() error {
+func (r *DeleteIntegrationRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r DeleteIntegrationRequest) ResourcePath() string {
+func (r *DeleteIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id
 }
 
-func (r DeleteIntegrationRequest) Method() string {
+func (r *DeleteIntegrationRequest) Method() string {
 	return "DELETE"
 }
 
@@ -180,18 +180,18 @@ type EnableIntegrationRequest struct {
 	Id string
 }
 
-func (r EnableIntegrationRequest) Validate() error {
+func (r *EnableIntegrationRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r EnableIntegrationRequest) ResourcePath() string {
+func (r *EnableIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/enable"
 }
 
-func (r EnableIntegrationRequest) Method() string {
+func (r *EnableIntegrationRequest) Method() string {
 	return "POST"
 }
 
@@ -200,18 +200,18 @@ type DisableIntegrationRequest struct {
 	Id string
 }
 
-func (r DisableIntegrationRequest) Validate() error {
+func (r *DisableIntegrationRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r DisableIntegrationRequest) ResourcePath() string {
+func (r *DisableIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/disable"
 }
 
-func (r DisableIntegrationRequest) Method() string {
+func (r *DisableIntegrationRequest) Method() string {
 	return "POST"
 }
 
@@ -220,18 +220,18 @@ type AuthenticateIntegrationRequest struct {
 	Type string `json:"type"`
 }
 
-func (r AuthenticateIntegrationRequest) Validate() error {
+func (r *AuthenticateIntegrationRequest) Validate() error {
 	if r.Type == "" {
 		return errors.New("Type cannot be blank.")
 	}
 	return nil
 }
 
-func (r AuthenticateIntegrationRequest) ResourcePath() string {
+func (r *AuthenticateIntegrationRequest) ResourcePath() string {
 	return "/v2/integrations/authenticate"
 }
 
-func (r AuthenticateIntegrationRequest) Method() string {
+func (r *AuthenticateIntegrationRequest) Method() string {
 	return "POST"
 }
 
@@ -240,18 +240,18 @@ type GetIntegrationActionsRequest struct {
 	Id string
 }
 
-func (r GetIntegrationActionsRequest) Validate() error {
+func (r *GetIntegrationActionsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Type cannot be blank.")
 	}
 	return nil
 }
 
-func (r GetIntegrationActionsRequest) ResourcePath() string {
+func (r *GetIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 
-func (r GetIntegrationActionsRequest) Method() string {
+func (r *GetIntegrationActionsRequest) Method() string {
 	return "GET"
 }
 
@@ -281,7 +281,7 @@ type CreateIntegrationActionsRequest struct {
 	ExtraProperties                  map[string]string `json:"extraProperties,omitempty"`
 }
 
-func (r CreateIntegrationActionsRequest) Validate() error {
+func (r *CreateIntegrationActionsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
@@ -305,11 +305,11 @@ func (r CreateIntegrationActionsRequest) Validate() error {
 	return nil
 }
 
-func (r CreateIntegrationActionsRequest) ResourcePath() string {
+func (r *CreateIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 
-func (r CreateIntegrationActionsRequest) Method() string {
+func (r *CreateIntegrationActionsRequest) Method() string {
 	return "POST"
 }
 
@@ -339,7 +339,7 @@ type UpdateAllIntegrationActionsRequest struct {
 	ExtraProperties                  map[string]string `json:"extraProperties,omitempty"`
 }
 
-func (r UpdateAllIntegrationActionsRequest) Validate() error {
+func (r *UpdateAllIntegrationActionsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
@@ -363,11 +363,11 @@ func (r UpdateAllIntegrationActionsRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateAllIntegrationActionsRequest) ResourcePath() string {
+func (r *UpdateAllIntegrationActionsRequest) ResourcePath() string {
 	return "/v2/integrations/" + r.Id + "/actions"
 }
 
-func (r UpdateAllIntegrationActionsRequest) Method() string {
+func (r *UpdateAllIntegrationActionsRequest) Method() string {
 	return "PUT"
 }
 

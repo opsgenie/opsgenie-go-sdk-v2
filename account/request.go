@@ -6,14 +6,14 @@ type GetRequest struct {
 	client.BaseRequest
 }
 
-func (lr GetRequest) Validate() error {
+func (r *GetRequest) Validate() error {
 	return nil
 }
 
-func (lr GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 	return "/v2/account"
 }
 
-func (lr GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }

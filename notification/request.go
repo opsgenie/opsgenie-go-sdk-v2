@@ -15,25 +15,25 @@ type CreateRuleStepRequest struct {
 	Enabled        bool          `json:"enabled,omitempty"`
 }
 
-func (crs CreateRuleStepRequest) Validate() error {
-	err := validateRuleIdentifier(crs.UserIdentifier, crs.RuleId)
+func (r *CreateRuleStepRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 
-	err = validateContact(&crs.Contact)
+	err = validateContact(&r.Contact)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (crs CreateRuleStepRequest) ResourcePath() string {
+func (r *CreateRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + crs.UserIdentifier + "/notification-rules/" + crs.RuleId + "/steps"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps"
 }
 
-func (crs CreateRuleStepRequest) Method() string {
+func (r *CreateRuleStepRequest) Method() string {
 	return "POST"
 }
 
@@ -44,20 +44,20 @@ type GetRuleStepRequest struct {
 	RuleStepId     string
 }
 
-func (grs GetRuleStepRequest) Validate() error {
-	err := validateRuleStepIdentifier(grs.UserIdentifier, grs.RuleId, grs.RuleStepId)
+func (r *GetRuleStepRequest) Validate() error {
+	err := validateRuleStepIdentifier(r.UserIdentifier, r.RuleId, r.RuleStepId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (grs GetRuleStepRequest) ResourcePath() string {
+func (r *GetRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + grs.UserIdentifier + "/notification-rules/" + grs.RuleId + "/steps/" + grs.RuleStepId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps/" + r.RuleStepId
 }
 
-func (grs GetRuleStepRequest) Method() string {
+func (r *GetRuleStepRequest) Method() string {
 	return "GET"
 }
 
@@ -71,13 +71,13 @@ type UpdateRuleStepRequest struct {
 	Enabled        bool          `json:"enabled,omitempty"`
 }
 
-func (urs UpdateRuleStepRequest) Validate() error {
-	err := validateRuleStepIdentifier(urs.UserIdentifier, urs.RuleId, urs.RuleStepId)
+func (r *UpdateRuleStepRequest) Validate() error {
+	err := validateRuleStepIdentifier(r.UserIdentifier, r.RuleId, r.RuleStepId)
 	if err != nil {
 		return err
 	}
-	if urs.Contact != nil {
-		err = validateContact(urs.Contact)
+	if r.Contact != nil {
+		err = validateContact(r.Contact)
 		if err != nil {
 			return err
 		}
@@ -86,12 +86,12 @@ func (urs UpdateRuleStepRequest) Validate() error {
 	return nil
 }
 
-func (urs UpdateRuleStepRequest) ResourcePath() string {
+func (r *UpdateRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + urs.UserIdentifier + "/notification-rules/" + urs.RuleId + "/steps/" + urs.RuleStepId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps/" + r.RuleStepId
 }
 
-func (urs UpdateRuleStepRequest) Method() string {
+func (r *UpdateRuleStepRequest) Method() string {
 	return "PATCH"
 }
 
@@ -102,20 +102,20 @@ type DeleteRuleStepRequest struct {
 	RuleStepId     string
 }
 
-func (drs DeleteRuleStepRequest) Validate() error {
-	err := validateRuleStepIdentifier(drs.UserIdentifier, drs.RuleId, drs.RuleStepId)
+func (r *DeleteRuleStepRequest) Validate() error {
+	err := validateRuleStepIdentifier(r.UserIdentifier, r.RuleId, r.RuleStepId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (drs DeleteRuleStepRequest) ResourcePath() string {
+func (r *DeleteRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + drs.UserIdentifier + "/notification-rules/" + drs.RuleId + "/steps/" + drs.RuleStepId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps/" + r.RuleStepId
 }
 
-func (drs DeleteRuleStepRequest) Method() string {
+func (r *DeleteRuleStepRequest) Method() string {
 	return "DELETE"
 }
 
@@ -125,20 +125,20 @@ type ListRuleStepsRequest struct {
 	RuleId         string
 }
 
-func (lrs ListRuleStepsRequest) Validate() error {
-	err := validateRuleIdentifier(lrs.UserIdentifier, lrs.RuleId)
+func (r *ListRuleStepsRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (lrs ListRuleStepsRequest) ResourcePath() string {
+func (r *ListRuleStepsRequest) ResourcePath() string {
 
-	return "/v2/users/" + lrs.UserIdentifier + "/notification-rules/" + lrs.RuleId + "/steps"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps"
 }
 
-func (lrs ListRuleStepsRequest) Method() string {
+func (r *ListRuleStepsRequest) Method() string {
 	return "GET"
 }
 
@@ -149,20 +149,20 @@ type EnableRuleStepRequest struct {
 	RuleStepId     string
 }
 
-func (ers EnableRuleStepRequest) Validate() error {
-	err := validateRuleStepIdentifier(ers.UserIdentifier, ers.RuleId, ers.RuleStepId)
+func (r *EnableRuleStepRequest) Validate() error {
+	err := validateRuleStepIdentifier(r.UserIdentifier, r.RuleId, r.RuleStepId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (ers EnableRuleStepRequest) ResourcePath() string {
+func (r *EnableRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + ers.UserIdentifier + "/notification-rules/" + ers.RuleId + "/steps/" + ers.RuleStepId + "/enable"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps/" + r.RuleStepId + "/enable"
 }
 
-func (ers EnableRuleStepRequest) Method() string {
+func (r *EnableRuleStepRequest) Method() string {
 	return "POST"
 }
 
@@ -173,20 +173,20 @@ type DisableRuleStepRequest struct {
 	RuleStepId     string
 }
 
-func (drs DisableRuleStepRequest) Validate() error {
-	err := validateRuleStepIdentifier(drs.UserIdentifier, drs.RuleId, drs.RuleStepId)
+func (r *DisableRuleStepRequest) Validate() error {
+	err := validateRuleStepIdentifier(r.UserIdentifier, r.RuleId, r.RuleStepId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (drs DisableRuleStepRequest) ResourcePath() string {
+func (r *DisableRuleStepRequest) ResourcePath() string {
 
-	return "/v2/users/" + drs.UserIdentifier + "/notification-rules/" + drs.RuleId + "/steps/" + drs.RuleStepId + "/disable"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/steps/" + r.RuleStepId + "/disable"
 }
 
-func (drs DisableRuleStepRequest) Method() string {
+func (r *DisableRuleStepRequest) Method() string {
 	return "POST"
 }
 
@@ -205,62 +205,62 @@ type CreateRuleRequest struct {
 	Enabled          bool                   `json:"enabled,omitempty"`
 }
 
-func (crr CreateRuleRequest) Validate() error {
-	if crr.UserIdentifier == "" {
+func (r *CreateRuleRequest) Validate() error {
+	if r.UserIdentifier == "" {
 		return errors.New("User identifier cannot be empty.")
 	}
-	if crr.Name == "" {
+	if r.Name == "" {
 		return errors.New("Name cannot be empty.")
 	}
-	if crr.ActionType == "" {
+	if r.ActionType == "" {
 		return errors.New("Action type cannot be empty.")
 	}
-	if (crr.ActionType == ScheduleStart || crr.ActionType == ScheduleEnd) && len(crr.NotificationTime) == 0 {
+	if (r.ActionType == ScheduleStart || r.ActionType == ScheduleEnd) && len(r.NotificationTime) == 0 {
 		return errors.New("Notification time cannot be empty.")
 	}
-	if len(crr.Schedules) != 0 {
-		for _, schedule := range crr.Schedules {
+	if len(r.Schedules) != 0 {
+		for _, schedule := range r.Schedules {
 			err := validateSchedule(schedule)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	if len(crr.Steps) != 0 {
-		for _, step := range crr.Steps {
-			err := validateStep(step, crr.ActionType)
+	if len(r.Steps) != 0 {
+		for _, step := range r.Steps {
+			err := validateStep(step, r.ActionType)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	if crr.Criteria != nil {
-		err := og.ValidateFilter(*crr.Criteria)
+	if r.Criteria != nil {
+		err := og.ValidateFilter(*r.Criteria)
 		if err != nil {
 			return err
 		}
 	}
 
-	if crr.TimeRestriction != nil {
-		err := og.ValidateRestrictions(crr.TimeRestriction)
+	if r.TimeRestriction != nil {
+		err := og.ValidateRestrictions(r.TimeRestriction)
 		if err != nil {
 			return err
 		}
 	}
 
-	if crr.Repeat != nil && crr.Repeat.LoopAfter <= 0 {
+	if r.Repeat != nil && r.Repeat.LoopAfter <= 0 {
 		return errors.New("Loop after must have a positive integer value.")
 	}
 
 	return nil
 }
 
-func (crr CreateRuleRequest) ResourcePath() string {
+func (r *CreateRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + crr.UserIdentifier + "/notification-rules"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules"
 }
 
-func (crr CreateRuleRequest) Method() string {
+func (r *CreateRuleRequest) Method() string {
 	return "POST"
 }
 
@@ -270,20 +270,20 @@ type GetRuleRequest struct {
 	RuleId         string
 }
 
-func (grr GetRuleRequest) Validate() error {
-	err := validateRuleIdentifier(grr.UserIdentifier, grr.RuleId)
+func (r *GetRuleRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (grr GetRuleRequest) ResourcePath() string {
+func (r *GetRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + grr.UserIdentifier + "/notification-rules/" + grr.RuleId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId
 }
 
-func (grr GetRuleRequest) Method() string {
+func (r *GetRuleRequest) Method() string {
 	return "GET"
 }
 
@@ -301,13 +301,13 @@ type UpdateRuleRequest struct {
 	Enabled          bool                   `json:"enabled,omitempty"`
 }
 
-func (urr UpdateRuleRequest) Validate() error {
-	err := validateRuleIdentifier(urr.UserIdentifier, urr.RuleId)
+func (r *UpdateRuleRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
-	if len(urr.Schedules) != 0 {
-		for _, schedule := range urr.Schedules {
+	if len(r.Schedules) != 0 {
+		for _, schedule := range r.Schedules {
 			err := validateSchedule(schedule)
 			if err != nil {
 				return err
@@ -315,40 +315,40 @@ func (urr UpdateRuleRequest) Validate() error {
 		}
 	}
 
-	if len(urr.Steps) != 0 {
-		for _, step := range urr.Steps {
+	if len(r.Steps) != 0 {
+		for _, step := range r.Steps {
 			err := validateStepWithoutActionTypeInfo(step)
 			if err != nil {
 				return err
 			}
 		}
 	}
-	if urr.Criteria != nil {
-		err := og.ValidateFilter(*urr.Criteria)
+	if r.Criteria != nil {
+		err := og.ValidateFilter(*r.Criteria)
 		if err != nil {
 			return err
 		}
 	}
 
-	if urr.TimeRestriction != nil {
-		err := og.ValidateRestrictions(urr.TimeRestriction)
+	if r.TimeRestriction != nil {
+		err := og.ValidateRestrictions(r.TimeRestriction)
 		if err != nil {
 			return err
 		}
 	}
 
-	if urr.Repeat != nil && urr.Repeat.LoopAfter <= 0 {
+	if r.Repeat != nil && r.Repeat.LoopAfter <= 0 {
 		return errors.New("Loop after must have a positive integer value.")
 	}
 	return nil
 }
 
-func (urr UpdateRuleRequest) ResourcePath() string {
+func (r *UpdateRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + urr.UserIdentifier + "/notification-rules/" + urr.RuleId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId
 }
 
-func (urr UpdateRuleRequest) Method() string {
+func (r *UpdateRuleRequest) Method() string {
 	return "PATCH"
 }
 
@@ -358,20 +358,20 @@ type DeleteRuleRequest struct {
 	RuleId         string
 }
 
-func (drr DeleteRuleRequest) Validate() error {
-	err := validateRuleIdentifier(drr.UserIdentifier, drr.RuleId)
+func (r *DeleteRuleRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (drr DeleteRuleRequest) ResourcePath() string {
+func (r *DeleteRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + drr.UserIdentifier + "/notification-rules/" + drr.RuleId
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId
 }
 
-func (drr DeleteRuleRequest) Method() string {
+func (r *DeleteRuleRequest) Method() string {
 	return "DELETE"
 }
 
@@ -380,19 +380,19 @@ type ListRuleRequest struct {
 	UserIdentifier string
 }
 
-func (lrr ListRuleRequest) Validate() error {
-	if lrr.UserIdentifier == "" {
+func (r *ListRuleRequest) Validate() error {
+	if r.UserIdentifier == "" {
 		return errors.New("User identifier cannot be empty.")
 	}
 	return nil
 }
 
-func (lrr ListRuleRequest) ResourcePath() string {
+func (r *ListRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + lrr.UserIdentifier + "/notification-rules"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules"
 }
 
-func (lrr ListRuleRequest) Method() string {
+func (r *ListRuleRequest) Method() string {
 	return "GET"
 }
 
@@ -402,20 +402,20 @@ type EnableRuleRequest struct {
 	RuleId         string
 }
 
-func (enr EnableRuleRequest) Validate() error {
-	err := validateRuleIdentifier(enr.UserIdentifier, enr.RuleId)
+func (r *EnableRuleRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (enr EnableRuleRequest) ResourcePath() string {
+func (r *EnableRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + enr.UserIdentifier + "/notification-rules/" + enr.RuleId + "/enable"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/enable"
 }
 
-func (enr EnableRuleRequest) Method() string {
+func (r *EnableRuleRequest) Method() string {
 	return "POST"
 }
 
@@ -425,20 +425,20 @@ type DisableRuleRequest struct {
 	RuleId         string
 }
 
-func (drr DisableRuleRequest) Validate() error {
-	err := validateRuleIdentifier(drr.UserIdentifier, drr.RuleId)
+func (r *DisableRuleRequest) Validate() error {
+	err := validateRuleIdentifier(r.UserIdentifier, r.RuleId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (drr DisableRuleRequest) ResourcePath() string {
+func (r *DisableRuleRequest) ResourcePath() string {
 
-	return "/v2/users/" + drr.UserIdentifier + "/notification-rules/" + drr.RuleId + "/disable"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/" + r.RuleId + "/disable"
 }
 
-func (drr DisableRuleRequest) Method() string {
+func (r *DisableRuleRequest) Method() string {
 	return "POST"
 }
 
@@ -449,25 +449,25 @@ type CopyNotificationRulesRequest struct {
 	RuleTypes      []RuleTypes `json:"ruleTypes"`
 }
 
-func (cnr CopyNotificationRulesRequest) Validate() error {
-	if cnr.UserIdentifier == "" {
+func (r *CopyNotificationRulesRequest) Validate() error {
+	if r.UserIdentifier == "" {
 		return errors.New("User identifier cannot be empty.")
 	}
-	if len(cnr.ToUsers) == 0 {
+	if len(r.ToUsers) == 0 {
 		return errors.New("You must specify a list of the users which you want to copy the rules to.")
 	}
-	if len(cnr.RuleTypes) == 0 {
+	if len(r.RuleTypes) == 0 {
 		return errors.New("Specify a list of the action types you want to copy the rules of.")
 	}
 	return nil
 }
 
-func (cnr CopyNotificationRulesRequest) ResourcePath() string {
+func (r *CopyNotificationRulesRequest) ResourcePath() string {
 
-	return "/v2/users/" + cnr.UserIdentifier + "/notification-rules/copy-to"
+	return "/v2/users/" + r.UserIdentifier + "/notification-rules/copy-to"
 }
 
-func (cnr CopyNotificationRulesRequest) Method() string {
+func (r *CopyNotificationRulesRequest) Method() string {
 	return "POST"
 }
 

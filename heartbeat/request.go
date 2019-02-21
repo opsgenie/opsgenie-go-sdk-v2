@@ -18,15 +18,15 @@ func nameValidation(name string) error {
 	return nil
 }
 
-func (pr pingRequest) Validate() error {
-	return nameValidation(pr.HeartbeatName)
+func (r pingRequest) Validate() error {
+	return nameValidation(r.HeartbeatName)
 }
 
-func (pr pingRequest) ResourcePath() string {
-	return "/v2/heartbeats/" + pr.HeartbeatName + "/ping"
+func (r pingRequest) ResourcePath() string {
+	return "/v2/heartbeats/" + r.HeartbeatName + "/ping"
 }
 
-func (pr pingRequest) Method() string {
+func (r pingRequest) Method() string {
 	return "GET"
 }
 
@@ -35,15 +35,15 @@ type getRequest struct {
 	HeartbeatName string
 }
 
-func (gr getRequest) Validate() error {
-	return nameValidation(gr.HeartbeatName)
+func (r getRequest) Validate() error {
+	return nameValidation(r.HeartbeatName)
 }
 
-func (gr getRequest) ResourcePath() string {
-	return "/v2/heartbeats/" + gr.HeartbeatName
+func (r getRequest) ResourcePath() string {
+	return "/v2/heartbeats/" + r.HeartbeatName
 }
 
-func (gr getRequest) Method() string {
+func (r getRequest) Method() string {
 	return "GET"
 }
 
@@ -51,15 +51,15 @@ type listRequest struct {
 	client.BaseRequest
 }
 
-func (lr listRequest) Validate() error {
+func (r listRequest) Validate() error {
 	return nil
 }
 
-func (lr listRequest) ResourcePath() string {
+func (r listRequest) ResourcePath() string {
 	return "/v2/heartbeats"
 }
 
-func (lr listRequest) Method() string {
+func (r listRequest) Method() string {
 	return "GET"
 }
 

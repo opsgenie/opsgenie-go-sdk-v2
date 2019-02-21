@@ -11,19 +11,19 @@ type CountAlertsRequest struct {
 	SearchIdentifierType SearchIdentifierType
 }
 
-func (r CountAlertsRequest) Validate() error {
+func (r *CountAlertsRequest) Validate() error {
 	return nil
 }
 
-func (r CountAlertsRequest) ResourcePath() string {
+func (r *CountAlertsRequest) ResourcePath() string {
 	return "/v2/alerts/count"
 }
 
-func (r CountAlertsRequest) Method() string {
+func (r *CountAlertsRequest) Method() string {
 	return "GET"
 }
 
-func (r CountAlertsRequest) RequestParams() map[string]string {
+func (r *CountAlertsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

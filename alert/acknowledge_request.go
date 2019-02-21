@@ -14,24 +14,24 @@ type AcknowledgeAlertRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r AcknowledgeAlertRequest) Validate() error {
+func (r *AcknowledgeAlertRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 	return nil
 }
 
-func (r AcknowledgeAlertRequest) ResourcePath() string {
+func (r *AcknowledgeAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/acknowledge"
 
 }
 
-func (r AcknowledgeAlertRequest) Method() string {
+func (r *AcknowledgeAlertRequest) Method() string {
 	return "POST"
 }
 
-func (r AcknowledgeAlertRequest) RequestParams() map[string]string {
+func (r *AcknowledgeAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

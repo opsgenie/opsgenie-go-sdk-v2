@@ -13,7 +13,7 @@ type CreateRequest struct {
 	Rules       []Rule `json:"rules"`
 }
 
-func (r CreateRequest) Validate() error {
+func (r *CreateRequest) Validate() error {
 	err := validateTime(r.Time)
 	if err != nil {
 		return err
@@ -28,11 +28,11 @@ func (r CreateRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRequest) ResourcePath() string {
+func (r *CreateRequest) ResourcePath() string {
 	return "/v1/maintenance"
 }
 
-func (r CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -41,18 +41,18 @@ type GetRequest struct {
 	Id string
 }
 
-func (r GetRequest) Validate() error {
+func (r *GetRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Maintenance ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
-func (r GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
@@ -64,7 +64,7 @@ type UpdateRequest struct {
 	Rules       []Rule `json:"rules"`
 }
 
-func (r UpdateRequest) Validate() error {
+func (r *UpdateRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Maintenance ID cannot be blank.")
 	}
@@ -82,11 +82,11 @@ func (r UpdateRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRequest) ResourcePath() string {
+func (r *UpdateRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
-func (r UpdateRequest) Method() string {
+func (r *UpdateRequest) Method() string {
 	return "PUT"
 }
 
@@ -95,18 +95,18 @@ type DeleteRequest struct {
 	Id string
 }
 
-func (r DeleteRequest) Validate() error {
+func (r *DeleteRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Maintenance ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r DeleteRequest) ResourcePath() string {
+func (r *DeleteRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id
 }
 
-func (r DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
@@ -115,7 +115,7 @@ type ListRequest struct {
 	Type StatusType
 }
 
-func (r ListRequest) Validate() error {
+func (r *ListRequest) Validate() error {
 	err := validateStatusType(r.Type)
 	if err != nil {
 		return err
@@ -123,11 +123,11 @@ func (r ListRequest) Validate() error {
 	return nil
 }
 
-func (r ListRequest) ResourcePath() string {
+func (r *ListRequest) ResourcePath() string {
 	return "/v1/maintenance"
 }
 
-func (r ListRequest) Method() string {
+func (r *ListRequest) Method() string {
 	return "GET"
 }
 
@@ -136,18 +136,18 @@ type CancelRequest struct {
 	Id string
 }
 
-func (r CancelRequest) Validate() error {
+func (r *CancelRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Maintenance ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r CancelRequest) ResourcePath() string {
+func (r *CancelRequest) ResourcePath() string {
 	return "/v1/maintenance/" + r.Id + "/cancel"
 }
 
-func (r CancelRequest) Method() string {
+func (r *CancelRequest) Method() string {
 	return "POST"
 }
 

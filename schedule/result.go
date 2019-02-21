@@ -83,6 +83,17 @@ type Period struct {
 	Recipient og.Participant `json:"recipient,omitempty"`
 }
 
+type Rotation struct {
+	Id              string              `json:"id,omitempty"`
+	Name            string              `json:"name,omitempty"`
+	StartDate       *time.Time          `json:"startDate,omitempty"`
+	EndDate         *time.Time          `json:"endDate,omitempty"`
+	Type            og.RotationType     `json:"type,omitempty"`
+	Length          uint32              `json:"length,omitempty"`
+	Participants    []og.Participant    `json:"participants,omitempty"`
+	TimeRestriction *og.TimeRestriction `json:"timeRestriction,omitempty"`
+}
+
 type CreateRotationResult struct {
 	client.ResultMetadata
 	Id   string `json:"id,omitempty"`
@@ -91,7 +102,7 @@ type CreateRotationResult struct {
 
 type GetRotationResult struct {
 	client.ResultMetadata
-	og.Rotation
+	Rotation
 	Info `json:"_parent,omitempty"`
 }
 
@@ -103,5 +114,5 @@ type UpdateRotationResult struct {
 
 type ListRotationsResult struct {
 	client.ResultMetadata
-	Rotations []og.Rotation `json:"data,omitempty"`
+	Rotations []Rotation `json:"data,omitempty"`
 }

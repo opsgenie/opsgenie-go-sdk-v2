@@ -15,7 +15,7 @@ type AddDetailsRequest struct {
 	Note            string            `json:"note,omitempty"`
 }
 
-func (r AddDetailsRequest) Validate() error {
+func (r *AddDetailsRequest) Validate() error {
 	if len(r.Details) == 0 {
 		return errors.New("Details can not be empty")
 	}
@@ -26,17 +26,17 @@ func (r AddDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r AddDetailsRequest) ResourcePath() string {
+func (r *AddDetailsRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/details"
 
 }
 
-func (r AddDetailsRequest) Method() string {
+func (r *AddDetailsRequest) Method() string {
 	return "POST"
 }
 
-func (r AddDetailsRequest) RequestParams() map[string]string {
+func (r *AddDetailsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

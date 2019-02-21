@@ -4,8 +4,8 @@ import (
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
-	"time"
 	"strconv"
+	"time"
 )
 
 type Identifier uint32
@@ -20,22 +20,22 @@ type CreateRequest struct {
 	Rotations   []og.Rotation `json:"rotations,omitempty"`
 }
 
-func (cr CreateRequest) Validate() error {
-	if cr.Name == "" {
+func (r *CreateRequest) Validate() error {
+	if r.Name == "" {
 		return errors.New("Name cannot be empty.")
 	}
-	err := og.ValidateRotations(cr.Rotations)
+	err := og.ValidateRotations(r.Rotations)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (cr CreateRequest) ResourcePath() string {
+func (r *CreateRequest) ResourcePath() string {
 	return "/v2/schedules"
 }
 
-func (cr CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -45,28 +45,28 @@ type GetRequest struct {
 	IdentifierValue string
 }
 
-func (gr GetRequest) Validate() error {
-	err := validateIdentifier(gr.IdentifierValue)
+func (r *GetRequest) Validate() error {
+	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (gr GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + gr.IdentifierValue
+	return "/v2/schedules/" + r.IdentifierValue
 }
 
-func (gr GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
-func (gr GetRequest) RequestParams() map[string]string {
+func (r *GetRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if gr.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -87,32 +87,32 @@ type UpdateRequest struct {
 	Rotations       []og.Rotation `json:"rotations,omitempty"`
 }
 
-func (ur UpdateRequest) Validate() error {
-	err := validateIdentifier(ur.IdentifierValue)
+func (r *UpdateRequest) Validate() error {
+	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
 	}
-	err = og.ValidateRotations(ur.Rotations)
+	err = og.ValidateRotations(r.Rotations)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (ur UpdateRequest) ResourcePath() string {
+func (r *UpdateRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + ur.IdentifierValue
+	return "/v2/schedules/" + r.IdentifierValue
 }
 
-func (ur UpdateRequest) Method() string {
+func (r *UpdateRequest) Method() string {
 	return "PATCH"
 }
 
-func (ur UpdateRequest) RequestParams() map[string]string {
+func (r *UpdateRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if ur.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -127,28 +127,28 @@ type DeleteRequest struct {
 	IdentifierValue string
 }
 
-func (dr DeleteRequest) Validate() error {
-	err := validateIdentifier(dr.IdentifierValue)
+func (r *DeleteRequest) Validate() error {
+	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (dr DeleteRequest) ResourcePath() string {
+func (r *DeleteRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + dr.IdentifierValue
+	return "/v2/schedules/" + r.IdentifierValue
 }
 
-func (dr DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
-func (dr DeleteRequest) RequestParams() map[string]string {
+func (r *DeleteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if dr.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -162,24 +162,24 @@ type ListRequest struct {
 	Expand bool
 }
 
-func (lr ListRequest) Validate() error {
+func (r *ListRequest) Validate() error {
 	return nil
 }
 
-func (lr ListRequest) ResourcePath() string {
+func (r *ListRequest) ResourcePath() string {
 
 	return "/v2/schedules"
 }
 
-func (lr ListRequest) Method() string {
+func (r *ListRequest) Method() string {
 	return "GET"
 }
 
-func (lr ListRequest) RequestParams() map[string]string {
+func (r *ListRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if lr.Expand {
+	if r.Expand {
 		params["expand"] = "rotation"
 
 	}
@@ -197,42 +197,42 @@ type GetTimelineRequest struct {
 	Date            *time.Time
 }
 
-func (tr GetTimelineRequest) Validate() error {
-	err := validateIdentifier(tr.IdentifierValue)
+func (r *GetTimelineRequest) Validate() error {
+	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
 	}
 
-	if tr.IntervalUnit != Days && tr.IntervalUnit != Months && tr.IntervalUnit != Weeks {
+	if r.IntervalUnit != Days && r.IntervalUnit != Months && r.IntervalUnit != Weeks {
 		return errors.New("Provided InternalUnit is not valid.")
 	}
 	return nil
 }
 
-func (tr GetTimelineRequest) ResourcePath() string {
+func (r *GetTimelineRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + tr.IdentifierValue + "/timeline"
+	return "/v2/schedules/" + r.IdentifierValue + "/timeline"
 
 }
 
-func (tr GetTimelineRequest) Method() string {
+func (r *GetTimelineRequest) Method() string {
 	return "GET"
 }
 
-func (tr GetTimelineRequest) RequestParams() map[string]string {
+func (r *GetTimelineRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if tr.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
 	}
 
-	if len(tr.Expands) != 0 {
+	if len(r.Expands) != 0 {
 		expands := ""
-		for i, expand := range tr.Expands {
-			if i != len(tr.Expands)-1 {
+		for i, expand := range r.Expands {
+			if i != len(r.Expands)-1 {
 				expands = expands + string(expand) + ","
 			} else {
 				expands = expands + string(expand)
@@ -241,20 +241,20 @@ func (tr GetTimelineRequest) RequestParams() map[string]string {
 		params["expand"] = expands
 	}
 
-	if tr.Interval > 1 {
-		params["interval"] = strconv.Itoa(tr.Interval)
+	if r.Interval > 1 {
+		params["interval"] = strconv.Itoa(r.Interval)
 	}
-	params["intervalUnit"] = string(tr.IntervalUnit)
+	params["intervalUnit"] = string(r.IntervalUnit)
 
-	if tr.Date != nil {
-		params["date"] = tr.Date.Format("2006-01-02T15:04:05.000Z")
+	if r.Date != nil {
+		params["date"] = r.Date.Format("2006-01-02T15:04:05.000Z")
 	}
 	return params
 }
 
-func (tr *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineRequest {
-	tr.Expands = expands
-	return *tr
+func (r *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineRequest {
+	r.Expands = expands
+	return *r
 }
 
 type Unit string
@@ -278,14 +278,14 @@ const (
 	Id
 )
 
-func (cr *CreateRequest) WithRotation(rotation *og.Rotation) *CreateRequest {
-	cr.Rotations = append(cr.Rotations, *rotation)
-	return cr
+func (r *CreateRequest) WithRotation(rotation *og.Rotation) *CreateRequest {
+	r.Rotations = append(r.Rotations, *rotation)
+	return r
 }
 
-func (ur *UpdateRequest) WithRotation(rotation *og.Rotation) *UpdateRequest {
-	ur.Rotations = append(ur.Rotations, *rotation)
-	return ur
+func (r *UpdateRequest) WithRotation(rotation *og.Rotation) *UpdateRequest {
+	r.Rotations = append(r.Rotations, *rotation)
+	return r
 }
 
 func validateIdentifier(identifier string) error {
@@ -302,7 +302,7 @@ type CreateRotationRequest struct {
 	ScheduleIdentifierValue string
 }
 
-func (r CreateRotationRequest) Validate() error {
+func (r *CreateRotationRequest) Validate() error {
 	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
 		return err
@@ -315,16 +315,16 @@ func (r CreateRotationRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRotationRequest) ResourcePath() string {
+func (r *CreateRotationRequest) ResourcePath() string {
 	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations"
 
 }
 
-func (r CreateRotationRequest) Method() string {
+func (r *CreateRotationRequest) Method() string {
 	return "POST"
 }
 
-func (r CreateRotationRequest) RequestParams() map[string]string {
+func (r *CreateRotationRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -344,7 +344,7 @@ type GetRotationRequest struct {
 	RotationId              string
 }
 
-func (r GetRotationRequest) Validate() error {
+func (r *GetRotationRequest) Validate() error {
 
 	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
@@ -358,16 +358,16 @@ func (r GetRotationRequest) Validate() error {
 	return nil
 }
 
-func (r GetRotationRequest) ResourcePath() string {
+func (r *GetRotationRequest) ResourcePath() string {
 	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
-func (r GetRotationRequest) Method() string {
+func (r *GetRotationRequest) Method() string {
 	return "GET"
 }
 
-func (r GetRotationRequest) RequestParams() map[string]string {
+func (r *GetRotationRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -387,7 +387,7 @@ type UpdateRotationRequest struct {
 	*og.Rotation
 }
 
-func (r UpdateRotationRequest) Validate() error {
+func (r *UpdateRotationRequest) Validate() error {
 
 	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
@@ -401,17 +401,17 @@ func (r UpdateRotationRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRotationRequest) ResourcePath() string {
+func (r *UpdateRotationRequest) ResourcePath() string {
 
 	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
-func (r UpdateRotationRequest) Method() string {
+func (r *UpdateRotationRequest) Method() string {
 	return "PATCH"
 }
 
-func (r UpdateRotationRequest) RequestParams() map[string]string {
+func (r *UpdateRotationRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -431,7 +431,7 @@ type DeleteRotationRequest struct {
 	RotationId              string
 }
 
-func (r DeleteRotationRequest) Validate() error {
+func (r *DeleteRotationRequest) Validate() error {
 
 	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
@@ -445,17 +445,17 @@ func (r DeleteRotationRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRotationRequest) ResourcePath() string {
+func (r *DeleteRotationRequest) ResourcePath() string {
 
 	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations/" + r.RotationId
 
 }
 
-func (r DeleteRotationRequest) Method() string {
+func (r *DeleteRotationRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteRotationRequest) RequestParams() map[string]string {
+func (r *DeleteRotationRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -474,7 +474,7 @@ type ListRotationsRequest struct {
 	ScheduleIdentifierValue string
 }
 
-func (r ListRotationsRequest) Validate() error {
+func (r *ListRotationsRequest) Validate() error {
 
 	err := validateIdentifier(r.ScheduleIdentifierValue)
 	if err != nil {
@@ -484,17 +484,17 @@ func (r ListRotationsRequest) Validate() error {
 	return nil
 }
 
-func (r ListRotationsRequest) ResourcePath() string {
+func (r *ListRotationsRequest) ResourcePath() string {
 
 	return "/v2/schedules/" + r.ScheduleIdentifierValue + "/rotations"
 
 }
 
-func (r ListRotationsRequest) Method() string {
+func (r *ListRotationsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListRotationsRequest) RequestParams() map[string]string {
+func (r *ListRotationsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

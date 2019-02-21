@@ -16,21 +16,21 @@ type ListAlertRequest struct {
 	SearchIdentifierType SearchIdentifierType
 }
 
-func (r ListAlertRequest) Validate() error {
+func (r *ListAlertRequest) Validate() error {
 
 	return nil
 }
 
-func (r ListAlertRequest) ResourcePath() string {
+func (r *ListAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts"
 }
 
-func (r ListAlertRequest) Method() string {
+func (r *ListAlertRequest) Method() string {
 	return "GET"
 }
 
-func (r ListAlertRequest) RequestParams() map[string]string {
+func (r *ListAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

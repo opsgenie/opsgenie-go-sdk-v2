@@ -1,9 +1,9 @@
 package customuserrole
 
 import (
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
-	"github.com/pkg/errors"
 )
 
 func TestCreateCustomUserRoleRequest_Validate(t *testing.T) {

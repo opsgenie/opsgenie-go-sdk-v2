@@ -26,7 +26,7 @@ type CreateTeamRequest struct {
 	Members     []Member `json:"members,omitempty"`
 }
 
-func (r CreateTeamRequest) Validate() error {
+func (r *CreateTeamRequest) Validate() error {
 	if r.Name == "" {
 		return errors.New("name can not be empty")
 	}
@@ -34,12 +34,12 @@ func (r CreateTeamRequest) Validate() error {
 	return nil
 }
 
-func (r CreateTeamRequest) ResourcePath() string {
+func (r *CreateTeamRequest) ResourcePath() string {
 
 	return "/v2/teams"
 }
 
-func (r CreateTeamRequest) Method() string {
+func (r *CreateTeamRequest) Method() string {
 	return "POST"
 }
 
@@ -47,17 +47,17 @@ type ListTeamRequest struct {
 	client.BaseRequest
 }
 
-func (r ListTeamRequest) Validate() error {
+func (r *ListTeamRequest) Validate() error {
 
 	return nil
 }
 
-func (r ListTeamRequest) ResourcePath() string {
+func (r *ListTeamRequest) ResourcePath() string {
 
 	return "/v2/teams"
 }
 
-func (r ListTeamRequest) Method() string {
+func (r *ListTeamRequest) Method() string {
 	return "GET"
 }
 
@@ -67,7 +67,7 @@ type DeleteTeamRequest struct {
 	IdentifierValue string
 }
 
-func (r DeleteTeamRequest) Validate() error {
+func (r *DeleteTeamRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -75,16 +75,16 @@ func (r DeleteTeamRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteTeamRequest) ResourcePath() string {
+func (r *DeleteTeamRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.IdentifierValue
 }
 
-func (r DeleteTeamRequest) Method() string {
+func (r *DeleteTeamRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteTeamRequest) RequestParams() map[string]string {
+func (r *DeleteTeamRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -103,7 +103,7 @@ type GetTeamRequest struct {
 	IdentifierValue string
 }
 
-func (r GetTeamRequest) Validate() error {
+func (r *GetTeamRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -111,16 +111,16 @@ func (r GetTeamRequest) Validate() error {
 	return nil
 }
 
-func (r GetTeamRequest) ResourcePath() string {
+func (r *GetTeamRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.IdentifierValue
 }
 
-func (r GetTeamRequest) Method() string {
+func (r *GetTeamRequest) Method() string {
 	return "GET"
 }
 
-func (r GetTeamRequest) RequestParams() map[string]string {
+func (r *GetTeamRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -141,19 +141,19 @@ type UpdateTeamRequest struct {
 	Members     []Member `json:"members,omitempty"`
 }
 
-func (r UpdateTeamRequest) Validate() error {
+func (r *UpdateTeamRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("team id can not be empty")
 	}
 	return nil
 }
 
-func (r UpdateTeamRequest) ResourcePath() string {
+func (r *UpdateTeamRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.Id
 }
 
-func (r UpdateTeamRequest) Method() string {
+func (r *UpdateTeamRequest) Method() string {
 	return "PATCH"
 }
 
@@ -166,7 +166,7 @@ type ListTeamLogsRequest struct {
 	Offset          int    `json:"offset,omitempty"`
 }
 
-func (r ListTeamLogsRequest) Validate() error {
+func (r *ListTeamLogsRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -175,17 +175,17 @@ func (r ListTeamLogsRequest) Validate() error {
 	return nil
 }
 
-func (r ListTeamLogsRequest) ResourcePath() string {
+func (r *ListTeamLogsRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.IdentifierValue + "/logs"
 
 }
 
-func (r ListTeamLogsRequest) Method() string {
+func (r *ListTeamLogsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListTeamLogsRequest) RequestParams() map[string]string {
+func (r *ListTeamLogsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -222,7 +222,7 @@ type CreateTeamRoleRequest struct {
 	Rights              []Right `json:"rights"`
 }
 
-func (r CreateTeamRoleRequest) Validate() error {
+func (r *CreateTeamRoleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -239,17 +239,17 @@ func (r CreateTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r CreateTeamRoleRequest) ResourcePath() string {
+func (r *CreateTeamRoleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/roles"
 
 }
 
-func (r CreateTeamRoleRequest) Method() string {
+func (r *CreateTeamRoleRequest) Method() string {
 	return "POST"
 }
 
-func (r CreateTeamRoleRequest) RequestParams() map[string]string {
+func (r *CreateTeamRoleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -270,7 +270,7 @@ type GetTeamRoleRequest struct {
 	RoleName string
 }
 
-func (r GetTeamRoleRequest) Validate() error {
+func (r *GetTeamRoleRequest) Validate() error {
 
 	if r.TeamID == "" && r.TeamName == "" {
 		return errors.New("team identifier can not be empty")
@@ -283,7 +283,7 @@ func (r GetTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r GetTeamRoleRequest) ResourcePath() string {
+func (r *GetTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamName != "" {
 		if r.RoleName != "" {
@@ -299,11 +299,11 @@ func (r GetTeamRoleRequest) ResourcePath() string {
 
 }
 
-func (r GetTeamRoleRequest) Method() string {
+func (r *GetTeamRoleRequest) Method() string {
 	return "GET"
 }
 
-func (r GetTeamRoleRequest) RequestParams() map[string]string {
+func (r *GetTeamRoleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -332,7 +332,7 @@ type UpdateTeamRoleRequest struct {
 	Rights   []Right `json:"rights"`
 }
 
-func (r UpdateTeamRoleRequest) Validate() error {
+func (r *UpdateTeamRoleRequest) Validate() error {
 
 	if r.TeamID == "" && r.TeamName == "" {
 		return errors.New("team identifier can not be empty")
@@ -345,7 +345,7 @@ func (r UpdateTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateTeamRoleRequest) ResourcePath() string {
+func (r *UpdateTeamRoleRequest) ResourcePath() string {
 
 	if r.TeamName != "" {
 		if r.RoleName != "" {
@@ -361,11 +361,11 @@ func (r UpdateTeamRoleRequest) ResourcePath() string {
 
 }
 
-func (r UpdateTeamRoleRequest) Method() string {
+func (r *UpdateTeamRoleRequest) Method() string {
 	return "PATCH"
 }
 
-func (r UpdateTeamRoleRequest) RequestParams() map[string]string {
+func (r *UpdateTeamRoleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -392,7 +392,7 @@ type DeleteTeamRoleRequest struct {
 	RoleName string
 }
 
-func (r DeleteTeamRoleRequest) Validate() error {
+func (r *DeleteTeamRoleRequest) Validate() error {
 	if r.TeamID == "" && r.TeamName == "" {
 		return errors.New("team identifier can not be empty")
 	}
@@ -404,7 +404,7 @@ func (r DeleteTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteTeamRoleRequest) ResourcePath() string {
+func (r *DeleteTeamRoleRequest) ResourcePath() string {
 	if r.TeamName != "" {
 		if r.RoleName != "" {
 			return "/v2/teams/" + r.TeamName + "/roles/" + r.RoleName
@@ -419,11 +419,11 @@ func (r DeleteTeamRoleRequest) ResourcePath() string {
 
 }
 
-func (r DeleteTeamRoleRequest) Method() string {
+func (r *DeleteTeamRoleRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteTeamRoleRequest) RequestParams() map[string]string {
+func (r *DeleteTeamRoleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -448,7 +448,7 @@ type ListTeamRoleRequest struct {
 	TeamIdentifierValue string
 }
 
-func (r ListTeamRoleRequest) Validate() error {
+func (r *ListTeamRoleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -456,16 +456,16 @@ func (r ListTeamRoleRequest) Validate() error {
 	return nil
 }
 
-func (r ListTeamRoleRequest) ResourcePath() string {
+func (r *ListTeamRoleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/roles"
 }
 
-func (r ListTeamRoleRequest) Method() string {
+func (r *ListTeamRoleRequest) Method() string {
 	return "GET"
 }
 
-func (r ListTeamRoleRequest) RequestParams() map[string]string {
+func (r *ListTeamRoleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -500,7 +500,7 @@ type AddTeamMemberRequest struct {
 	Role                string `json:"role,omitempty"`
 }
 
-func (r AddTeamMemberRequest) Validate() error {
+func (r *AddTeamMemberRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -513,17 +513,17 @@ func (r AddTeamMemberRequest) Validate() error {
 	return nil
 }
 
-func (r AddTeamMemberRequest) ResourcePath() string {
+func (r *AddTeamMemberRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/members"
 
 }
 
-func (r AddTeamMemberRequest) Method() string {
+func (r *AddTeamMemberRequest) Method() string {
 	return "POST"
 }
 
-func (r AddTeamMemberRequest) RequestParams() map[string]string {
+func (r *AddTeamMemberRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -544,7 +544,7 @@ type RemoveTeamMemberRequest struct {
 	MemberIdentifierValue string
 }
 
-func (r RemoveTeamMemberRequest) Validate() error {
+func (r *RemoveTeamMemberRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -561,17 +561,17 @@ func (r RemoveTeamMemberRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveTeamMemberRequest) ResourcePath() string {
+func (r *RemoveTeamMemberRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/members/" + r.MemberIdentifierValue
 
 }
 
-func (r RemoveTeamMemberRequest) Method() string {
+func (r *RemoveTeamMemberRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveTeamMemberRequest) RequestParams() map[string]string {
+func (r *RemoveTeamMemberRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -611,7 +611,7 @@ type CreateRoutingRuleRequest struct {
 	Notify              *Notify             `json:"notify"`
 }
 
-func (r CreateRoutingRuleRequest) Validate() error {
+func (r *CreateRoutingRuleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -642,17 +642,17 @@ func (r CreateRoutingRuleRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRoutingRuleRequest) ResourcePath() string {
+func (r *CreateRoutingRuleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules"
 
 }
 
-func (r CreateRoutingRuleRequest) Method() string {
+func (r *CreateRoutingRuleRequest) Method() string {
 	return "POST"
 }
 
-func (r CreateRoutingRuleRequest) RequestParams() map[string]string {
+func (r *CreateRoutingRuleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -665,9 +665,9 @@ func (r CreateRoutingRuleRequest) RequestParams() map[string]string {
 	return params
 }
 
-func (r CreateRoutingRuleRequest) WithTimeRestriction(timeRestriction og.TimeRestriction) CreateRoutingRuleRequest {
+func (r *CreateRoutingRuleRequest) WithTimeRestriction(timeRestriction og.TimeRestriction) CreateRoutingRuleRequest {
 	r.TimeRestriction = &timeRestriction
-	return r
+	return *r
 }
 
 type GetRoutingRuleRequest struct {
@@ -677,7 +677,7 @@ type GetRoutingRuleRequest struct {
 	RoutingRuleId       string
 }
 
-func (r GetRoutingRuleRequest) Validate() error {
+func (r *GetRoutingRuleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -690,17 +690,17 @@ func (r GetRoutingRuleRequest) Validate() error {
 	return nil
 }
 
-func (r GetRoutingRuleRequest) ResourcePath() string {
+func (r *GetRoutingRuleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
 
 }
 
-func (r GetRoutingRuleRequest) Method() string {
+func (r *GetRoutingRuleRequest) Method() string {
 	return "GET"
 }
 
-func (r GetRoutingRuleRequest) RequestParams() map[string]string {
+func (r *GetRoutingRuleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -725,7 +725,7 @@ type UpdateRoutingRuleRequest struct {
 	Notify              *Notify             `json:"notify,omitempty"`
 }
 
-func (r UpdateRoutingRuleRequest) Validate() error {
+func (r *UpdateRoutingRuleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -759,17 +759,17 @@ func (r UpdateRoutingRuleRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRoutingRuleRequest) ResourcePath() string {
+func (r *UpdateRoutingRuleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
 
 }
 
-func (r UpdateRoutingRuleRequest) Method() string {
+func (r *UpdateRoutingRuleRequest) Method() string {
 	return "PATCH"
 }
 
-func (r UpdateRoutingRuleRequest) RequestParams() map[string]string {
+func (r *UpdateRoutingRuleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -789,7 +789,7 @@ type DeleteRoutingRuleRequest struct {
 	RoutingRuleId       string
 }
 
-func (r DeleteRoutingRuleRequest) Validate() error {
+func (r *DeleteRoutingRuleRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -802,17 +802,17 @@ func (r DeleteRoutingRuleRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRoutingRuleRequest) ResourcePath() string {
+func (r *DeleteRoutingRuleRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId
 
 }
 
-func (r DeleteRoutingRuleRequest) Method() string {
+func (r *DeleteRoutingRuleRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteRoutingRuleRequest) RequestParams() map[string]string {
+func (r *DeleteRoutingRuleRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -831,7 +831,7 @@ type ListRoutingRulesRequest struct {
 	TeamIdentifierValue string
 }
 
-func (r ListRoutingRulesRequest) Validate() error {
+func (r *ListRoutingRulesRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -840,17 +840,17 @@ func (r ListRoutingRulesRequest) Validate() error {
 	return nil
 }
 
-func (r ListRoutingRulesRequest) ResourcePath() string {
+func (r *ListRoutingRulesRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules"
 
 }
 
-func (r ListRoutingRulesRequest) Method() string {
+func (r *ListRoutingRulesRequest) Method() string {
 	return "GET"
 }
 
-func (r ListRoutingRulesRequest) RequestParams() map[string]string {
+func (r *ListRoutingRulesRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -871,7 +871,7 @@ type ChangeRoutingRuleOrderRequest struct {
 	Order               *int `json:"order"`
 }
 
-func (r ChangeRoutingRuleOrderRequest) Validate() error {
+func (r *ChangeRoutingRuleOrderRequest) Validate() error {
 	err := validateIdentifier(r.TeamIdentifierValue)
 	if err != nil {
 		return err
@@ -888,17 +888,17 @@ func (r ChangeRoutingRuleOrderRequest) Validate() error {
 	return nil
 }
 
-func (r ChangeRoutingRuleOrderRequest) ResourcePath() string {
+func (r *ChangeRoutingRuleOrderRequest) ResourcePath() string {
 
 	return "/v2/teams/" + r.TeamIdentifierValue + "/routing-rules/" + r.RoutingRuleId + "/change-order"
 
 }
 
-func (r ChangeRoutingRuleOrderRequest) Method() string {
+func (r *ChangeRoutingRuleOrderRequest) Method() string {
 	return "POST"
 }
 
-func (r ChangeRoutingRuleOrderRequest) RequestParams() map[string]string {
+func (r *ChangeRoutingRuleOrderRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

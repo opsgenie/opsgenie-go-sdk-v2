@@ -12,7 +12,7 @@ type GetAttachmentRequest struct {
 	AttachmentId    string
 }
 
-func (r GetAttachmentRequest) Validate() error {
+func (r *GetAttachmentRequest) Validate() error {
 	if r.AttachmentId == "" {
 		return errors.New("AttachmentId can not be empty")
 	}
@@ -23,16 +23,16 @@ func (r GetAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (r GetAttachmentRequest) ResourcePath() string {
+func (r *GetAttachmentRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/attachments/" + r.AttachmentId
 }
 
-func (r GetAttachmentRequest) Method() string {
+func (r *GetAttachmentRequest) Method() string {
 	return "GET"
 }
 
-func (r GetAttachmentRequest) RequestParams() map[string]string {
+func (r *GetAttachmentRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

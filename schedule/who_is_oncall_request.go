@@ -13,37 +13,37 @@ type GetOnCallsRequest struct {
 	ScheduleIdentifier     string
 }
 
-func (request GetOnCallsRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *GetOnCallsRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request GetOnCallsRequest) Method() string {
+func (r *GetOnCallsRequest) Method() string {
 	return "GET"
 }
 
-func (request GetOnCallsRequest) ResourcePath() string {
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/on-calls"
+func (r *GetOnCallsRequest) ResourcePath() string {
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/on-calls"
 }
 
-func (request GetOnCallsRequest) RequestParams() map[string]string {
+func (r *GetOnCallsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
 	}
-	if request.Flat {
+	if r.Flat {
 		params["flat"] = "true"
 	}
 
-	if request.Date != nil {
-		params["date"] = request.Date.Format("2006-01-02T15:04:05.000Z")
+	if r.Date != nil {
+		params["date"] = r.Date.Format("2006-01-02T15:04:05.000Z")
 	}
 
 	return params
@@ -57,37 +57,37 @@ type GetNextOnCallsRequest struct {
 	ScheduleIdentifier     string
 }
 
-func (request GetNextOnCallsRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *GetNextOnCallsRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request GetNextOnCallsRequest) Method() string {
+func (r *GetNextOnCallsRequest) Method() string {
 	return "GET"
 }
 
-func (request GetNextOnCallsRequest) ResourcePath() string {
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/next-on-calls"
+func (r *GetNextOnCallsRequest) ResourcePath() string {
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/next-on-calls"
 }
 
-func (request GetNextOnCallsRequest) RequestParams() map[string]string {
+func (r *GetNextOnCallsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
 	}
-	if request.Flat {
+	if r.Flat {
 		params["flat"] = "true"
 	}
 
-	if request.Date != nil {
-		params["date"] = request.Date.Format("2006-01-02T15:04:05.000Z")
+	if r.Date != nil {
+		params["date"] = r.Date.Format("2006-01-02T15:04:05.000Z")
 	}
 
 	return params
@@ -99,22 +99,22 @@ type ExportOnCallUserRequest struct {
 	ExportedFilePath string
 }
 
-func (request ExportOnCallUserRequest) Validate() error {
-	err := validateIdentifiers(request.UserIdentifier, "User identifier cannot be empty.")
+func (r *ExportOnCallUserRequest) Validate() error {
+	err := validateIdentifiers(r.UserIdentifier, "User identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r ExportOnCallUserRequest) Method() string {
+func (r *ExportOnCallUserRequest) Method() string {
 	return "GET"
 }
 
-func (r ExportOnCallUserRequest) getFileName() string {
+func (r *ExportOnCallUserRequest) getFileName() string {
 	return r.UserIdentifier + ".ics"
 }
 
-func (request ExportOnCallUserRequest) ResourcePath() string {
-	return "/v2/schedules/on-calls/" + request.getFileName()
+func (r *ExportOnCallUserRequest) ResourcePath() string {
+	return "/v2/schedules/on-calls/" + r.getFileName()
 }

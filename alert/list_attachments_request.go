@@ -11,23 +11,23 @@ type ListAttachmentsRequest struct {
 	IdentifierValue string
 }
 
-func (r ListAttachmentsRequest) Validate() error {
+func (r *ListAttachmentsRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 	return nil
 }
 
-func (r ListAttachmentsRequest) ResourcePath() string {
+func (r *ListAttachmentsRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/attachments"
 }
 
-func (r ListAttachmentsRequest) Method() string {
+func (r *ListAttachmentsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListAttachmentsRequest) RequestParams() map[string]string {
+func (r *ListAttachmentsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

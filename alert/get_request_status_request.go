@@ -10,7 +10,7 @@ type GetAsyncRequestStatusRequest struct {
 	RequestID string `json:"requestId,omitempty"`
 }
 
-func (r GetAsyncRequestStatusRequest) Validate() error {
+func (r *GetAsyncRequestStatusRequest) Validate() error {
 	if r.RequestID == "" {
 		return errors.New("RequestID can not be empty")
 	}
@@ -18,10 +18,10 @@ func (r GetAsyncRequestStatusRequest) Validate() error {
 	return nil
 }
 
-func (r GetAsyncRequestStatusRequest) ResourcePath() string {
+func (r *GetAsyncRequestStatusRequest) ResourcePath() string {
 	return "/v2/alerts/requests/" + r.RequestID
 }
 
-func (r GetAsyncRequestStatusRequest) Method() string {
+func (r *GetAsyncRequestStatusRequest) Method() string {
 	return "GET"
 }

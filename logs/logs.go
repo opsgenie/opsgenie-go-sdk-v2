@@ -12,31 +12,21 @@ type Log struct {
 }
 
 type Client struct {
-	retClient *client.OpsGenieClient
+	client *client.OpsGenieClient
 }
 
 func NewClient(config *client.Config) (*Client, error) {
-	restClient, err := client.NewOpsGenieClient(
-		config,
-	)
-
-	OpsGenieLogsClient := &Client{
-		retClient: restClient,
-	}
-
+	opsgenieClient, err := client.NewOpsGenieClient(config)
 	if err != nil {
 		return nil, err
 	}
-
-	return OpsGenieLogsClient, nil
+	return &Client{opsgenieClient}, nil
 }
 
-// TODO: Bazi yerlerde once ctx, sonra paramlar bazilarinda tersi, bunlari ortaklayalim.
-
-func (lc *Client) ListLogFiles(ctx context.Context, req ListLogFilesRequest) (*ListLogFilesResult, error) {
+func (c *Client) ListLogFiles(ctx context.Context, req *ListLogFilesRequest) (*ListLogFilesResult, error) {
 	listLogFilesResponse := &ListLogFilesResult{}
 
-	err := lc.retClient.Exec(ctx, req, listLogFilesResponse)
+	err := c.client.Exec(ctx, req, listLogFilesResponse)
 
 	if err != nil {
 		return nil, err
@@ -45,10 +35,10 @@ func (lc *Client) ListLogFiles(ctx context.Context, req ListLogFilesRequest) (*L
 	return listLogFilesResponse, nil
 }
 
-func (lc *Client) GenerateLogFileDownloadLink(ctx context.Context, req GenerateLogFileDownloadLinkRequest) (*GenerateLogFileDownloadLinkResult, error) {
+func (c *Client) GenerateLogFileDownloadLink(ctx context.Context, req *GenerateLogFileDownloadLinkRequest) (*GenerateLogFileDownloadLinkResult, error) {
 	generateLogFileDownloadLinkResponse := &GenerateLogFileDownloadLinkResult{}
 
-	err := lc.retClient.Exec(ctx, req, generateLogFileDownloadLinkResponse)
+	err := c.client.Exec(ctx, req, generateLogFileDownloadLinkResponse)
 
 	if err != nil {
 		return nil, err

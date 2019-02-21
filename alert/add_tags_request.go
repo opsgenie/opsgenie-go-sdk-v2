@@ -15,7 +15,7 @@ type AddTagsRequest struct {
 	Note            string   `json:"note,omitempty"`
 }
 
-func (r AddTagsRequest) Validate() error {
+func (r *AddTagsRequest) Validate() error {
 	if len(r.Tags) == 0 {
 		return errors.New("Tags list can not be empty")
 	}
@@ -26,17 +26,17 @@ func (r AddTagsRequest) Validate() error {
 	return nil
 }
 
-func (r AddTagsRequest) ResourcePath() string {
+func (r *AddTagsRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/tags"
 
 }
 
-func (r AddTagsRequest) Method() string {
+func (r *AddTagsRequest) Method() string {
 	return "POST"
 }
 
-func (r AddTagsRequest) RequestParams() map[string]string {
+func (r *AddTagsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

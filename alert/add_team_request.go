@@ -15,7 +15,7 @@ type AddTeamRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r AddTeamRequest) Validate() error {
+func (r *AddTeamRequest) Validate() error {
 	if r.Team.ID == "" && r.Team.Name == "" {
 		return errors.New("Team ID or name must be defined")
 	}
@@ -26,17 +26,17 @@ func (r AddTeamRequest) Validate() error {
 	return nil
 }
 
-func (r AddTeamRequest) ResourcePath() string {
+func (r *AddTeamRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/teams"
 
 }
 
-func (r AddTeamRequest) Method() string {
+func (r *AddTeamRequest) Method() string {
 	return "POST"
 }
 
-func (r AddTeamRequest) RequestParams() map[string]string {
+func (r *AddTeamRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

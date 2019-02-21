@@ -6,7 +6,7 @@ import (
 )
 
 type Client struct {
-	ogClient client.OpsGenieClient
+	client *client.OpsGenieClient
 }
 
 func NewClient(config *client.Config) (*Client, error) {
@@ -14,138 +14,136 @@ func NewClient(config *client.Config) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	newClient := &Client{}
-	newClient.ogClient = *opsgenieClient
-	return newClient, nil
+	return &Client{client: opsgenieClient}, nil
 }
-func (client *Client) CreateRuleStep(context context.Context, request CreateRuleStepRequest) (*CreateRuleStepResult, error) {
+func (c *Client) CreateRuleStep(context context.Context, request *CreateRuleStepRequest) (*CreateRuleStepResult, error) {
 	result := &CreateRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) GetRuleStep(context context.Context, request GetRuleStepRequest) (*GetRuleStepResult, error) {
+func (c *Client) GetRuleStep(context context.Context, request *GetRuleStepRequest) (*GetRuleStepResult, error) {
 	result := &GetRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) UpdateRuleStep(context context.Context, request UpdateRuleStepRequest) (*UpdateRuleStepResult, error) {
+func (c *Client) UpdateRuleStep(context context.Context, request *UpdateRuleStepRequest) (*UpdateRuleStepResult, error) {
 	result := &UpdateRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DeleteRuleStep(context context.Context, request DeleteRuleStepRequest) (*DeleteRuleStepResult, error) {
+func (c *Client) DeleteRuleStep(context context.Context, request *DeleteRuleStepRequest) (*DeleteRuleStepResult, error) {
 	result := &DeleteRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) ListRuleStep(context context.Context, request ListRuleStepsRequest) (*ListRuleStepResult, error) {
+func (c *Client) ListRuleStep(context context.Context, request *ListRuleStepsRequest) (*ListRuleStepResult, error) {
 	result := &ListRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) EnableRuleStep(context context.Context, request EnableRuleStepRequest) (*EnableRuleStepResult, error) {
+func (c *Client) EnableRuleStep(context context.Context, request *EnableRuleStepRequest) (*EnableRuleStepResult, error) {
 	result := &EnableRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DisableRuleStep(context context.Context, request DisableRuleStepRequest) (*DisableRuleStepResult, error) {
+func (c *Client) DisableRuleStep(context context.Context, request *DisableRuleStepRequest) (*DisableRuleStepResult, error) {
 	result := &DisableRuleStepResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) CreateRule(context context.Context, request CreateRuleRequest) (*CreateRuleResult, error) {
+func (c *Client) CreateRule(context context.Context, request *CreateRuleRequest) (*CreateRuleResult, error) {
 	result := &CreateRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
-func (client *Client) GetRule(context context.Context, request GetRuleRequest) (*GetRuleResult, error) {
+func (c *Client) GetRule(context context.Context, request *GetRuleRequest) (*GetRuleResult, error) {
 	result := &GetRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) UpdateRule(context context.Context, request UpdateRuleRequest) (*UpdateRuleResult, error) {
+func (c *Client) UpdateRule(context context.Context, request *UpdateRuleRequest) (*UpdateRuleResult, error) {
 	result := &UpdateRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DeleteRule(context context.Context, request DeleteRuleRequest) (*DeleteRuleResult, error) {
+func (c *Client) DeleteRule(context context.Context, request *DeleteRuleRequest) (*DeleteRuleResult, error) {
 	result := &DeleteRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) ListRule(context context.Context, request ListRuleRequest) (*ListRuleResult, error) {
+func (c *Client) ListRule(context context.Context, request *ListRuleRequest) (*ListRuleResult, error) {
 	result := &ListRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) EnableRule(context context.Context, request EnableRuleRequest) (*EnableRuleResult, error) {
+func (c *Client) EnableRule(context context.Context, request *EnableRuleRequest) (*EnableRuleResult, error) {
 	result := &EnableRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DisableRule(context context.Context, request DisableRuleRequest) (*DisableRuleResult, error) {
+func (c *Client) DisableRule(context context.Context, request *DisableRuleRequest) (*DisableRuleResult, error) {
 	result := &DisableRuleResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) CopyRule(context context.Context, request CopyNotificationRulesRequest) (*CopyNotificationRulesResult, error) {
+func (c *Client) CopyRule(context context.Context, request *CopyNotificationRulesRequest) (*CopyNotificationRulesResult, error) {
 	result := &CopyNotificationRulesResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}

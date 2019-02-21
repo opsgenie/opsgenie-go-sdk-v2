@@ -14,7 +14,7 @@ type AddNoteRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r AddNoteRequest) Validate() error {
+func (r *AddNoteRequest) Validate() error {
 	if r.Note == "" {
 		return errors.New("Note can not be empty")
 	}
@@ -24,17 +24,17 @@ func (r AddNoteRequest) Validate() error {
 	return nil
 }
 
-func (r AddNoteRequest) ResourcePath() string {
+func (r *AddNoteRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/notes"
 
 }
 
-func (r AddNoteRequest) Method() string {
+func (r *AddNoteRequest) Method() string {
 	return "POST"
 }
 
-func (r AddNoteRequest) RequestParams() map[string]string {
+func (r *AddNoteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

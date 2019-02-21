@@ -12,18 +12,18 @@ type RequestStatusRequest struct {
 	Id string
 }
 
-func (r RequestStatusRequest) Validate() error {
+func (r *RequestStatusRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r RequestStatusRequest) ResourcePath() string {
+func (r *RequestStatusRequest) ResourcePath() string {
 	return "/v1/incidents/requests/" + r.Id
 }
 
-func (r RequestStatusRequest) Method() string {
+func (r *RequestStatusRequest) Method() string {
 	return "GET"
 }
 
@@ -46,7 +46,7 @@ type StatusPageEntity struct {
 	Description string `json:"description,omitempty"`
 }
 
-func (r CreateRequest) Validate() error {
+func (r *CreateRequest) Validate() error {
 	if r.Message == "" || r.ServiceId == "" {
 		return errors.New("Message and ServiceId fields cannot be blank.")
 	}
@@ -66,11 +66,11 @@ func (r CreateRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRequest) ResourcePath() string {
+func (r *CreateRequest) ResourcePath() string {
 	return "/v1/incidents/create"
 }
 
-func (r CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -80,7 +80,7 @@ type DeleteRequest struct {
 	Identifier IdentifierType
 }
 
-func (r DeleteRequest) Validate() error {
+func (r *DeleteRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -90,15 +90,15 @@ func (r DeleteRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteRequest) ResourcePath() string {
+func (r *DeleteRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id
 }
 
-func (r DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteRequest) RequestParams() map[string]string {
+func (r *DeleteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -117,7 +117,7 @@ type GetRequest struct {
 	Identifier IdentifierType
 }
 
-func (r GetRequest) Validate() error {
+func (r *GetRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -127,15 +127,15 @@ func (r GetRequest) Validate() error {
 	return nil
 }
 
-func (r GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id
 }
 
-func (r GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
-func (r GetRequest) RequestParams() map[string]string {
+func (r *GetRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -156,22 +156,22 @@ type ListRequest struct {
 	Query  string
 }
 
-func (r ListRequest) Validate() error {
+func (r *ListRequest) Validate() error {
 	if r.Query == "" {
 		return errors.New("Query field cannot be empty.")
 	}
 	return nil
 }
 
-func (r ListRequest) ResourcePath() string {
+func (r *ListRequest) ResourcePath() string {
 	return "/v1/incidents"
 }
 
-func (r ListRequest) Method() string {
+func (r *ListRequest) Method() string {
 	return "GET"
 }
 
-func (r ListRequest) RequestParams() map[string]string {
+func (r *ListRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -202,7 +202,7 @@ type CloseRequest struct {
 	Note       string `json:"note,omitempty"`
 }
 
-func (r CloseRequest) Validate() error {
+func (r *CloseRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -212,15 +212,15 @@ func (r CloseRequest) Validate() error {
 	return nil
 }
 
-func (r CloseRequest) ResourcePath() string {
+func (r *CloseRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/close"
 }
 
-func (r CloseRequest) Method() string {
+func (r *CloseRequest) Method() string {
 	return "POST"
 }
 
-func (r CloseRequest) RequestParams() map[string]string {
+func (r *CloseRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -240,7 +240,7 @@ type AddNoteRequest struct {
 	Note       string `json:"note"`
 }
 
-func (r AddNoteRequest) Validate() error {
+func (r *AddNoteRequest) Validate() error {
 	if r.Id == "" || r.Note == "" {
 		return errors.New("Incident ID and Note fields cannot be blank.")
 	}
@@ -250,16 +250,16 @@ func (r AddNoteRequest) Validate() error {
 	return nil
 }
 
-func (r AddNoteRequest) ResourcePath() string {
+func (r *AddNoteRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/notes"
 
 }
 
-func (r AddNoteRequest) Method() string {
+func (r *AddNoteRequest) Method() string {
 	return "POST"
 }
 
-func (r AddNoteRequest) RequestParams() map[string]string {
+func (r *AddNoteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -280,7 +280,7 @@ type AddResponderRequest struct {
 	Responders []Responder `json:"responder"`
 }
 
-func (r AddResponderRequest) Validate() error {
+func (r *AddResponderRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -297,16 +297,16 @@ func (r AddResponderRequest) Validate() error {
 	return nil
 }
 
-func (r AddResponderRequest) ResourcePath() string {
+func (r *AddResponderRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/responders"
 
 }
 
-func (r AddResponderRequest) Method() string {
+func (r *AddResponderRequest) Method() string {
 	return "POST"
 }
 
-func (r AddResponderRequest) RequestParams() map[string]string {
+func (r *AddResponderRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -327,7 +327,7 @@ type AddTagsRequest struct {
 	Tags       []string `json:"tags"`
 }
 
-func (r AddTagsRequest) Validate() error {
+func (r *AddTagsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -340,15 +340,15 @@ func (r AddTagsRequest) Validate() error {
 	return nil
 }
 
-func (r AddTagsRequest) ResourcePath() string {
+func (r *AddTagsRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/tags"
 }
 
-func (r AddTagsRequest) Method() string {
+func (r *AddTagsRequest) Method() string {
 	return "POST"
 }
 
-func (r AddTagsRequest) RequestParams() map[string]string {
+func (r *AddTagsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -369,7 +369,7 @@ type RemoveTagsRequest struct {
 	Tags       []string
 }
 
-func (r RemoveTagsRequest) Validate() error {
+func (r *RemoveTagsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -382,15 +382,15 @@ func (r RemoveTagsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveTagsRequest) ResourcePath() string {
+func (r *RemoveTagsRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/tags"
 }
 
-func (r RemoveTagsRequest) Method() string {
+func (r *RemoveTagsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveTagsRequest) RequestParams() map[string]string {
+func (r *RemoveTagsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -418,7 +418,7 @@ type AddDetailsRequest struct {
 	Details    map[string]string `json:"details"`
 }
 
-func (r AddDetailsRequest) Validate() error {
+func (r *AddDetailsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -431,15 +431,15 @@ func (r AddDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r AddDetailsRequest) ResourcePath() string {
+func (r *AddDetailsRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/details"
 }
 
-func (r AddDetailsRequest) Method() string {
+func (r *AddDetailsRequest) Method() string {
 	return "POST"
 }
 
-func (r AddDetailsRequest) RequestParams() map[string]string {
+func (r *AddDetailsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -460,7 +460,7 @@ type RemoveDetailsRequest struct {
 	Keys       []string
 }
 
-func (r RemoveDetailsRequest) Validate() error {
+func (r *RemoveDetailsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -473,15 +473,15 @@ func (r RemoveDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveDetailsRequest) ResourcePath() string {
+func (r *RemoveDetailsRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/details"
 }
 
-func (r RemoveDetailsRequest) Method() string {
+func (r *RemoveDetailsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveDetailsRequest) RequestParams() map[string]string {
+func (r *RemoveDetailsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -508,7 +508,7 @@ type UpdatePriorityRequest struct {
 	Priority   Priority `json:"priority"`
 }
 
-func (r UpdatePriorityRequest) Validate() error {
+func (r *UpdatePriorityRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -522,16 +522,16 @@ func (r UpdatePriorityRequest) Validate() error {
 	return nil
 }
 
-func (r UpdatePriorityRequest) ResourcePath() string {
+func (r *UpdatePriorityRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/priority"
 
 }
 
-func (r UpdatePriorityRequest) Method() string {
+func (r *UpdatePriorityRequest) Method() string {
 	return "PUT"
 }
 
-func (r UpdatePriorityRequest) RequestParams() map[string]string {
+func (r *UpdatePriorityRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -551,7 +551,7 @@ type UpdateMessageRequest struct {
 	Message    string `json:"message"`
 }
 
-func (r UpdateMessageRequest) Validate() error {
+func (r *UpdateMessageRequest) Validate() error {
 	if r.Id == "" || r.Message == "" {
 		return errors.New("Incident ID and Message fields cannot be blank.")
 	}
@@ -561,16 +561,16 @@ func (r UpdateMessageRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateMessageRequest) ResourcePath() string {
+func (r *UpdateMessageRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/message"
 
 }
 
-func (r UpdateMessageRequest) Method() string {
+func (r *UpdateMessageRequest) Method() string {
 	return "POST"
 }
 
-func (r UpdateMessageRequest) RequestParams() map[string]string {
+func (r *UpdateMessageRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -590,7 +590,7 @@ type UpdateDescriptionRequest struct {
 	Description string `json:"description"`
 }
 
-func (r UpdateDescriptionRequest) Validate() error {
+func (r *UpdateDescriptionRequest) Validate() error {
 	if r.Id == "" || r.Description == "" {
 		return errors.New("Incident ID and Description fields cannot be blank.")
 	}
@@ -600,15 +600,15 @@ func (r UpdateDescriptionRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateDescriptionRequest) ResourcePath() string {
+func (r *UpdateDescriptionRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/description"
 }
 
-func (r UpdateDescriptionRequest) Method() string {
+func (r *UpdateDescriptionRequest) Method() string {
 	return "POST"
 }
 
-func (r UpdateDescriptionRequest) RequestParams() map[string]string {
+func (r *UpdateDescriptionRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -631,7 +631,7 @@ type ListLogsRequest struct {
 	Direction  string
 }
 
-func (r ListLogsRequest) Validate() error {
+func (r *ListLogsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -641,15 +641,15 @@ func (r ListLogsRequest) Validate() error {
 	return nil
 }
 
-func (r ListLogsRequest) ResourcePath() string {
+func (r *ListLogsRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/logs"
 }
 
-func (r ListLogsRequest) Method() string {
+func (r *ListLogsRequest) Method() string {
 	return "GET"
 }
 
-func (r ListLogsRequest) RequestParams() map[string]string {
+func (r *ListLogsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -686,7 +686,7 @@ type ListNotesRequest struct {
 	Direction  string
 }
 
-func (r ListNotesRequest) Validate() error {
+func (r *ListNotesRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Incident ID cannot be blank.")
 	}
@@ -696,16 +696,16 @@ func (r ListNotesRequest) Validate() error {
 	return nil
 }
 
-func (r ListNotesRequest) ResourcePath() string {
+func (r *ListNotesRequest) ResourcePath() string {
 	return "/v1/incidents/" + r.Id + "/notes"
 
 }
 
-func (r ListNotesRequest) Method() string {
+func (r *ListNotesRequest) Method() string {
 	return "GET"
 }
 
-func (r ListNotesRequest) RequestParams() map[string]string {
+func (r *ListNotesRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

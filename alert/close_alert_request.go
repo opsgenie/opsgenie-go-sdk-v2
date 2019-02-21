@@ -14,24 +14,24 @@ type CloseAlertRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r CloseAlertRequest) Validate() error {
+func (r *CloseAlertRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 	return nil
 }
 
-func (r CloseAlertRequest) ResourcePath() string {
+func (r *CloseAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/close"
 
 }
 
-func (r CloseAlertRequest) Method() string {
+func (r *CloseAlertRequest) Method() string {
 	return "POST"
 }
 
-func (r CloseAlertRequest) RequestParams() map[string]string {
+func (r *CloseAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

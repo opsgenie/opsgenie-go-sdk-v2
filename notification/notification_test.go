@@ -37,7 +37,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 func TestGetRequest_Validate(t *testing.T) {
 	var err error
 	getRequest := &GetRuleStepRequest{}
-	err = GetRuleStepRequest{}.Validate()
+	err = getRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	getRequest.UserIdentifier = "123"
@@ -60,7 +60,7 @@ func TestGetRequest_Validate(t *testing.T) {
 func TestUpdateRequest_Validate(t *testing.T) {
 	var err error
 	updateRequest := &UpdateRuleStepRequest{}
-	err = UpdateRuleStepRequest{}.Validate()
+	err = updateRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	updateRequest.UserIdentifier = "123"
@@ -95,7 +95,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 func TestDeleteRequest_Validate(t *testing.T) {
 	var err error
 	deleteRequest := &DeleteRuleStepRequest{}
-	err = DeleteRuleStepRequest{}.Validate()
+	err = deleteRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	deleteRequest.UserIdentifier = "123"
@@ -118,7 +118,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 func TestListRequest_Validate(t *testing.T) {
 	var err error
 	listRequest := &ListRuleStepsRequest{}
-	err = ListRuleStepsRequest{}.Validate()
+	err = listRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	listRequest.UserIdentifier = "123"
@@ -137,7 +137,7 @@ func TestListRequest_Validate(t *testing.T) {
 func TestEnableRequest_Validate(t *testing.T) {
 	var err error
 	enableRequest := &EnableRuleStepRequest{}
-	err = EnableRuleStepRequest{}.Validate()
+	err = enableRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	enableRequest.UserIdentifier = "123"
@@ -160,7 +160,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 func TestDisableRequest_Validate(t *testing.T) {
 	var err error
 	disableRuleStepRequest := &DisableRuleStepRequest{}
-	err = DisableRuleStepRequest{}.Validate()
+	err = disableRuleStepRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	disableRuleStepRequest.UserIdentifier = "123"
@@ -306,7 +306,7 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 func TestGetRuleRequest_Validate(t *testing.T) {
 	var err error
 	getRequest := &GetRuleRequest{}
-	err = GetRuleRequest{}.Validate()
+	err = getRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	getRequest.UserIdentifier = "123"
@@ -437,7 +437,7 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 func TestDeleteRuleRequest_Validate(t *testing.T) {
 	var err error
 	deleteRequest := &DeleteRuleRequest{}
-	err = DeleteRuleRequest{}.Validate()
+	err = deleteRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	deleteRequest.UserIdentifier = "123"
@@ -456,7 +456,7 @@ func TestDeleteRuleRequest_Validate(t *testing.T) {
 func TestListRuleRequest_Validate(t *testing.T) {
 	var err error
 	listRequest := &ListRuleRequest{}
-	err = ListRuleRequest{}.Validate()
+	err = listRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	listRequest.UserIdentifier = "123"
@@ -471,7 +471,7 @@ func TestListRuleRequest_Validate(t *testing.T) {
 func TestEnableRuleRequest_Validate(t *testing.T) {
 	var err error
 	enableRequest := &EnableRuleRequest{}
-	err = EnableRuleStepRequest{}.Validate()
+	err = enableRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	enableRequest.UserIdentifier = "123"
@@ -490,7 +490,7 @@ func TestEnableRuleRequest_Validate(t *testing.T) {
 func TestDisableRuleRequest_Validate(t *testing.T) {
 	var err error
 	disableRuleRequest := &DisableRuleRequest{}
-	err = DisableRuleRequest{}.Validate()
+	err = disableRuleRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	disableRuleRequest.UserIdentifier = "123"
@@ -508,7 +508,7 @@ func TestDisableRuleRequest_Validate(t *testing.T) {
 func TestCopyNotificationRulesRequest_Validate(t *testing.T) {
 	var err error
 	copyNotificationRulesRequest := &CopyNotificationRulesRequest{}
-	err = CopyNotificationRulesRequest{}.Validate()
+	err = copyNotificationRulesRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("User identifier cannot be empty.").Error())
 
 	copyNotificationRulesRequest.UserIdentifier = "123"

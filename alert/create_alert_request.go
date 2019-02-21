@@ -22,7 +22,7 @@ type CreateAlertRequest struct {
 	Note        string            `json:"note,omitempty"`
 }
 
-func (r CreateAlertRequest) Validate() error {
+func (r *CreateAlertRequest) Validate() error {
 	if r.Message == "" {
 		return errors.New("message can not be empty")
 	}
@@ -32,11 +32,11 @@ func (r CreateAlertRequest) Validate() error {
 	return nil
 }
 
-func (r CreateAlertRequest) ResourcePath() string {
+func (r *CreateAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts"
 }
 
-func (r CreateAlertRequest) Method() string {
+func (r *CreateAlertRequest) Method() string {
 	return "POST"
 }

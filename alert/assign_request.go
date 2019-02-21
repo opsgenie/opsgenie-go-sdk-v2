@@ -15,7 +15,7 @@ type AssignRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r AssignRequest) Validate() error {
+func (r *AssignRequest) Validate() error {
 	if r.Owner.ID == "" && r.Owner.Username == "" {
 		return errors.New("Owner ID or username must be defined")
 	}
@@ -26,17 +26,17 @@ func (r AssignRequest) Validate() error {
 	return nil
 }
 
-func (r AssignRequest) ResourcePath() string {
+func (r *AssignRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/assign"
 
 }
 
-func (r AssignRequest) Method() string {
+func (r *AssignRequest) Method() string {
 	return "POST"
 }
 
-func (r AssignRequest) RequestParams() map[string]string {
+func (r *AssignRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

@@ -41,7 +41,7 @@ type ApiRequest interface {
 type BaseRequest struct {
 }
 
-func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
+func (r *BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
 	headers := make(map[string]interface{})
 	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
 		headers["Content-Type"] = "application/json; charset=utf-8"
@@ -51,7 +51,7 @@ func (r BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
 	return headers
 }
 
-func (r BaseRequest) RequestParams() map[string]string {
+func (r *BaseRequest) RequestParams() map[string]string {
 	return nil
 }
 
@@ -258,7 +258,7 @@ type ApiError struct {
 	ErrorHeader string
 }
 
-func (ar ApiError) Error() string {
+func (ar *ApiError) Error() string {
 	errMessage := "Error occurred with Status code: " + ar.StatusCode + ", " +
 		"Message: " + ar.Message + ", " +
 		"Took: " + fmt.Sprintf("%f", ar.Took) + ", " +

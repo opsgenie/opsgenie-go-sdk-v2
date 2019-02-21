@@ -15,17 +15,17 @@ type AddResponderRequest struct {
 	Note            string    `json:"note,omitempty"`
 }
 
-func (r AddResponderRequest) Validate() error {
+func (r *AddResponderRequest) Validate() error {
 
 	if r.Responder.Type != UserResponder && r.Responder.Type != TeamResponder {
-			return errors.New("Responder type must be user or team")
-		}
+		return errors.New("Responder type must be user or team")
+	}
 	if r.Responder.Type == UserResponder && r.Responder.Id == "" && r.Responder.Username == "" {
-			return errors.New("User ID or username must be defined")
-		}
+		return errors.New("User ID or username must be defined")
+	}
 	if r.Responder.Type == TeamResponder && r.Responder.Id == "" && r.Responder.Name == "" {
-			return errors.New("Team ID or name must be defined")
-		}
+		return errors.New("Team ID or name must be defined")
+	}
 
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
@@ -33,17 +33,17 @@ func (r AddResponderRequest) Validate() error {
 	return nil
 }
 
-func (r AddResponderRequest) ResourcePath() string {
+func (r *AddResponderRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/responders"
 
 }
 
-func (r AddResponderRequest) Method() string {
+func (r *AddResponderRequest) Method() string {
 	return "POST"
 }
 
-func (r AddResponderRequest) RequestParams() map[string]string {
+func (r *AddResponderRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

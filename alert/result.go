@@ -113,12 +113,12 @@ type AlertLog struct {
 
 type ListAlertLogsResult struct {
 	client.ResultMetadata
-	AlertLog []AlertLog `json:"data"`
-	Paging        map[string]string `json:"paging,omitempty"`
+	AlertLog []AlertLog        `json:"data"`
+	Paging   map[string]string `json:"paging,omitempty"`
 }
 
 type AlertNote struct {
-	Note       string    `json:"log,omitempty"`
+	Note      string    `json:"note,omitempty"`
 	Owner     string    `json:"owner,omitempty"`
 	CreatedAt time.Time `json:"createdAt,omitempty"`
 	Offset    string    `json:"offset,omitempty"`
@@ -126,19 +126,19 @@ type AlertNote struct {
 
 type ListAlertNotesResult struct {
 	client.ResultMetadata
-	AlertLog []AlertNote `json:"data"`
-	Paging        map[string]string `json:"paging,omitempty"`
+	AlertLog []AlertNote       `json:"data"`
+	Paging   map[string]string `json:"paging,omitempty"`
 }
 
 type GetSavedSearchResult struct {
 	client.ResultMetadata
-	Id string `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	CreatedAt time.Time `json:"createdAt,omitempty"`
-	UpdatedAt time.Time `json:"updatedAt,omitempty"`
-	Teams []Team  `json:"teams,omitempty"`
-	Description string `json:"description,omitempty"`
-	Query string `json:"query,omitempty"`
+	Id          string    `json:"id,omitempty"`
+	Name        string    `json:"name,omitempty"`
+	CreatedAt   time.Time `json:"createdAt,omitempty"`
+	UpdatedAt   time.Time `json:"updatedAt,omitempty"`
+	Teams       []Team    `json:"teams,omitempty"`
+	Description string    `json:"description,omitempty"`
+	Query       string    `json:"query,omitempty"`
 }
 
 type CreateAlertAttachmentsResult struct {
@@ -148,7 +148,7 @@ type CreateAlertAttachmentsResult struct {
 }
 
 type CreatedAttachment struct {
-	Id string  `json:id,omitempty"`
+	Id string `json:id,omitempty"`
 }
 
 type GetAttachmentResult struct {

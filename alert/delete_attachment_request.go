@@ -13,7 +13,7 @@ type DeleteAttachmentRequest struct {
 	User            string
 }
 
-func (r DeleteAttachmentRequest) Validate() error {
+func (r *DeleteAttachmentRequest) Validate() error {
 	if r.AttachmentId == "" {
 		return errors.New("AttachmentId can not be empty")
 	}
@@ -24,16 +24,16 @@ func (r DeleteAttachmentRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteAttachmentRequest) ResourcePath() string {
+func (r *DeleteAttachmentRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/attachments/" + r.AttachmentId
 }
 
-func (r DeleteAttachmentRequest) Method() string {
+func (r *DeleteAttachmentRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteAttachmentRequest) RequestParams() map[string]string {
+func (r *DeleteAttachmentRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

@@ -1,8 +1,8 @@
 package escalation
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 )
 
@@ -40,25 +40,25 @@ type CreateRequest struct {
 	Repeat      *RepeatRequest `json:"repeat,omitempty"`
 }
 
-func (request CreateRequest) Validate() error {
-	if request.Name == "" {
+func (r *CreateRequest) Validate() error {
+	if r.Name == "" {
 		return errors.New("Name cannot be empty.")
 	}
-	if len(request.Rules) == 0 {
+	if len(r.Rules) == 0 {
 		return errors.New("Rules list cannot be empty.")
 	}
-	err := validateRules(request.Rules)
+	err := validateRules(r.Rules)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request CreateRequest) ResourcePath() string {
+func (r *CreateRequest) ResourcePath() string {
 	return "/v2/escalations"
 }
 
-func (request CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -68,27 +68,27 @@ type GetRequest struct {
 	Identifier     string
 }
 
-func (request GetRequest) Validate() error {
-	err := validateIdentifiers(request.Identifier, request.IdentifierType)
+func (r *GetRequest) Validate() error {
+	err := validateIdentifiers(r.Identifier, r.IdentifierType)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
-func (request GetRequest) ResourcePath() string {
-	return "/v2/escalations/" + request.Identifier
+func (r *GetRequest) ResourcePath() string {
+	return "/v2/escalations/" + r.Identifier
 }
 
-func (request GetRequest) RequestParams() map[string]string {
+func (r *GetRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -108,27 +108,27 @@ type UpdateRequest struct {
 	Identifier     string
 }
 
-func (request UpdateRequest) Validate() error {
-	err := validateIdentifiers(request.Identifier, request.IdentifierType)
+func (r *UpdateRequest) Validate() error {
+	err := validateIdentifiers(r.Identifier, r.IdentifierType)
 	if err != nil {
 		return err
 	}
-	err = validateRules(request.Rules)
+	err = validateRules(r.Rules)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request UpdateRequest) ResourcePath() string {
-	return "/v2/escalations/" + request.Identifier
+func (r *UpdateRequest) ResourcePath() string {
+	return "/v2/escalations/" + r.Identifier
 }
 
-func (request UpdateRequest) RequestParams() map[string]string {
+func (r *UpdateRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -137,7 +137,7 @@ func (request UpdateRequest) RequestParams() map[string]string {
 	return params
 }
 
-func (r UpdateRequest) Method() string {
+func (r *UpdateRequest) Method() string {
 	return "PATCH"
 }
 
@@ -147,27 +147,27 @@ type DeleteRequest struct {
 	Identifier     string
 }
 
-func (request DeleteRequest) Validate() error {
-	err := validateIdentifiers(request.Identifier, request.IdentifierType)
+func (r *DeleteRequest) Validate() error {
+	err := validateIdentifiers(r.Identifier, r.IdentifierType)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
-func (request DeleteRequest) ResourcePath() string {
-	return "/v2/escalations/" + request.Identifier
+func (r *DeleteRequest) ResourcePath() string {
+	return "/v2/escalations/" + r.Identifier
 }
 
-func (request DeleteRequest) RequestParams() map[string]string {
+func (r *DeleteRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.IdentifierType == Name {
+	if r.IdentifierType == Name {
 		params["identifierType"] = "name"
 	} else {
 		params["identifierType"] = "id"
@@ -180,15 +180,15 @@ type listRequest struct {
 	client.BaseRequest
 }
 
-func (request listRequest) Validate() error {
+func (r *listRequest) Validate() error {
 	return nil
 }
 
-func (request listRequest) Method() string {
+func (r *listRequest) Method() string {
 	return "GET"
 }
 
-func (request listRequest) ResourcePath() string {
+func (r *listRequest) ResourcePath() string {
 	return "/v2/escalations"
 }
 

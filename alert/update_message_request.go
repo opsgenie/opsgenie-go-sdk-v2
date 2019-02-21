@@ -12,7 +12,7 @@ type UpdateMessageRequest struct {
 	Message         string `json:"message,omitempty"`
 }
 
-func (r UpdateMessageRequest) Validate() error {
+func (r *UpdateMessageRequest) Validate() error {
 	if r.Message == "" {
 		return errors.New("Message can not be empty")
 	}
@@ -22,16 +22,16 @@ func (r UpdateMessageRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateMessageRequest) ResourcePath() string {
+func (r *UpdateMessageRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/message"
 }
 
-func (r UpdateMessageRequest) Method() string {
+func (r *UpdateMessageRequest) Method() string {
 	return "PUT"
 }
 
-func (r UpdateMessageRequest) RequestParams() map[string]string {
+func (r *UpdateMessageRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

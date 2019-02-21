@@ -10,7 +10,7 @@ type DeleteSavedSearchRequest struct {
 	IdentifierValue string
 }
 
-func (r DeleteSavedSearchRequest) Validate() error {
+func (r *DeleteSavedSearchRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -18,16 +18,16 @@ func (r DeleteSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r DeleteSavedSearchRequest) ResourcePath() string {
+func (r *DeleteSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches/" + r.IdentifierValue
 }
 
-func (r DeleteSavedSearchRequest) Method() string {
+func (r *DeleteSavedSearchRequest) Method() string {
 	return "DELETE"
 }
 
-func (r DeleteSavedSearchRequest) RequestParams() map[string]string {
+func (r *DeleteSavedSearchRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

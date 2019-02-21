@@ -14,24 +14,24 @@ type UnacknowledgeAlertRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r UnacknowledgeAlertRequest) Validate() error {
+func (r *UnacknowledgeAlertRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
 	return nil
 }
 
-func (r UnacknowledgeAlertRequest) ResourcePath() string {
+func (r *UnacknowledgeAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/unacknowledge"
 
 }
 
-func (r UnacknowledgeAlertRequest) Method() string {
+func (r *UnacknowledgeAlertRequest) Method() string {
 	return "POST"
 }
 
-func (r UnacknowledgeAlertRequest) RequestParams() map[string]string {
+func (r *UnacknowledgeAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

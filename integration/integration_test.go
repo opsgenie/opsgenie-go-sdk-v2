@@ -1,10 +1,10 @@
 package integration
 
 import (
+	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
 
 func TestGetRequest_Validate(t *testing.T) {

@@ -12,25 +12,25 @@ type CreateRequest struct {
 	MethodOfContact MethodType `json:"method"`
 }
 
-func (cr CreateRequest) Validate() error {
-	if cr.UserIdentifier == "" {
+func (r *CreateRequest) Validate() error {
+	if r.UserIdentifier == "" {
 		return errors.New("User identifier cannot be empty.")
 	}
-	if cr.To == "" {
+	if r.To == "" {
 		return errors.New("to cannot be empty.")
 	}
-	if cr.MethodOfContact == "" {
+	if r.MethodOfContact == "" {
 		return errors.New("Method cannot be empty.")
 	}
 
 	return nil
 }
 
-func (cr CreateRequest) ResourcePath() string {
-	return "/v2/users/" + cr.UserIdentifier + "/contacts"
+func (r *CreateRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts"
 }
 
-func (cr CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -40,19 +40,19 @@ type GetRequest struct {
 	ContactIdentifier string
 }
 
-func (gr GetRequest) Validate() error {
-	err := validateIdentifier(gr.UserIdentifier, gr.ContactIdentifier)
+func (r *GetRequest) Validate() error {
+	err := validateIdentifier(r.UserIdentifier, r.ContactIdentifier)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (gr GetRequest) ResourcePath() string {
-	return "/v2/users/" + gr.UserIdentifier + "/contacts/" + gr.ContactIdentifier
+func (r *GetRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts/" + r.ContactIdentifier
 }
 
-func (gr GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
@@ -63,25 +63,25 @@ type UpdateRequest struct {
 	To                string `json:"to"`
 }
 
-func (ur UpdateRequest) Validate() error {
+func (r *UpdateRequest) Validate() error {
 
-	err := validateIdentifier(ur.UserIdentifier, ur.ContactIdentifier)
+	err := validateIdentifier(r.UserIdentifier, r.ContactIdentifier)
 	if err != nil {
 		return err
 	}
 
-	if ur.To == "" {
+	if r.To == "" {
 		return errors.New("to cannot be empty.")
 	}
 
 	return nil
 }
 
-func (ur UpdateRequest) ResourcePath() string {
-	return "/v2/users/" + ur.UserIdentifier + "/contacts/" + ur.ContactIdentifier
+func (r *UpdateRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts/" + r.ContactIdentifier
 }
 
-func (ur UpdateRequest) Method() string {
+func (r *UpdateRequest) Method() string {
 	return "PATCH"
 }
 
@@ -91,18 +91,18 @@ type DeleteRequest struct {
 	ContactIdentifier string
 }
 
-func (dr DeleteRequest) Validate() error {
-	err := validateIdentifier(dr.UserIdentifier, dr.ContactIdentifier)
+func (r *DeleteRequest) Validate() error {
+	err := validateIdentifier(r.UserIdentifier, r.ContactIdentifier)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (dr DeleteRequest) ResourcePath() string {
-	return "/v2/users/" + dr.UserIdentifier + "/contacts/" + dr.ContactIdentifier
+func (r *DeleteRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts/" + r.ContactIdentifier
 }
 
-func (dr DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
@@ -111,17 +111,17 @@ type ListRequest struct {
 	UserIdentifier string
 }
 
-func (lr ListRequest) Validate() error {
-	if lr.UserIdentifier == "" {
+func (r *ListRequest) Validate() error {
+	if r.UserIdentifier == "" {
 		return errors.New("User identifier cannot be empty.")
 	}
 	return nil
 }
-func (lr ListRequest) ResourcePath() string {
-	return "/v2/users/" + lr.UserIdentifier + "/contacts"
+func (r *ListRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts"
 }
 
-func (lr ListRequest) Method() string {
+func (r *ListRequest) Method() string {
 	return "GET"
 }
 
@@ -131,18 +131,18 @@ type EnableRequest struct {
 	ContactIdentifier string
 }
 
-func (er EnableRequest) Validate() error {
-	err := validateIdentifier(er.UserIdentifier, er.ContactIdentifier)
+func (r *EnableRequest) Validate() error {
+	err := validateIdentifier(r.UserIdentifier, r.ContactIdentifier)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (er EnableRequest) ResourcePath() string {
-	return "/v2/users/" + er.UserIdentifier + "/contacts/" + er.ContactIdentifier + "/enable"
+func (r *EnableRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts/" + r.ContactIdentifier + "/enable"
 }
 
-func (er EnableRequest) Method() string {
+func (r *EnableRequest) Method() string {
 	return "POST"
 }
 
@@ -152,18 +152,18 @@ type DisableRequest struct {
 	ContactIdentifier string
 }
 
-func (dr DisableRequest) Validate() error {
-	err := validateIdentifier(dr.UserIdentifier, dr.ContactIdentifier)
+func (r *DisableRequest) Validate() error {
+	err := validateIdentifier(r.UserIdentifier, r.ContactIdentifier)
 	if err != nil {
 		return err
 	}
 	return nil
 }
-func (dr DisableRequest) ResourcePath() string {
-	return "/v2/users/" + dr.UserIdentifier + "/contacts/" + dr.ContactIdentifier + "/disable"
+func (r *DisableRequest) ResourcePath() string {
+	return "/v2/users/" + r.UserIdentifier + "/contacts/" + r.ContactIdentifier + "/disable"
 }
 
-func (dr DisableRequest) Method() string {
+func (r *DisableRequest) Method() string {
 	return "POST"
 }
 

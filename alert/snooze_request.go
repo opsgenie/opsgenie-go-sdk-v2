@@ -16,7 +16,7 @@ type SnoozeAlertRequest struct {
 	Note            string    `json:"note,omitempty"`
 }
 
-func (r SnoozeAlertRequest) Validate() error {
+func (r *SnoozeAlertRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
@@ -27,17 +27,17 @@ func (r SnoozeAlertRequest) Validate() error {
 	return nil
 }
 
-func (r SnoozeAlertRequest) ResourcePath() string {
+func (r *SnoozeAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/snooze"
 
 }
 
-func (r SnoozeAlertRequest) Method() string {
+func (r *SnoozeAlertRequest) Method() string {
 	return "POST"
 }
 
-func (r SnoozeAlertRequest) RequestParams() map[string]string {
+func (r *SnoozeAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

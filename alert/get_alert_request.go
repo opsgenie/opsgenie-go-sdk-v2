@@ -8,7 +8,7 @@ type GetAlertRequest struct {
 	IdentifierValue string
 }
 
-func (r GetAlertRequest) Validate() error {
+func (r *GetAlertRequest) Validate() error {
 	err := validateIdentifier(r.IdentifierValue)
 	if err != nil {
 		return err
@@ -16,15 +16,15 @@ func (r GetAlertRequest) Validate() error {
 	return nil
 }
 
-func (r GetAlertRequest) ResourcePath() string {
+func (r *GetAlertRequest) ResourcePath() string {
 	return "/v2/alerts/" + r.IdentifierValue
 }
 
-func (r GetAlertRequest) Method() string {
+func (r *GetAlertRequest) Method() string {
 	return "GET"
 }
 
-func (r GetAlertRequest) RequestParams() map[string]string {
+func (r *GetAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

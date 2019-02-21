@@ -12,7 +12,7 @@ type UpdatePriorityRequest struct {
 	Priority        Priority `json:"priority,omitempty"`
 }
 
-func (r UpdatePriorityRequest) Validate() error {
+func (r *UpdatePriorityRequest) Validate() error {
 	if r.Priority == "" {
 		return errors.New("Priority can not be empty")
 	}
@@ -26,17 +26,17 @@ func (r UpdatePriorityRequest) Validate() error {
 	return nil
 }
 
-func (r UpdatePriorityRequest) ResourcePath() string {
+func (r *UpdatePriorityRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/priority"
 
 }
 
-func (r UpdatePriorityRequest) Method() string {
+func (r *UpdatePriorityRequest) Method() string {
 	return "PUT"
 }
 
-func (r UpdatePriorityRequest) RequestParams() map[string]string {
+func (r *UpdatePriorityRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

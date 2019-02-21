@@ -122,7 +122,7 @@ func TestParsingWithoutDataField(t *testing.T) {
 	result := &aResultDoesNotWantDataFieldsToBeParsed{}
 	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
 	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	if err != nil {
 		t.Fail()
 	}
@@ -152,7 +152,7 @@ func TestParsingWhenApiDoesNotReturnDataField(t *testing.T) {
 	result := &ResultWithoutDataField{}
 	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
 	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	if err != nil {
 		t.Fail()
 	}
@@ -209,7 +209,7 @@ func TestExec(t *testing.T) {
 	result := &testResult{}
 	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
 	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	assert.Equal(t, result.Data, "processed")
 	if err != nil {
 		t.Fail()
@@ -229,7 +229,7 @@ func TestParsingErrorExec(t *testing.T) {
 	result := &testResult{}
 	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
 	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	assert.Contains(t, err.Error(), "Response could not be parsed, unexpected end of JSON input")
 }
 
@@ -250,7 +250,7 @@ func TestExecWhenRequestIsNotValid(t *testing.T) {
 	request := testRequest{ExtraField: "extra"}
 	result := &testResult{}
 
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	assert.Equal(t, err.Error(), "mandatory field cannot be empty")
 }
 
@@ -276,7 +276,7 @@ func TestExecWhenApiReturns422(t *testing.T) {
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	fmt.Println(err.Error())
 	assert.Contains(t, err.Error(), "422")
 	assert.Contains(t, err.Error(), "Invalid recipient")
@@ -303,7 +303,7 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
-	err = ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, &request, result)
 	fmt.Println(err.Error())
 	assert.Contains(t, err.Error(), "Internal Server Error")
 	assert.Contains(t, err.Error(), "500")

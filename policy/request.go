@@ -47,22 +47,22 @@ type MainFields struct {
 	TeamId            string
 }
 
-func (cap CreateAlertPolicyRequest) Validate() error {
-	err := ValidateMainFields(&cap.MainFields)
+func (r *CreateAlertPolicyRequest) Validate() error {
+	err := ValidateMainFields(&r.MainFields)
 	if err != nil {
 		return err
 	}
-	if cap.Message == "" {
+	if r.Message == "" {
 		return errors.New("alert message cannot be empty")
 	}
-	if cap.Responders != nil {
-		err = ValidateResponders(cap.Responders)
+	if r.Responders != nil {
+		err = ValidateResponders(r.Responders)
 		if err != nil {
 			return err
 		}
 	}
-	if cap.Priority != "" {
-		err = alert.ValidatePriority(cap.Priority)
+	if r.Priority != "" {
+		err = alert.ValidatePriority(r.Priority)
 		if err != nil {
 			return err
 		}
@@ -70,42 +70,42 @@ func (cap CreateAlertPolicyRequest) Validate() error {
 	return nil
 }
 
-func (cap CreateAlertPolicyRequest) ResourcePath() string {
+func (r *CreateAlertPolicyRequest) ResourcePath() string {
 	return "/v2/policies"
 }
 
-func (cap CreateAlertPolicyRequest) Method() string {
+func (r *CreateAlertPolicyRequest) Method() string {
 	return "POST"
 }
 
-func (cnp CreateNotificationPolicyRequest) Validate() error {
-	err := ValidateMainFields(&cnp.MainFields)
+func (r *CreateNotificationPolicyRequest) Validate() error {
+	err := ValidateMainFields(&r.MainFields)
 	if err != nil {
 		return err
 	}
-	if cnp.TeamId == "" {
+	if r.TeamId == "" {
 		return errors.New("policy team id should be provided")
 	}
-	if cnp.AutoRestartAction != nil {
-		err = ValidateAutoRestartAction(*cnp.AutoRestartAction)
+	if r.AutoRestartAction != nil {
+		err = ValidateAutoRestartAction(*r.AutoRestartAction)
 		if err != nil {
 			return err
 		}
 	}
-	if cnp.AutoCloseAction != nil {
-		err = ValidateAutoCloseAction(*cnp.AutoCloseAction)
+	if r.AutoCloseAction != nil {
+		err = ValidateAutoCloseAction(*r.AutoCloseAction)
 		if err != nil {
 			return err
 		}
 	}
-	if cnp.DeDuplicationAction != nil {
-		err = ValidateDeDuplicationAction(*cnp.DeDuplicationAction)
+	if r.DeDuplicationAction != nil {
+		err = ValidateDeDuplicationAction(*r.DeDuplicationAction)
 		if err != nil {
 			return err
 		}
 	}
-	if cnp.DelayAction != nil {
-		err = ValidateDelayAction(*cnp.DelayAction)
+	if r.DelayAction != nil {
+		err = ValidateDelayAction(*r.DelayAction)
 		if err != nil {
 			return err
 		}
@@ -113,20 +113,20 @@ func (cnp CreateNotificationPolicyRequest) Validate() error {
 	return nil
 }
 
-func (cnp CreateNotificationPolicyRequest) ResourcePath() string {
+func (r *CreateNotificationPolicyRequest) ResourcePath() string {
 	return "/v2/policies"
 }
 
-func (cnp CreateNotificationPolicyRequest) RequestParams() map[string]string {
-	if cnp.TeamId == "" {
+func (r *CreateNotificationPolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = cnp.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
-func (cnp CreateNotificationPolicyRequest) Method() string {
+func (r *CreateNotificationPolicyRequest) Method() string {
 	return "POST"
 }
 
@@ -136,27 +136,27 @@ type GetAlertPolicyRequest struct {
 	TeamId string
 }
 
-func (gap GetAlertPolicyRequest) Validate() error {
-	if gap.Id == "" {
+func (r *GetAlertPolicyRequest) Validate() error {
+	if r.Id == "" {
 		return errors.New("policy id should be provided")
 	}
 	return nil
 }
 
-func (gap GetAlertPolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + gap.Id
+func (r *GetAlertPolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id
 }
 
-func (gap GetAlertPolicyRequest) RequestParams() map[string]string {
-	if gap.TeamId == "" {
+func (r *GetAlertPolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = gap.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
-func (gap GetAlertPolicyRequest) Method() string {
+func (r *GetAlertPolicyRequest) Method() string {
 	return "GET"
 }
 
@@ -166,30 +166,30 @@ type GetNotificationPolicyRequest struct {
 	TeamId string
 }
 
-func (gnp GetNotificationPolicyRequest) Validate() error {
-	if gnp.Id == "" {
+func (r *GetNotificationPolicyRequest) Validate() error {
+	if r.Id == "" {
 		return errors.New("policy id should be provided")
 	}
-	if gnp.TeamId == "" {
+	if r.TeamId == "" {
 		return errors.New("policy team id should be provided")
 	}
 	return nil
 }
 
-func (gnp GetNotificationPolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + gnp.Id
+func (r *GetNotificationPolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id
 }
 
-func (gnp GetNotificationPolicyRequest) RequestParams() map[string]string {
-	if gnp.TeamId == "" {
+func (r *GetNotificationPolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = gnp.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
-func (gnp GetNotificationPolicyRequest) Method() string {
+func (r *GetNotificationPolicyRequest) Method() string {
 	return "GET"
 }
 
@@ -214,26 +214,26 @@ type UpdateAlertPolicyRequest struct {
 	Id                       string
 }
 
-func (uap UpdateAlertPolicyRequest) Validate() error {
-	err := ValidatePolicyIdentifier("alert", uap.Id, uap.TeamId)
+func (r *UpdateAlertPolicyRequest) Validate() error {
+	err := ValidatePolicyIdentifier("alert", r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
-	err = ValidateMainFields(&uap.MainFields)
+	err = ValidateMainFields(&r.MainFields)
 	if err != nil {
 		return err
 	}
-	if uap.Message == "" {
+	if r.Message == "" {
 		return errors.New("alert message cannot be empty")
 	}
-	if uap.Responders != nil {
-		err = ValidateResponders(uap.Responders)
+	if r.Responders != nil {
+		err = ValidateResponders(r.Responders)
 		if err != nil {
 			return err
 		}
 	}
-	if uap.Priority != "" {
-		err = alert.ValidatePriority(uap.Priority)
+	if r.Priority != "" {
+		err = alert.ValidatePriority(r.Priority)
 		if err != nil {
 			return err
 		}
@@ -241,11 +241,11 @@ func (uap UpdateAlertPolicyRequest) Validate() error {
 	return nil
 }
 
-func (uap UpdateAlertPolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + uap.Id
+func (r *UpdateAlertPolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id
 }
 
-func (uap UpdateAlertPolicyRequest) Method() string {
+func (r *UpdateAlertPolicyRequest) Method() string {
 	return "PUT"
 }
 
@@ -260,38 +260,38 @@ type UpdateNotificationPolicyRequest struct {
 	Id                  string
 }
 
-func (unp UpdateNotificationPolicyRequest) Validate() error {
-	err := ValidatePolicyIdentifier("notification", unp.Id, unp.TeamId)
+func (r *UpdateNotificationPolicyRequest) Validate() error {
+	err := ValidatePolicyIdentifier("notification", r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
-	err = ValidateMainFields(&unp.MainFields)
+	err = ValidateMainFields(&r.MainFields)
 	if err != nil {
 		return err
 	}
-	if unp.TeamId == "" {
+	if r.TeamId == "" {
 		return errors.New("policy team id should be provided")
 	}
-	if unp.AutoRestartAction != nil {
-		err = ValidateAutoRestartAction(*unp.AutoRestartAction)
+	if r.AutoRestartAction != nil {
+		err = ValidateAutoRestartAction(*r.AutoRestartAction)
 		if err != nil {
 			return err
 		}
 	}
-	if unp.AutoCloseAction != nil {
-		err = ValidateAutoCloseAction(*unp.AutoCloseAction)
+	if r.AutoCloseAction != nil {
+		err = ValidateAutoCloseAction(*r.AutoCloseAction)
 		if err != nil {
 			return err
 		}
 	}
-	if unp.DeDuplicationAction != nil {
-		err = ValidateDeDuplicationAction(*unp.DeDuplicationAction)
+	if r.DeDuplicationAction != nil {
+		err = ValidateDeDuplicationAction(*r.DeDuplicationAction)
 		if err != nil {
 			return err
 		}
 	}
-	if unp.DelayAction != nil {
-		err = ValidateDelayAction(*unp.DelayAction)
+	if r.DelayAction != nil {
+		err = ValidateDelayAction(*r.DelayAction)
 		if err != nil {
 			return err
 		}
@@ -299,17 +299,17 @@ func (unp UpdateNotificationPolicyRequest) Validate() error {
 	return nil
 }
 
-func (unp UpdateNotificationPolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + unp.Id
+func (r *UpdateNotificationPolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id
 }
 
-func (unp UpdateNotificationPolicyRequest) RequestParams() map[string]string {
+func (r *UpdateNotificationPolicyRequest) RequestParams() map[string]string {
 	params := make(map[string]string)
-	params["teamId"] = unp.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
-func (unp UpdateNotificationPolicyRequest) Method() string {
+func (r *UpdateNotificationPolicyRequest) Method() string {
 	return "PUT"
 }
 
@@ -320,31 +320,31 @@ type DeletePolicyRequest struct {
 	Type   PolicyType
 }
 
-func (dpr DeletePolicyRequest) Validate() error {
-	if dpr.Type != AlertPolicy && dpr.Type != NotificationPolicy {
+func (r *DeletePolicyRequest) Validate() error {
+	if r.Type != AlertPolicy && r.Type != NotificationPolicy {
 		return errors.New("policy type should be one of alert or notification")
 	}
-	err := ValidatePolicyIdentifier(string(dpr.Type), dpr.Id, dpr.TeamId)
+	err := ValidatePolicyIdentifier(string(r.Type), r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (dpr DeletePolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + dpr.Id
+func (r *DeletePolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id
 }
 
-func (dpr DeletePolicyRequest) Method() string {
+func (r *DeletePolicyRequest) Method() string {
 	return "DELETE"
 }
 
-func (dpr DeletePolicyRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *DeletePolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
@@ -355,31 +355,31 @@ type DisablePolicyRequest struct {
 	Type   PolicyType
 }
 
-func (dpr DisablePolicyRequest) Validate() error {
-	if dpr.Type != AlertPolicy && dpr.Type != NotificationPolicy {
+func (r *DisablePolicyRequest) Validate() error {
+	if r.Type != AlertPolicy && r.Type != NotificationPolicy {
 		return errors.New("policy type should be one of alert or notification")
 	}
-	err := ValidatePolicyIdentifier(string(dpr.Type), dpr.Id, dpr.TeamId)
+	err := ValidatePolicyIdentifier(string(r.Type), r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (dpr DisablePolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + dpr.Id + "/disable"
+func (r *DisablePolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id + "/disable"
 }
 
-func (dpr DisablePolicyRequest) Method() string {
+func (r *DisablePolicyRequest) Method() string {
 	return "POST"
 }
 
-func (dpr DisablePolicyRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *DisablePolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
@@ -390,31 +390,31 @@ type EnablePolicyRequest struct {
 	Type   PolicyType
 }
 
-func (dpr EnablePolicyRequest) Validate() error {
-	if dpr.Type != AlertPolicy && dpr.Type != NotificationPolicy {
+func (r *EnablePolicyRequest) Validate() error {
+	if r.Type != AlertPolicy && r.Type != NotificationPolicy {
 		return errors.New("policy type should be one of alert or notification")
 	}
-	err := ValidatePolicyIdentifier(string(dpr.Type), dpr.Id, dpr.TeamId)
+	err := ValidatePolicyIdentifier(string(r.Type), r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (dpr EnablePolicyRequest) ResourcePath() string {
-	return "/v2/policies/" + dpr.Id + "/enable"
+func (r *EnablePolicyRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id + "/enable"
 }
 
-func (dpr EnablePolicyRequest) Method() string {
+func (r *EnablePolicyRequest) Method() string {
 	return "POST"
 }
 
-func (dpr EnablePolicyRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *EnablePolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
@@ -426,34 +426,34 @@ type ChangeOrderRequest struct {
 	TargetIndex int `json:"targetIndex,omitempty"`
 }
 
-func (dpr ChangeOrderRequest) Validate() error {
-	if dpr.Type != AlertPolicy && dpr.Type != NotificationPolicy {
+func (r *ChangeOrderRequest) Validate() error {
+	if r.Type != AlertPolicy && r.Type != NotificationPolicy {
 		return errors.New("policy type should be one of alert or notification")
 	}
-	err := ValidatePolicyIdentifier(string(dpr.Type), dpr.Id, dpr.TeamId)
+	err := ValidatePolicyIdentifier(string(r.Type), r.Id, r.TeamId)
 	if err != nil {
 		return err
 	}
-	if dpr.TargetIndex < 0 {
+	if r.TargetIndex < 0 {
 		return errors.New("target index should be at least 0")
 	}
 	return nil
 }
 
-func (dpr ChangeOrderRequest) ResourcePath() string {
-	return "/v2/policies/" + dpr.Id + "/change-order"
+func (r *ChangeOrderRequest) ResourcePath() string {
+	return "/v2/policies/" + r.Id + "/change-order"
 }
 
-func (dpr ChangeOrderRequest) Method() string {
+func (r *ChangeOrderRequest) Method() string {
 	return "POST"
 }
 
-func (dpr ChangeOrderRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *ChangeOrderRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
@@ -462,24 +462,24 @@ type ListAlertPoliciesRequest struct {
 	TeamId string
 }
 
-func (dpr ListAlertPoliciesRequest) Validate() error {
+func (r *ListAlertPoliciesRequest) Validate() error {
 	return nil
 }
 
-func (dpr ListAlertPoliciesRequest) ResourcePath() string {
+func (r *ListAlertPoliciesRequest) ResourcePath() string {
 	return "/v2/policies/alert"
 }
 
-func (dpr ListAlertPoliciesRequest) Method() string {
+func (r *ListAlertPoliciesRequest) Method() string {
 	return "GET"
 }
 
-func (dpr ListAlertPoliciesRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *ListAlertPoliciesRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 
@@ -488,27 +488,27 @@ type ListNotificationPoliciesRequest struct {
 	TeamId string
 }
 
-func (dpr ListNotificationPoliciesRequest) Validate() error {
-	if dpr.TeamId == "" {
+func (r *ListNotificationPoliciesRequest) Validate() error {
+	if r.TeamId == "" {
 		return errors.New("team id should be provided")
 	}
 	return nil
 }
 
-func (dpr ListNotificationPoliciesRequest) ResourcePath() string {
+func (r *ListNotificationPoliciesRequest) ResourcePath() string {
 	return "/v2/policies/notification"
 }
 
-func (dpr ListNotificationPoliciesRequest) Method() string {
+func (r *ListNotificationPoliciesRequest) Method() string {
 	return "GET"
 }
 
-func (dpr ListNotificationPoliciesRequest) RequestParams() map[string]string {
-	if dpr.TeamId == "" {
+func (r *ListNotificationPoliciesRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
 		return nil
 	}
 	params := make(map[string]string)
-	params["teamId"] = dpr.TeamId
+	params["teamId"] = r.TeamId
 	return params
 }
 

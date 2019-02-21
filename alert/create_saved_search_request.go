@@ -14,7 +14,7 @@ type CreateSavedSearchRequest struct {
 	Teams       []Team `json:"teams,omitempty"`
 }
 
-func (r CreateSavedSearchRequest) Validate() error {
+func (r *CreateSavedSearchRequest) Validate() error {
 	if r.Name == "" {
 		return errors.New("Name can not be empty")
 	}
@@ -30,11 +30,11 @@ func (r CreateSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r CreateSavedSearchRequest) ResourcePath() string {
+func (r *CreateSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches"
 }
 
-func (r CreateSavedSearchRequest) Method() string {
+func (r *CreateSavedSearchRequest) Method() string {
 	return "POST"
 }

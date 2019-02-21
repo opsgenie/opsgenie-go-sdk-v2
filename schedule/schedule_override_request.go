@@ -22,40 +22,40 @@ type CreateScheduleOverrideRequest struct {
 	ScheduleIdentifier     string
 }
 
-func (request CreateScheduleOverrideRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *CreateScheduleOverrideRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateUser(&request.User)
+	err = validateUser(&r.User)
 	if err != nil {
 		return err
 	}
-	err = validateDates(&request.StartDate, "Start date cannot be empty.")
+	err = validateDates(&r.StartDate, "Start date cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateDates(&request.EndDate, "End date cannot be empty.")
+	err = validateDates(&r.EndDate, "End date cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request CreateScheduleOverrideRequest) ResourcePath() string {
+func (r *CreateScheduleOverrideRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides"
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/overrides"
 }
 
-func (request CreateScheduleOverrideRequest) Method() string {
+func (r *CreateScheduleOverrideRequest) Method() string {
 	return "POST"
 }
 
-func (request CreateScheduleOverrideRequest) RequestParams() map[string]string {
+func (r *CreateScheduleOverrideRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
@@ -71,32 +71,32 @@ type GetScheduleOverrideRequest struct {
 	Alias                  string
 }
 
-func (request GetScheduleOverrideRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *GetScheduleOverrideRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateIdentifiers(request.Alias, "Alias cannot be empty.")
+	err = validateIdentifiers(r.Alias, "Alias cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request GetScheduleOverrideRequest) ResourcePath() string {
+func (r *GetScheduleOverrideRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/overrides/" + r.Alias
 }
 
-func (request GetScheduleOverrideRequest) Method() string {
+func (r *GetScheduleOverrideRequest) Method() string {
 	return "GET"
 }
 
-func (request GetScheduleOverrideRequest) RequestParams() map[string]string {
+func (r *GetScheduleOverrideRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
@@ -111,27 +111,27 @@ type ListScheduleOverrideRequest struct {
 	ScheduleIdentifier     string
 }
 
-func (request ListScheduleOverrideRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *ListScheduleOverrideRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request ListScheduleOverrideRequest) ResourcePath() string {
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides"
+func (r *ListScheduleOverrideRequest) ResourcePath() string {
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/overrides"
 }
 
-func (request ListScheduleOverrideRequest) Method() string {
+func (r *ListScheduleOverrideRequest) Method() string {
 	return "GET"
 }
 
-func (request ListScheduleOverrideRequest) RequestParams() map[string]string {
+func (r *ListScheduleOverrideRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
@@ -147,32 +147,32 @@ type DeleteScheduleOverrideRequest struct {
 	Alias                  string
 }
 
-func (request DeleteScheduleOverrideRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *DeleteScheduleOverrideRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateIdentifiers(request.Alias, "Alias cannot be empty.")
+	err = validateIdentifiers(r.Alias, "Alias cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request DeleteScheduleOverrideRequest) ResourcePath() string {
+func (r *DeleteScheduleOverrideRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/overrides/" + r.Alias
 }
 
-func (request DeleteScheduleOverrideRequest) Method() string {
+func (r *DeleteScheduleOverrideRequest) Method() string {
 	return "DELETE"
 }
 
-func (request DeleteScheduleOverrideRequest) RequestParams() map[string]string {
+func (r *DeleteScheduleOverrideRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"
@@ -192,44 +192,44 @@ type UpdateScheduleOverrideRequest struct {
 	ScheduleIdentifier     string
 }
 
-func (request UpdateScheduleOverrideRequest) Validate() error {
-	err := validateIdentifiers(request.ScheduleIdentifier, "Schedule identifier cannot be empty.")
+func (r *UpdateScheduleOverrideRequest) Validate() error {
+	err := validateIdentifiers(r.ScheduleIdentifier, "Schedule identifier cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateIdentifiers(request.Alias, "Alias cannot be empty.")
+	err = validateIdentifiers(r.Alias, "Alias cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateUser(&request.User)
+	err = validateUser(&r.User)
 	if err != nil {
 		return err
 	}
-	err = validateDates(&request.StartDate, "Start date cannot be empty.")
+	err = validateDates(&r.StartDate, "Start date cannot be empty.")
 	if err != nil {
 		return err
 	}
-	err = validateDates(&request.EndDate, "End date cannot be empty.")
+	err = validateDates(&r.EndDate, "End date cannot be empty.")
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (request UpdateScheduleOverrideRequest) ResourcePath() string {
+func (r *UpdateScheduleOverrideRequest) ResourcePath() string {
 
-	return "/v2/schedules/" + request.ScheduleIdentifier + "/overrides/" + request.Alias
+	return "/v2/schedules/" + r.ScheduleIdentifier + "/overrides/" + r.Alias
 }
 
-func (request UpdateScheduleOverrideRequest) Method() string {
+func (r *UpdateScheduleOverrideRequest) Method() string {
 	return "PUT"
 }
 
-func (request UpdateScheduleOverrideRequest) RequestParams() map[string]string {
+func (r *UpdateScheduleOverrideRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if request.ScheduleIdentifierType == Name {
+	if r.ScheduleIdentifierType == Name {
 		params["scheduleIdentifierType"] = "name"
 	} else {
 		params["scheduleIdentifierType"] = "id"

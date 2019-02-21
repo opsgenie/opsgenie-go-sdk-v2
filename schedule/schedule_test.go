@@ -38,7 +38,7 @@ func TestBuildCreateRequest(t *testing.T) {
 	createRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: true, OwnerTeam: ownerTeam}
 	createRequest.WithRotation(rotation1.WithParticipants(*participant1, *participant2)).
 		WithRotation(rotation2.WithParticipants(*participant1, *participant2).
-		WithTimeRestriction(tr))
+			WithTimeRestriction(tr))
 
 	assert.Equal(t, expectedCreateRequest, createRequest)
 	err := createRequest.Validate()

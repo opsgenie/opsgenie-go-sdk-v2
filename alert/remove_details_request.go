@@ -15,7 +15,7 @@ type RemoveDetailsRequest struct {
 	Note            string
 }
 
-func (r RemoveDetailsRequest) Validate() error {
+func (r *RemoveDetailsRequest) Validate() error {
 	if r.Keys == "" {
 		return errors.New("Keys can not be empty")
 	}
@@ -26,16 +26,16 @@ func (r RemoveDetailsRequest) Validate() error {
 	return nil
 }
 
-func (r RemoveDetailsRequest) ResourcePath() string {
+func (r *RemoveDetailsRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/details"
 }
 
-func (r RemoveDetailsRequest) Method() string {
+func (r *RemoveDetailsRequest) Method() string {
 	return "DELETE"
 }
 
-func (r RemoveDetailsRequest) RequestParams() map[string]string {
+func (r *RemoveDetailsRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

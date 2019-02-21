@@ -15,7 +15,7 @@ type ExecuteCustomActionAlertRequest struct {
 	Note            string `json:"note,omitempty"`
 }
 
-func (r ExecuteCustomActionAlertRequest) Validate() error {
+func (r *ExecuteCustomActionAlertRequest) Validate() error {
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
 	}
@@ -25,17 +25,17 @@ func (r ExecuteCustomActionAlertRequest) Validate() error {
 	return nil
 }
 
-func (r ExecuteCustomActionAlertRequest) ResourcePath() string {
+func (r *ExecuteCustomActionAlertRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/actions/" + r.Action
 
 }
 
-func (r ExecuteCustomActionAlertRequest) Method() string {
+func (r *ExecuteCustomActionAlertRequest) Method() string {
 	return "POST"
 }
 
-func (r ExecuteCustomActionAlertRequest) RequestParams() map[string]string {
+func (r *ExecuteCustomActionAlertRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

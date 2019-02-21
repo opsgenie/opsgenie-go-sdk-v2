@@ -7,7 +7,7 @@ import (
 )
 
 type Client struct {
-	ogClient client.OpsGenieClient
+	client *client.OpsGenieClient
 }
 
 func NewClient(config *client.Config) (*Client, error) {
@@ -15,32 +15,32 @@ func NewClient(config *client.Config) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Client{*opsgenieClient}, nil
+	return &Client{opsgenieClient}, nil
 }
 
-func (client *Client) CreateAlertPolicy(context context.Context, request *CreateAlertPolicyRequest) (*CreateResult, error) {
+func (c *Client) CreateAlertPolicy(context context.Context, request *CreateAlertPolicyRequest) (*CreateResult, error) {
 	request.PolicyType = "alert"
 	result := &CreateResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) CreateNotificationPolicy(context context.Context, request CreateNotificationPolicyRequest) (*CreateResult, error) {
+func (c *Client) CreateNotificationPolicy(context context.Context, request *CreateNotificationPolicyRequest) (*CreateResult, error) {
 	request.PolicyType = "notification"
 	result := &CreateResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) GetAlertPolicy(context context.Context, request GetAlertPolicyRequest) (*GetAlertPolicyResult, error) {
+func (c *Client) GetAlertPolicy(context context.Context, request *GetAlertPolicyRequest) (*GetAlertPolicyResult, error) {
 	result := &GetAlertPolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
@@ -50,9 +50,9 @@ func (client *Client) GetAlertPolicy(context context.Context, request GetAlertPo
 	return result, nil
 }
 
-func (client *Client) GetNotificationPolicy(context context.Context, request GetNotificationPolicyRequest) (*GetNotificationPolicyResult, error) {
+func (c *Client) GetNotificationPolicy(context context.Context, request *GetNotificationPolicyRequest) (*GetNotificationPolicyResult, error) {
 	result := &GetNotificationPolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
@@ -62,74 +62,74 @@ func (client *Client) GetNotificationPolicy(context context.Context, request Get
 	return result, nil
 }
 
-func (client *Client) UpdateAlertPolicy(context context.Context, request UpdateAlertPolicyRequest) (*PolicyResult, error) {
+func (c *Client) UpdateAlertPolicy(context context.Context, request *UpdateAlertPolicyRequest) (*PolicyResult, error) {
 	request.PolicyType = "alert"
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) UpdateNotificationPolicy(context context.Context, request UpdateNotificationPolicyRequest) (*PolicyResult, error) {
+func (c *Client) UpdateNotificationPolicy(context context.Context, request *UpdateNotificationPolicyRequest) (*PolicyResult, error) {
 	request.PolicyType = "notification"
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DeletePolicy(context context.Context, request DeletePolicyRequest) (*PolicyResult, error) {
+func (c *Client) DeletePolicy(context context.Context, request *DeletePolicyRequest) (*PolicyResult, error) {
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) DisablePolicy(context context.Context, request DisablePolicyRequest) (*PolicyResult, error) {
+func (c *Client) DisablePolicy(context context.Context, request *DisablePolicyRequest) (*PolicyResult, error) {
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) EnablePolicy(context context.Context, request EnablePolicyRequest) (*PolicyResult, error) {
+func (c *Client) EnablePolicy(context context.Context, request *EnablePolicyRequest) (*PolicyResult, error) {
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) ChangeOrder(context context.Context, request ChangeOrderRequest) (*PolicyResult, error) {
+func (c *Client) ChangeOrder(context context.Context, request *ChangeOrderRequest) (*PolicyResult, error) {
 	result := &PolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) ListAlertPolicies(context context.Context, request ListAlertPoliciesRequest) (*ListPolicyResult, error) {
+func (c *Client) ListAlertPolicies(context context.Context, request *ListAlertPoliciesRequest) (*ListPolicyResult, error) {
 	result := &ListPolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) ListNotificationPolicies(context context.Context, request ListNotificationPoliciesRequest) (*ListPolicyResult, error) {
+func (c *Client) ListNotificationPolicies(context context.Context, request *ListNotificationPoliciesRequest) (*ListPolicyResult, error) {
 	result := &ListPolicyResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}

@@ -12,7 +12,7 @@ type ListLogFilesRequest struct {
 	Limit  int
 }
 
-func (r ListLogFilesRequest) Validate() error {
+func (r *ListLogFilesRequest) Validate() error {
 	if len(r.Marker) == 0 {
 		return errors.New("marker cannot be empty")
 	}
@@ -20,15 +20,15 @@ func (r ListLogFilesRequest) Validate() error {
 	return nil
 }
 
-func (r ListLogFilesRequest) ResourcePath() string {
+func (r *ListLogFilesRequest) ResourcePath() string {
 	return "/v2/logs/list/" + r.Marker
 }
 
-func (r ListLogFilesRequest) Method() string {
+func (r *ListLogFilesRequest) Method() string {
 	return "GET"
 }
 
-func (r ListLogFilesRequest) RequestParams() map[string]string {
+func (r *ListLogFilesRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
@@ -44,7 +44,7 @@ type GenerateLogFileDownloadLinkRequest struct {
 	FileName string
 }
 
-func (r GenerateLogFileDownloadLinkRequest) Validate() error {
+func (r *GenerateLogFileDownloadLinkRequest) Validate() error {
 	if len(r.FileName) == 0 {
 		return errors.New("fileName cannot be empty")
 	}
@@ -52,10 +52,10 @@ func (r GenerateLogFileDownloadLinkRequest) Validate() error {
 	return nil
 }
 
-func (r GenerateLogFileDownloadLinkRequest) ResourcePath() string {
+func (r *GenerateLogFileDownloadLinkRequest) ResourcePath() string {
 	return "/v2/logs/download/" + r.FileName
 }
 
-func (r GenerateLogFileDownloadLinkRequest) Method() string {
+func (r *GenerateLogFileDownloadLinkRequest) Method() string {
 	return "GET"
 }

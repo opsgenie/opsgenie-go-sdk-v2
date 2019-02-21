@@ -6,30 +6,24 @@ import (
 )
 
 type Client struct {
-	restClient *client.OpsGenieClient
+	client *client.OpsGenieClient
 }
 
-func NewClient(config client.Config) (*Client, error) {
+func NewClient(config *client.Config) (*Client, error) {
 
-	restClient, err := client.NewOpsGenieClient(
-		&config,
-	)
-
-	teamClient := &Client{
-		restClient: restClient,
-	}
+	opsgenieClient, err := client.NewOpsGenieClient(config)
 
 	if err != nil {
 		return nil, err
 	}
 
-	return teamClient, nil
+	return &Client{opsgenieClient}, nil
 }
 
-func (c *Client) Create(ctx context.Context, req CreateTeamRequest) (*CreateTeamResult, error) {
+func (c *Client) Create(ctx context.Context, req *CreateTeamRequest) (*CreateTeamResult, error) {
 	createTeamResponse := &CreateTeamResult{}
 
-	err := c.restClient.Exec(ctx, req, createTeamResponse)
+	err := c.client.Exec(ctx, req, createTeamResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -38,11 +32,11 @@ func (c *Client) Create(ctx context.Context, req CreateTeamRequest) (*CreateTeam
 
 }
 
-func (c *Client) Get(ctx context.Context, req GetTeamRequest) (*GetTeamResult, error) {
+func (c *Client) Get(ctx context.Context, req *GetTeamRequest) (*GetTeamResult, error) {
 
 	getTeamResponse := &GetTeamResult{}
 
-	err := c.restClient.Exec(ctx, req, getTeamResponse)
+	err := c.client.Exec(ctx, req, getTeamResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -50,11 +44,11 @@ func (c *Client) Get(ctx context.Context, req GetTeamRequest) (*GetTeamResult, e
 	return getTeamResponse, nil
 }
 
-func (c *Client) Update(ctx context.Context, req UpdateTeamRequest) (*UpdateTeamResult, error) {
+func (c *Client) Update(ctx context.Context, req *UpdateTeamRequest) (*UpdateTeamResult, error) {
 
 	updateTeamResponse := &UpdateTeamResult{}
 
-	err := c.restClient.Exec(ctx, req, updateTeamResponse)
+	err := c.client.Exec(ctx, req, updateTeamResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -62,11 +56,11 @@ func (c *Client) Update(ctx context.Context, req UpdateTeamRequest) (*UpdateTeam
 	return updateTeamResponse, nil
 }
 
-func (c *Client) Delete(ctx context.Context, req DeleteTeamRequest) (*DeleteTeamResult, error) {
+func (c *Client) Delete(ctx context.Context, req *DeleteTeamRequest) (*DeleteTeamResult, error) {
 
 	deleteTeamResponse := &DeleteTeamResult{}
 
-	err := c.restClient.Exec(ctx, req, deleteTeamResponse)
+	err := c.client.Exec(ctx, req, deleteTeamResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -74,11 +68,11 @@ func (c *Client) Delete(ctx context.Context, req DeleteTeamRequest) (*DeleteTeam
 	return deleteTeamResponse, nil
 }
 
-func (c *Client) List(ctx context.Context, req ListTeamRequest) (*ListTeamResult, error) {
+func (c *Client) List(ctx context.Context, req *ListTeamRequest) (*ListTeamResult, error) {
 
 	listTeamResponse := &ListTeamResult{}
 
-	err := c.restClient.Exec(ctx, req, listTeamResponse)
+	err := c.client.Exec(ctx, req, listTeamResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -86,11 +80,11 @@ func (c *Client) List(ctx context.Context, req ListTeamRequest) (*ListTeamResult
 	return listTeamResponse, nil
 }
 
-func (c *Client) ListTeamLogs(ctx context.Context, req ListTeamLogsRequest) (*ListTeamLogsResult, error) {
+func (c *Client) ListTeamLogs(ctx context.Context, req *ListTeamLogsRequest) (*ListTeamLogsResult, error) {
 
 	ListTeamLogsResponse := &ListTeamLogsResult{}
 
-	err := c.restClient.Exec(ctx, req, ListTeamLogsResponse)
+	err := c.client.Exec(ctx, req, ListTeamLogsResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -99,11 +93,11 @@ func (c *Client) ListTeamLogs(ctx context.Context, req ListTeamLogsRequest) (*Li
 }
 
 //team role api
-func (c *Client) CreateRole(ctx context.Context, req CreateTeamRoleRequest) (*CreateTeamRoleResult, error) {
+func (c *Client) CreateRole(ctx context.Context, req *CreateTeamRoleRequest) (*CreateTeamRoleResult, error) {
 
 	createTeamRoleResponse := &CreateTeamRoleResult{}
 
-	err := c.restClient.Exec(ctx, req, createTeamRoleResponse)
+	err := c.client.Exec(ctx, req, createTeamRoleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -111,11 +105,11 @@ func (c *Client) CreateRole(ctx context.Context, req CreateTeamRoleRequest) (*Cr
 	return createTeamRoleResponse, nil
 }
 
-func (c *Client) GetRole(ctx context.Context, req GetTeamRoleRequest) (*GetTeamRoleResult, error) {
+func (c *Client) GetRole(ctx context.Context, req *GetTeamRoleRequest) (*GetTeamRoleResult, error) {
 
 	getTeamRoleResponse := &GetTeamRoleResult{}
 
-	err := c.restClient.Exec(ctx, req, getTeamRoleResponse)
+	err := c.client.Exec(ctx, req, getTeamRoleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -123,11 +117,11 @@ func (c *Client) GetRole(ctx context.Context, req GetTeamRoleRequest) (*GetTeamR
 	return getTeamRoleResponse, nil
 }
 
-func (c *Client) UpdateRole(ctx context.Context, req UpdateTeamRoleRequest) (*UpdateTeamRoleResult, error) {
+func (c *Client) UpdateRole(ctx context.Context, req *UpdateTeamRoleRequest) (*UpdateTeamRoleResult, error) {
 
 	updateTeamRoleResponse := &UpdateTeamRoleResult{}
 
-	err := c.restClient.Exec(ctx, req, updateTeamRoleResponse)
+	err := c.client.Exec(ctx, req, updateTeamRoleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -135,11 +129,11 @@ func (c *Client) UpdateRole(ctx context.Context, req UpdateTeamRoleRequest) (*Up
 	return updateTeamRoleResponse, nil
 }
 
-func (c *Client) DeleteRole(ctx context.Context, req DeleteTeamRoleRequest) (*DeleteTeamRoleResult, error) {
+func (c *Client) DeleteRole(ctx context.Context, req *DeleteTeamRoleRequest) (*DeleteTeamRoleResult, error) {
 
 	deleteTeamRoleResponse := &DeleteTeamRoleResult{}
 
-	err := c.restClient.Exec(ctx, req, deleteTeamRoleResponse)
+	err := c.client.Exec(ctx, req, deleteTeamRoleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -147,11 +141,11 @@ func (c *Client) DeleteRole(ctx context.Context, req DeleteTeamRoleRequest) (*De
 	return deleteTeamRoleResponse, nil
 }
 
-func (c *Client) ListRole(ctx context.Context, req ListTeamRoleRequest) (*ListTeamRoleResult, error) {
+func (c *Client) ListRole(ctx context.Context, req *ListTeamRoleRequest) (*ListTeamRoleResult, error) {
 
 	listTeamRoleResponse := &ListTeamRoleResult{}
 
-	err := c.restClient.Exec(ctx, req, listTeamRoleResponse)
+	err := c.client.Exec(ctx, req, listTeamRoleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -160,11 +154,11 @@ func (c *Client) ListRole(ctx context.Context, req ListTeamRoleRequest) (*ListTe
 }
 
 //team member api
-func (c *Client) AddMember(ctx context.Context, req AddTeamMemberRequest) (*AddTeamMemberResult, error) {
+func (c *Client) AddMember(ctx context.Context, req *AddTeamMemberRequest) (*AddTeamMemberResult, error) {
 
 	addTeamMemberResponse := &AddTeamMemberResult{}
 
-	err := c.restClient.Exec(ctx, req, addTeamMemberResponse)
+	err := c.client.Exec(ctx, req, addTeamMemberResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -172,11 +166,11 @@ func (c *Client) AddMember(ctx context.Context, req AddTeamMemberRequest) (*AddT
 	return addTeamMemberResponse, nil
 }
 
-func (c *Client) RemoveMember(ctx context.Context, req RemoveTeamMemberRequest) (*RemoveTeamMemberResult, error) {
+func (c *Client) RemoveMember(ctx context.Context, req *RemoveTeamMemberRequest) (*RemoveTeamMemberResult, error) {
 
 	removeTeamMemberResponse := &RemoveTeamMemberResult{}
 
-	err := c.restClient.Exec(ctx, req, removeTeamMemberResponse)
+	err := c.client.Exec(ctx, req, removeTeamMemberResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -185,11 +179,11 @@ func (c *Client) RemoveMember(ctx context.Context, req RemoveTeamMemberRequest) 
 }
 
 //team routing rule api
-func (c *Client) CreateRoutingRule(ctx context.Context, req CreateRoutingRuleRequest) (*RoutingRuleResult, error) {
+func (c *Client) CreateRoutingRule(ctx context.Context, req *CreateRoutingRuleRequest) (*RoutingRuleResult, error) {
 
 	createRoutingRuleResponse := &RoutingRuleResult{}
 
-	err := c.restClient.Exec(ctx, req, createRoutingRuleResponse)
+	err := c.client.Exec(ctx, req, createRoutingRuleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -197,11 +191,11 @@ func (c *Client) CreateRoutingRule(ctx context.Context, req CreateRoutingRuleReq
 	return createRoutingRuleResponse, nil
 }
 
-func (c *Client) GetRoutingRule(ctx context.Context, req GetRoutingRuleRequest) (*GetRoutingRuleResult, error) {
+func (c *Client) GetRoutingRule(ctx context.Context, req *GetRoutingRuleRequest) (*GetRoutingRuleResult, error) {
 
 	getRoutingRuleResponse := &GetRoutingRuleResult{}
 
-	err := c.restClient.Exec(ctx, req, getRoutingRuleResponse)
+	err := c.client.Exec(ctx, req, getRoutingRuleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -209,11 +203,11 @@ func (c *Client) GetRoutingRule(ctx context.Context, req GetRoutingRuleRequest) 
 	return getRoutingRuleResponse, nil
 }
 
-func (c *Client) UpdateRoutingRule(ctx context.Context, req UpdateRoutingRuleRequest) (*RoutingRuleResult, error) {
+func (c *Client) UpdateRoutingRule(ctx context.Context, req *UpdateRoutingRuleRequest) (*RoutingRuleResult, error) {
 
 	updateRoutingRuleResponse := &RoutingRuleResult{}
 
-	err := c.restClient.Exec(ctx, req, updateRoutingRuleResponse)
+	err := c.client.Exec(ctx, req, updateRoutingRuleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -221,11 +215,11 @@ func (c *Client) UpdateRoutingRule(ctx context.Context, req UpdateRoutingRuleReq
 	return updateRoutingRuleResponse, nil
 }
 
-func (c *Client) DeleteRoutingRule(ctx context.Context, req DeleteRoutingRuleRequest) (*DeleteRoutingRuleResult, error) {
+func (c *Client) DeleteRoutingRule(ctx context.Context, req *DeleteRoutingRuleRequest) (*DeleteRoutingRuleResult, error) {
 
 	deleteRoutingRuleResponse := &DeleteRoutingRuleResult{}
 
-	err := c.restClient.Exec(ctx, req, deleteRoutingRuleResponse)
+	err := c.client.Exec(ctx, req, deleteRoutingRuleResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -233,11 +227,11 @@ func (c *Client) DeleteRoutingRule(ctx context.Context, req DeleteRoutingRuleReq
 	return deleteRoutingRuleResponse, nil
 }
 
-func (c *Client) ListRoutingRules(ctx context.Context, req ListRoutingRulesRequest) (*ListRoutingRulesResult, error) {
+func (c *Client) ListRoutingRules(ctx context.Context, req *ListRoutingRulesRequest) (*ListRoutingRulesResult, error) {
 
 	listRoutingRulesResponse := &ListRoutingRulesResult{}
 
-	err := c.restClient.Exec(ctx, req, listRoutingRulesResponse)
+	err := c.client.Exec(ctx, req, listRoutingRulesResponse)
 	if err != nil {
 		return nil, err
 	}
@@ -245,11 +239,11 @@ func (c *Client) ListRoutingRules(ctx context.Context, req ListRoutingRulesReque
 	return listRoutingRulesResponse, nil
 }
 
-func (c *Client) ChangeRoutingRuleOrder(ctx context.Context, req ChangeRoutingRuleOrderRequest) (*RoutingRuleResult, error) {
+func (c *Client) ChangeRoutingRuleOrder(ctx context.Context, req *ChangeRoutingRuleOrderRequest) (*RoutingRuleResult, error) {
 
 	changeRoutingRuleOrderResponse := &RoutingRuleResult{}
 
-	err := c.restClient.Exec(ctx, req, changeRoutingRuleOrderResponse)
+	err := c.client.Exec(ctx, req, changeRoutingRuleOrderResponse)
 	if err != nil {
 		return nil, err
 	}

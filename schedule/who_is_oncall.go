@@ -5,18 +5,18 @@ import (
 	"os"
 )
 
-func (client *Client) GetOnCalls(context context.Context, request GetOnCallsRequest) (*GetOnCallsResult, error) {
+func (c *Client) GetOnCalls(context context.Context, request *GetOnCallsRequest) (*GetOnCallsResult, error) {
 	result := &GetOnCallsResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-func (client *Client) GetNextOnCall(context context.Context, request GetNextOnCallsRequest) (*GetNextOnCallsResult, error) {
+func (c *Client) GetNextOnCall(context context.Context, request *GetNextOnCallsRequest) (*GetNextOnCallsResult, error) {
 	result := &GetNextOnCallsResult{}
-	err := client.ogClient.Exec(context, request, result)
+	err := c.client.Exec(context, request, result)
 
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func (client *Client) GetNextOnCall(context context.Context, request GetNextOnCa
 	return result, nil
 }
 
-func (client *Client) ExportOnCallUser(context context.Context, request ExportOnCallUserRequest) (*os.File, error) {
+func (c *Client) ExportOnCallUser(context context.Context, request *ExportOnCallUserRequest) (*os.File, error) {
 	result := &exportOncallUserResult{}
 
 	file, err := os.Create(request.ExportedFilePath + request.getFileName())
@@ -34,7 +34,7 @@ func (client *Client) ExportOnCallUser(context context.Context, request ExportOn
 
 	defer file.Close()
 
-	err = client.ogClient.Exec(context, request, result)
+	err = c.client.Exec(context, request, result)
 	if err != nil {
 		return nil, err
 	}

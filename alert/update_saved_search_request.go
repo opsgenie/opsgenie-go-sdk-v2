@@ -16,7 +16,7 @@ type UpdateSavedSearchRequest struct {
 	Teams           []Team `json:"teams,omitempty"`
 }
 
-func (r UpdateSavedSearchRequest) Validate() error {
+func (r *UpdateSavedSearchRequest) Validate() error {
 
 	if r.IdentifierValue == "" {
 		return errors.New("Identifier can not be empty")
@@ -37,16 +37,16 @@ func (r UpdateSavedSearchRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateSavedSearchRequest) ResourcePath() string {
+func (r *UpdateSavedSearchRequest) ResourcePath() string {
 
 	return "/v2/alerts/saved-searches/" + r.IdentifierValue
 }
 
-func (r UpdateSavedSearchRequest) Method() string {
+func (r *UpdateSavedSearchRequest) Method() string {
 	return "PATCH"
 }
 
-func (r UpdateSavedSearchRequest) RequestParams() map[string]string {
+func (r *UpdateSavedSearchRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 

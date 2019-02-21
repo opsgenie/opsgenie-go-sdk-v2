@@ -14,7 +14,7 @@ type CreateRequest struct {
 	Visibility  Visibility `json:"visibility,omitempty"`
 }
 
-func (r CreateRequest) Validate() error {
+func (r *CreateRequest) Validate() error {
 	if r.Name == "" {
 		return errors.New("Name field cannot be empty.")
 	}
@@ -28,11 +28,11 @@ func (r CreateRequest) Validate() error {
 	return nil
 }
 
-func (r CreateRequest) ResourcePath() string {
+func (r *CreateRequest) ResourcePath() string {
 	return "/v1/services"
 }
 
-func (r CreateRequest) Method() string {
+func (r *CreateRequest) Method() string {
 	return "POST"
 }
 
@@ -44,7 +44,7 @@ type UpdateRequest struct {
 	Visibility  Visibility `json:"visibility,omitempty"`
 }
 
-func (r UpdateRequest) Validate() error {
+func (r *UpdateRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Service ID cannot be blank.")
 	}
@@ -55,11 +55,11 @@ func (r UpdateRequest) Validate() error {
 	return nil
 }
 
-func (r UpdateRequest) ResourcePath() string {
+func (r *UpdateRequest) ResourcePath() string {
 	return "/v1/services/" + r.Id
 }
 
-func (r UpdateRequest) Method() string {
+func (r *UpdateRequest) Method() string {
 	return "PATCH"
 }
 
@@ -68,18 +68,18 @@ type DeleteRequest struct {
 	Id string
 }
 
-func (r DeleteRequest) Validate() error {
+func (r *DeleteRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Service ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r DeleteRequest) ResourcePath() string {
+func (r *DeleteRequest) ResourcePath() string {
 	return "/v1/services/" + r.Id
 }
 
-func (r DeleteRequest) Method() string {
+func (r *DeleteRequest) Method() string {
 	return "DELETE"
 }
 
@@ -88,18 +88,18 @@ type GetRequest struct {
 	Id string
 }
 
-func (r GetRequest) Validate() error {
+func (r *GetRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Service ID cannot be blank.")
 	}
 	return nil
 }
 
-func (r GetRequest) ResourcePath() string {
+func (r *GetRequest) ResourcePath() string {
 	return "/v1/services/" + r.Id
 }
 
-func (r GetRequest) Method() string {
+func (r *GetRequest) Method() string {
 	return "GET"
 }
 
@@ -109,19 +109,19 @@ type ListRequest struct {
 	Offset int
 }
 
-func (r ListRequest) Validate() error {
+func (r *ListRequest) Validate() error {
 	return nil
 }
 
-func (r ListRequest) ResourcePath() string {
+func (r *ListRequest) ResourcePath() string {
 	return "/v1/services"
 }
 
-func (r ListRequest) Method() string {
+func (r *ListRequest) Method() string {
 	return "GET"
 }
 
-func (r ListRequest) RequestParams() map[string]string {
+func (r *ListRequest) RequestParams() map[string]string {
 	params := map[string]string{}
 	if r.Limit != 0 {
 		params["limit"] = strconv.Itoa(r.Limit)

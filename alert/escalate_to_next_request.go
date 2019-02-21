@@ -15,7 +15,7 @@ type EscalateToNextRequest struct {
 	Note            string     `json:"note,omitempty"`
 }
 
-func (r EscalateToNextRequest) Validate() error {
+func (r *EscalateToNextRequest) Validate() error {
 	if r.Escalation.ID == "" && r.Escalation.Name == "" {
 		return errors.New("Escalation ID or name must be defined")
 	}
@@ -26,17 +26,17 @@ func (r EscalateToNextRequest) Validate() error {
 	return nil
 }
 
-func (r EscalateToNextRequest) ResourcePath() string {
+func (r *EscalateToNextRequest) ResourcePath() string {
 
 	return "/v2/alerts/" + r.IdentifierValue + "/escalate"
 
 }
 
-func (r EscalateToNextRequest) Method() string {
+func (r *EscalateToNextRequest) Method() string {
 	return "POST"
 }
 
-func (r EscalateToNextRequest) RequestParams() map[string]string {
+func (r *EscalateToNextRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
