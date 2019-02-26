@@ -307,5 +307,290 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	fmt.Println(err.Error())
 	assert.Contains(t, err.Error(), "Internal Server Error")
 	assert.Contains(t, err.Error(), "500")
+}
 
+func TestExecWhenApiReturnsRateLimitingDetails(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("X-RateLimit-State", "THROTTLED")
+		w.Header().Add("X-RateLimit-Reason", "ACCOUNT")
+		w.Header().Add("X-RateLimit-Period-In-Sec", "60")
+		w.WriteHeader(http.StatusTooManyRequests)
+		fmt.Fprintln(w, `{
+    "message": "TooManyRequests",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+	assert.Contains(t, err.Error(), "rId")
+	assert.Equal(t, "THROTTLED", result.ResultMetadata.RateLimitState)
+	assert.Equal(t, "ACCOUNT", result.ResultMetadata.RateLimitReason)
+	assert.Equal(t, "60", result.ResultMetadata.RateLimitPeriod)
+}
+
+func TestSubscription(t *testing.T) {
+	subscriber := MetricSubscriber{
+		Process: subscriberProcessImpl,
+	}
+	subscriber.Register(HTTP)
+	subscriber.Register(SDK)
+	subscriber.Register(API)
+
+	subscriber2 := MetricSubscriber{}
+	subscriber2.Register(HTTP)
+
+	expectedSubsMap := map[string][]MetricSubscriber{
+		string(HTTP): {subscriber, subscriber2},
+		string(SDK):  {subscriber},
+		string(API):  {subscriber},
+	}
+
+	assert.Equal(t, len(expectedSubsMap["http"]), len(metricPublisher.SubscriberMap["http"]))
+	assert.Equal(t, len(expectedSubsMap["sdk"]), len(metricPublisher.SubscriberMap["sdk"]))
+	assert.Equal(t, len(expectedSubsMap["api"]), len(metricPublisher.SubscriberMap["api"]))
+}
+
+func subscriberProcessImpl(metric Metric) interface{} {
+	return metric
+}
+
+func TestHttpMetric(t *testing.T) {
+	var httpMetric *HttpMetric
+	subscriber := MetricSubscriber{
+		Process: func(metric Metric) interface{} {
+			httpMetric, _ = metric.(*HttpMetric)
+			return httpMetric
+		},
+	}
+	subscriber.Register(HTTP)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, `{
+    "message": "success",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+	assert.Nil(t, err)
+
+	expectedMetric := &HttpMetric{
+		RetryCount:   0,
+		Error:        nil,
+		ResourcePath: "/an-enpoint",
+		Status:       "200 OK",
+		StatusCode:   200,
+	}
+
+	assert.Equal(t, expectedMetric.StatusCode, httpMetric.StatusCode)
+	assert.Equal(t, expectedMetric.Status, httpMetric.Status)
+	assert.Equal(t, expectedMetric.RetryCount, httpMetric.RetryCount)
+	assert.Equal(t, expectedMetric.ResourcePath, httpMetric.ResourcePath)
+	assert.Nil(t, httpMetric.Error)
+}
+
+func TestHttpMetricWhenRequestRetried(t *testing.T) {
+	var httpMetric *HttpMetric
+	subscriber := MetricSubscriber{
+		Process: func(metric Metric) interface{} {
+			httpMetric, _ = metric.(*HttpMetric)
+			return httpMetric
+		},
+	}
+	subscriber.Register(HTTP)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		fmt.Fprintln(w, `{
+    "message": "something went wrong",
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	err = ogClient.Exec(nil, request, result)
+
+	expectedMetric := &HttpMetric{
+		RetryCount:   2,
+		Error:        err,
+		ResourcePath: "/an-enpoint",
+		Status:       "504 Gateway Timeout",
+		StatusCode:   504,
+	}
+
+	assert.Equal(t, expectedMetric.StatusCode, httpMetric.StatusCode)
+	assert.Equal(t, expectedMetric.Status, httpMetric.Status)
+	assert.Equal(t, expectedMetric.RetryCount, httpMetric.RetryCount)
+	assert.Equal(t, expectedMetric.ResourcePath, httpMetric.ResourcePath)
+	assert.Nil(t, httpMetric.Error)
+}
+
+func TestApiMetric(t *testing.T) {
+	var apiMetric *ApiMetric
+	subscriber := MetricSubscriber{
+		Process: func(metric Metric) interface{} {
+			apiMetric, _ = metric.(*ApiMetric)
+			return apiMetric
+		},
+	}
+	subscriber.Register(API)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("X-RateLimit-State", "THROTTLED")
+		w.Header().Add("X-RateLimit-Reason", "ACCOUNT")
+		w.Header().Add("X-RateLimit-Period-In-Sec", "60")
+		w.WriteHeader(http.StatusTooManyRequests)
+		fmt.Fprintln(w, `{
+    "message": "TooManyRequests",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, _ := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient.Exec(nil, request, result)
+	expectedMetric := ApiMetric{
+		ResourcePath: "/an-enpoint",
+		ResultMetadata: ResultMetadata{
+			RequestId:       "rId",
+			ResponseTime:    1,
+			RateLimitState:  "THROTTLED",
+			RateLimitReason: "ACCOUNT",
+			RateLimitPeriod: "60",
+			RetryCount:      2,
+		},
+	}
+
+	assert.Equal(t, expectedMetric.ResourcePath, apiMetric.ResourcePath)
+	assert.Equal(t, expectedMetric.ResultMetadata, apiMetric.ResultMetadata)
+}
+
+func TestSdkMetricWhenRequestIsNotValid(t *testing.T) {
+	var sdkMetric *SdkMetric
+	subscriber := MetricSubscriber{
+		Process: func(metric Metric) interface{} {
+			sdkMetric, _ = metric.(*SdkMetric)
+			return sdkMetric
+		},
+	}
+	subscriber.Register(SDK)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		fmt.Fprintln(w, `{
+    "message": "invalid request",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, _ := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient.Exec(nil, request, result)
+	expectedMetric := &SdkMetric{
+		ErrorType:         "request-validation-error",
+		ErrorMessage:      "mandatory field cannot be empty",
+		ResourcePath:      "/an-enpoint",
+		SdkRequestDetails: request,
+		SdkResultDetails:  result,
+	}
+
+	assert.Equal(t, expectedMetric.ResourcePath, sdkMetric.ResourcePath)
+	assert.Equal(t, expectedMetric.ErrorType, sdkMetric.ErrorType)
+	assert.Equal(t, expectedMetric.ErrorMessage, sdkMetric.ErrorMessage)
+	assert.Equal(t, expectedMetric.SdkRequestDetails, sdkMetric.SdkRequestDetails)
+	assert.Equal(t, expectedMetric.SdkResultDetails, sdkMetric.SdkResultDetails)
+}
+
+func TestSdkMetricWhenExecSuccessful(t *testing.T) {
+	var sdkMetric *SdkMetric
+	subscriber := MetricSubscriber{
+		Process: func(metric Metric) interface{} {
+			sdkMetric, _ = metric.(*SdkMetric)
+			return sdkMetric
+		},
+	}
+	subscriber.Register(SDK)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, `{
+    "message": "invalid request",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+	defer ts.Close()
+
+	ogClient, _ := NewOpsGenieClient(&Config{
+		ApiKey:     "apiKey",
+		RetryCount: 1,
+	})
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+	ogClient.Config.apiUrl = localUrl
+	request := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient.Exec(nil, request, result)
+	expectedMetric := &SdkMetric{
+		ErrorType:         "",
+		ErrorMessage:      "",
+		ResourcePath:      "/an-enpoint",
+		SdkRequestDetails: request,
+		SdkResultDetails:  result,
+	}
+
+	assert.Equal(t, expectedMetric.ResourcePath, sdkMetric.ResourcePath)
+	assert.Equal(t, expectedMetric.ErrorType, sdkMetric.ErrorType)
+	assert.Equal(t, expectedMetric.ErrorMessage, sdkMetric.ErrorMessage)
+	assert.Equal(t, expectedMetric.SdkRequestDetails, sdkMetric.SdkRequestDetails)
+	assert.Equal(t, expectedMetric.SdkResultDetails, sdkMetric.SdkResultDetails)
 }

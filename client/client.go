@@ -38,6 +38,8 @@ type ApiRequest interface {
 	RequestParams() map[string]string
 }
 
+var metricPublisher = &MetricPublisher{}
+
 type BaseRequest struct {
 }
 
@@ -56,29 +58,32 @@ func (r *BaseRequest) RequestParams() map[string]string {
 }
 
 type ApiResult interface {
-	setRequestId(requestId string)
-	setResponseTime(responseTime float32)
-	setRateLimitState(state string)
 	Parse(response *http.Response, result ApiResult) error
 	ValidateResultMetadata() error
+	setResultMetadata(metadata *ResultMetadata) *ResultMetadata
 }
 
 type ResultMetadata struct {
-	RequestId      string  `json:"requestId"`
-	ResponseTime   float32 `json:"took"`
-	RateLimitState string
+	RequestId       string  `json:"requestId"`
+	ResponseTime    float32 `json:"took"`
+	RateLimitState  string
+	RateLimitReason string
+	RateLimitPeriod string
+	RetryCount      int
 }
 
-func (rm *ResultMetadata) setRequestId(requestId string) {
-	rm.RequestId = requestId
-}
-
-func (rm *ResultMetadata) setResponseTime(responseTime float32) {
-	rm.ResponseTime = responseTime
-}
-
-func (rm *ResultMetadata) setRateLimitState(state string) {
-	rm.RateLimitState = state
+func (rm *ResultMetadata) setResultMetadata(metadata *ResultMetadata) *ResultMetadata {
+	if len(metadata.RequestId) > 0 {
+		rm.RequestId = metadata.RequestId
+	}
+	if metadata.ResponseTime != 0 {
+		rm.ResponseTime = metadata.ResponseTime
+	}
+	rm.RateLimitState = metadata.RateLimitState
+	rm.RateLimitReason = metadata.RateLimitReason
+	rm.RateLimitPeriod = metadata.RateLimitPeriod
+	rm.RetryCount = metadata.RetryCount
+	return rm
 }
 
 func (rm *ResultMetadata) ValidateResultMetadata() error {
@@ -223,6 +228,7 @@ func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, nu
 		}
 		return nil, err
 	}
+	resp.Header.Add("retryCount", strconv.Itoa(numTries))
 	logrus.Errorf("Failed to process request after %d retries.", numTries)
 	return resp, nil
 }
@@ -231,21 +237,24 @@ func (cli *OpsGenieClient) do(request *request) (*http.Response, error) {
 	return cli.RetryableClient.Do(request.Request)
 }
 
-func setResultMetadata(httpResponse *http.Response, result ApiResult) {
-	requestId := httpResponse.Header.Get("X-Request-Id")
+func setResultMetadata(httpResponse *http.Response, result ApiResult) *ResultMetadata {
+	responseTime := httpResponse.Header.Get("X-Response-Time")
 
-	if len(requestId) > 0 {
-		result.setRequestId(requestId)
+	retryCount, err := strconv.Atoi(httpResponse.Header.Get("retryCount"))
+	responseTimeInFloat, err2 := strconv.ParseFloat(responseTime, 32)
+	resultMetadata := &ResultMetadata{
+		RequestId:       httpResponse.Header.Get("X-Request-Id"),
+		RateLimitState:  httpResponse.Header.Get("X-RateLimit-State"),
+		RateLimitReason: httpResponse.Header.Get("X-RateLimit-Reason"),
+		RateLimitPeriod: httpResponse.Header.Get("X-RateLimit-Period-In-Sec"),
 	}
-
-	rateLimitState := httpResponse.Header.Get("X-RateLimit-State")
-	result.setRateLimitState(rateLimitState)
-
-	responseTime, err := strconv.ParseFloat(httpResponse.Header.Get("X-Response-Time"), 32)
-
 	if err == nil {
-		result.setResponseTime(float32(responseTime))
+		resultMetadata.RetryCount = retryCount
 	}
+	if err2 == nil {
+		resultMetadata.ResponseTime = float32(responseTimeInFloat)
+	}
+	return result.setResultMetadata(resultMetadata)
 }
 
 type ApiError struct {
@@ -379,15 +388,18 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 }
 
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
-
+	startTime := time.Now().UnixNano()
+	transactionId := generateTransactionId()
 	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.ResourcePath())
 	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
+		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "request-validation-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
 	req, err := cli.buildHttpRequest(request)
 	if err != nil {
 		cli.Config.Logger.Errorf("Could not create request: %s", err.Error())
+		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "sdk-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
 	if ctx != nil {
@@ -395,6 +407,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	}
 
 	response, err := cli.do(req)
+	metricPublisher.publish(buildHttpMetric(transactionId, request.ResourcePath(), *response, err, duration(startTime, time.Now().UnixNano()), *req))
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
 		return err
@@ -405,22 +418,25 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	err = handleErrorIfExist(response)
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
+		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), *response, err))
+		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "api-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
 
 	err = result.Parse(response, result)
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
+		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "http-response-parsing-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
 
-	setResultMetadata(response, result)
+	rm := setResultMetadata(response, result)
+	metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *rm, *response, nil))
 	err = result.ValidateResultMetadata()
-
 	if err != nil {
 		cli.Config.Logger.Warn(err.Error())
 	}
-
+	metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "", nil, request, result, duration(startTime, time.Now().UnixNano())))
 	cli.Config.Logger.Debugf("Request processed. The result: %+v", result)
 	return nil
 }
