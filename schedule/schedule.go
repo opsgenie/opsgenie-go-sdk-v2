@@ -3,6 +3,7 @@ package schedule
 import (
 	"context"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"os"
 )
 
 type Client struct {
@@ -69,4 +70,26 @@ func (c *Client) GetTimeline(context context.Context, request *GetTimelineReques
 		return nil, err
 	}
 	return result, nil
+}
+
+func (c *Client) ExportSchedule(context context.Context, request *ExportScheduleRequest) (*os.File, error) {
+	result := &exportScheduleResult{}
+
+	file, err := os.Create(request.ExportedFilePath + request.getFileName())
+	if err != nil {
+		return nil, err
+	}
+
+	defer file.Close()
+
+	err = c.client.Exec(context, request, result)
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = file.Write(result.FileContent)
+	if err != nil {
+		return nil, err
+	}
+	return file, nil
 }

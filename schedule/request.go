@@ -257,6 +257,46 @@ func (r *GetTimelineRequest) WithExpands(expands ...ExpandType) GetTimelineReque
 	return *r
 }
 
+type ExportScheduleRequest struct {
+	client.BaseRequest
+	IdentifierType   Identifier
+	IdentifierValue  string
+	ExportedFilePath string
+}
+
+func (r *ExportScheduleRequest) Validate() error {
+	err := validateIdentifier(r.IdentifierValue)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *ExportScheduleRequest) Method() string {
+	return "GET"
+}
+
+func (r *ExportScheduleRequest) getFileName() string {
+	return r.IdentifierValue + ".ics"
+}
+
+func (r *ExportScheduleRequest) ResourcePath() string {
+	return "/v2/schedules/" + r.getFileName()
+}
+
+func (r *ExportScheduleRequest) RequestParams() map[string]string {
+
+	params := make(map[string]string)
+
+	if r.IdentifierType == Name {
+		params["identifierType"] = "name"
+	} else {
+		params["identifierType"] = "id"
+	}
+
+	return params
+}
+
 type Unit string
 
 const (

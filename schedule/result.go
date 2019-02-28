@@ -1,8 +1,11 @@
 package schedule
 
 import (
+	"errors"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"io/ioutil"
+	"net/http"
 	"time"
 )
 
@@ -68,6 +71,26 @@ type TimelineRotation struct {
 	Name    string   `json:"name,omitempty"`
 	Order   float32  `json:"order,omitempty"`
 	Periods []Period `json:"periods,omitempty"`
+}
+
+type exportScheduleResult struct {
+	client.ResultMetadata
+	FileContent []byte
+}
+
+func (rm *exportScheduleResult) Parse(response *http.Response, result client.ApiResult) error {
+
+	if response == nil {
+		return errors.New("No response received")
+	}
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	result.(*exportScheduleResult).FileContent = body
+
+	return nil
 }
 
 type Info struct {

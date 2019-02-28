@@ -212,6 +212,19 @@ func TestGetRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
 }
 
+func TestExportScheduleRequest_Validate(t *testing.T) {
+	exportScheduleRequest := &ExportScheduleRequest{}
+	err := exportScheduleRequest.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("Schedule identifier cannot be empty.").Error())
+
+	exportScheduleRequest.IdentifierType = Name
+	exportScheduleRequest.IdentifierValue = "test"
+
+	err = exportScheduleRequest.Validate()
+	assert.Nil(t, err)
+}
+
 func TestCreateRotationRequest_Validate(t *testing.T) {
 	createRequest := &CreateRotationRequest{}
 	err := createRequest.Validate()
