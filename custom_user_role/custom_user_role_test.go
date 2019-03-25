@@ -1,4 +1,4 @@
-package customuserrole
+package custom_user_role
 
 import (
 	"github.com/pkg/errors"
