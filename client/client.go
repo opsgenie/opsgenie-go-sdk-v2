@@ -109,6 +109,8 @@ func (rm *ResultMetadata) ValidateResultMetadata() error {
 
 var UserAgentHeader string
 
+const Version = "2.0.0"
+
 func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
 	opsGenieClient.RetryableClient.ErrorHandler = opsGenieClient.defineErrorHandler
 	if cfg.OpsGenieAPIURL == "" {
@@ -188,7 +190,7 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
 }
 
 func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
-	UserAgentHeader = fmt.Sprintf("%s %s (%s/%s)", "opsgenie-go-sdk-v2", runtime.Version(), runtime.GOOS, runtime.GOARCH)
+	UserAgentHeader = fmt.Sprintf("opsgenie-go-sdk-%s %s (%s/%s)", Version, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
