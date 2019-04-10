@@ -15,17 +15,10 @@ func TestCreateRequest_Validate(t *testing.T) {
 
 	assert.Equal(t, err.Error(), errors.New("message can not be empty").Error())
 
-	createRequestWithoutAlias := &CreateAlertRequest{
-		Message: "message",
-	}
-	err = createRequestWithoutAlias.Validate()
-
-	assert.Equal(t, err.Error(), errors.New("alias can not be empty").Error())
-
 	createRequest := &CreateAlertRequest{
-		Alias:   "alias",
 		Message: "message",
 	}
+
 	err = createRequest.Validate()
 
 	assert.Equal(t, err, nil)

@@ -26,9 +26,6 @@ func (r *CreateAlertRequest) Validate() error {
 	if r.Message == "" {
 		return errors.New("message can not be empty")
 	}
-	if r.Alias == "" {
-		return errors.New("alias can not be empty")
-	}
 	return nil
 }
 
