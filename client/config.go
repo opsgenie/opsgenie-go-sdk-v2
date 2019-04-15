@@ -5,10 +5,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"net/http"
-	"net/url"
+	"time"
 )
 
-//todo
 type Config struct {
 	ApiKey string
 
@@ -16,7 +15,9 @@ type Config struct {
 
 	apiUrl string
 
-	ProxyUrl string
+	ProxyConfiguration *ProxyConfiguration
+
+	RequestTimeout time.Duration
 
 	HttpClient *http.Client
 
@@ -47,14 +48,25 @@ func (conf Config) Validate() error {
 	if conf.RetryCount < 0 {
 		return errors.New("Retry count cannot be less than 1.")
 	}
-	if conf.ProxyUrl != "" {
-		if _, err := url.ParseRequestURI(conf.ProxyUrl); err != nil {
-			return errors.New(conf.ProxyUrl + " is not a valid url.")
-		}
-	}
 	return nil
 }
 
 func Default() *Config {
 	return &Config{}
 }
+
+type ProxyConfiguration struct {
+	Username string
+	Password string
+	Host     string
+	Protocol Protocol
+	Port     int
+}
+
+type Protocol string
+
+const (
+	Http   Protocol = "http"
+	Https  Protocol = "https"
+	Socks5 Protocol = "socks5"
+)
