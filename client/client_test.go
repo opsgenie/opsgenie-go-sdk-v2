@@ -1,13 +1,16 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 type Team struct {
@@ -67,7 +70,7 @@ func TestParsingWithDataField(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{})
-	assert.Equal(t, err.Error(), errors.New("API key cannot be blank").Error())
+	assert.Equal(t, err.Error(), errors.New("API key cannot be blank.").Error())
 
 	ogClient, err = NewOpsGenieClient(&Config{
 		ApiKey: "apiKey",
@@ -563,7 +566,7 @@ func TestSdkMetricWhenExecSuccessful(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintln(w, `{
-    "message": "invalid request",
+    "message": "...",
     "took": 1,
     "requestId": "rId"
 }`)
@@ -593,4 +596,125 @@ func TestSdkMetricWhenExecSuccessful(t *testing.T) {
 	assert.Equal(t, expectedMetric.ErrorMessage, sdkMetric.ErrorMessage)
 	assert.Equal(t, expectedMetric.SdkRequestDetails, sdkMetric.SdkRequestDetails)
 	assert.Equal(t, expectedMetric.SdkResultDetails, sdkMetric.SdkResultDetails)
+}
+
+func TestConfiguration(t *testing.T) {
+
+	customHttpClient := http.DefaultClient
+	customHttpClient.Timeout = time.Second * 1
+
+	customLogger := logrus.New()
+	customLogger.SetLevel(logrus.DebugLevel)
+	customLogger.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: time.RFC3339Nano,
+		PrettyPrint:     true,
+	})
+
+	retryFunc := func(ctx context.Context, resp *http.Response, err error) (b bool, e error) {
+		return false, errors.New("testError")
+	}
+
+	backOff := func(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
+		return time.Millisecond * 1500
+	}
+
+	conf := &Config{
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: API_URL_EU,
+		HttpClient:     customHttpClient,
+		RetryCount:     7,
+		RetryPolicy:    retryFunc,
+		Backoff:        backOff,
+		Logger:         customLogger,
+		LogLevel:       logrus.ErrorLevel,
+	}
+
+	ogClient, _ := NewOpsGenieClient(conf)
+
+	apiRequest := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
+
+	assert.Equal(t, 7, ogClient.RetryableClient.RetryMax)
+	assert.Equal(t, ogClient.Config.Logger, customLogger)
+	assert.Equal(t, "https://api.eu.opsgenie.com/an-enpoint", buildRequestUrl(ogClient, apiRequest, nil))
+	assert.Equal(t, ogClient.RetryableClient.HTTPClient, customHttpClient)
+
+	flag, err := ogClient.RetryableClient.CheckRetry(nil, nil, nil)
+	assert.False(t, flag)
+	assert.Equal(t, "testError", err.Error())
+	assert.Equal(t, time.Millisecond*1500, ogClient.RetryableClient.Backoff(0, 0, 0, nil))
+}
+
+func TestProxyConfiguration(t *testing.T) {
+
+	var request *http.Request
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		request = r
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, `{
+    "message": "",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+
+	proxyConf := &ProxyConfiguration{
+		Username: "eren",
+		Password: "123",
+		Host:     localUrl,
+		Protocol: "http",
+	}
+
+	ogClient, _ := NewOpsGenieClient(&Config{
+		ApiKey:             "apiKey",
+		RetryCount:         1,
+		ProxyConfiguration: proxyConf,
+	})
+
+	apiRequest := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient.Exec(nil, apiRequest, result)
+
+	assert.Equal(t, "GenieKey apiKey", request.Header.Get("Authorization"))
+	assert.NotEmpty(t, request.Header.Get("Proxy-Authorization"))
+
+}
+
+func TestProxyConfigurationWhenAuthorizationIsNotRequired(t *testing.T) {
+
+	var request *http.Request
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		request = r
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, `{
+    "message": "",
+    "took": 1,
+    "requestId": "rId"
+}`)
+	}))
+
+	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
+
+	proxyConf := &ProxyConfiguration{
+		Host:     localUrl,
+		Protocol: "http",
+	}
+
+	ogClient, _ := NewOpsGenieClient(&Config{
+		ApiKey:             "apiKey",
+		RetryCount:         1,
+		ProxyConfiguration: proxyConf,
+	})
+
+	apiRequest := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient.Exec(nil, apiRequest, result)
+
+	assert.Equal(t, "GenieKey apiKey", request.Header.Get("Authorization"))
+	assert.Empty(t, request.Header.Get("Proxy-Authorization"))
 }

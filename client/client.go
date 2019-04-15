@@ -119,6 +119,9 @@ func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
 	if cfg.HttpClient != nil {
 		opsGenieClient.RetryableClient.HTTPClient = cfg.HttpClient
 	}
+	if cfg.RequestTimeout != 0 {
+		opsGenieClient.RetryableClient.HTTPClient.Timeout = cfg.RequestTimeout
+	}
 	opsGenieClient.Config.apiUrl = string(cfg.OpsGenieAPIURL)
 }
 
@@ -138,17 +141,6 @@ func setLogger(conf *Config) {
 	}
 }
 
-func setProxy(client *OpsGenieClient, proxyUrl string) error {
-	if proxyUrl != "" {
-		proxyURL, err := url.Parse(proxyUrl)
-		if err != nil {
-			return err
-		}
-		client.RetryableClient.HTTPClient.Transport = &http.Transport{Proxy: http.ProxyURL(proxyURL)}
-	}
-	return nil
-}
-
 func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
 	//custom backoff
 	if cfg.Backoff != nil {
@@ -156,7 +148,7 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
 	}
 
 	//custom retry policy
-	if cfg.RetryPolicy != nil { //todo:429 retry etmeli
+	if cfg.RetryPolicy != nil {
 		opsGenieClient.RetryableClient.CheckRetry = cfg.RetryPolicy
 	} else {
 		opsGenieClient.RetryableClient.CheckRetry = func(ctx context.Context, resp *http.Response, err error) (b bool, e error) {
@@ -196,28 +188,20 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 		RetryableClient: retryablehttp.NewClient(),
 	}
 	if cfg.Validate() != nil {
-		return nil, errors.New("API key cannot be blank")
+		return nil, cfg.Validate()
 	}
 	setConfiguration(opsGenieClient, cfg)
 	opsGenieClient.RetryableClient.Logger = nil //disable retryableClient's uncustomizable logging
 	setLogger(cfg)
-	err := setProxy(opsGenieClient, cfg.ProxyUrl)
-	if err != nil {
-		return nil, err
-	}
 	setRetryPolicy(opsGenieClient, cfg)
-	if err != nil {
-		return nil, err
-	}
 	printInfoLog(opsGenieClient)
 	return opsGenieClient, nil
 }
 
 func printInfoLog(client *OpsGenieClient) {
-	client.Config.Logger.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, ProxyUrl: %s, LogLevel: %s, RetryMaxCount: %v",
+	client.Config.Logger.Infof("Client is configured with ApiKey: %s, ApiUrl: %s, LogLevel: %s, RetryMaxCount: %v",
 		client.Config.ApiKey,
 		client.Config.OpsGenieAPIURL,
-		client.Config.ProxyUrl,
 		client.Config.Logger.GetLevel().String(),
 		client.RetryableClient.RetryMax)
 }
@@ -322,7 +306,11 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 		return nil, err
 	}
 
-	req.Header.Add("Content-Type", *(contentType))
+	if contentType != nil {
+		req.Header.Add("Content-Type", *(contentType))
+	} else {
+		req.Header.Add("Content-Type", "application/json")
+	}
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", "GenieKey "+cli.Config.ApiKey)
 	req.Header.Add("User-Agent", UserAgentHeader)
@@ -332,9 +320,23 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 }
 
 func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url.Values) string {
+	var scheme = "https"
+	var user *url.Userinfo
+	var host = cli.Config.apiUrl
+	if cli.Config.ProxyConfiguration != nil {
+		scheme = string(cli.Config.ProxyConfiguration.Protocol)
+		if cli.Config.ProxyConfiguration.Username != "" {
+			user = url.UserPassword(cli.Config.ProxyConfiguration.Username, cli.Config.ProxyConfiguration.Password)
+		}
+		host = cli.Config.ProxyConfiguration.Host
+		if cli.Config.ProxyConfiguration.Port != 0 {
+			host = host + ":" + strconv.Itoa(cli.Config.ProxyConfiguration.Port)
+		}
+	}
 	requestUrl := url.URL{
-		Scheme:   "https",
-		Host:     cli.Config.apiUrl,
+		User:     user,
+		Scheme:   scheme,
+		Host:     host,
 		Path:     apiRequest.ResourcePath(),
 		RawQuery: queryParams.Encode(),
 	}
@@ -342,6 +344,17 @@ func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url
 	//test purposes only
 	if !strings.Contains(cli.Config.apiUrl, "api") {
 		requestUrl.Scheme = "http"
+	}
+	//
+
+	if cli.Config.ProxyConfiguration != nil {
+		proxyUrl, err := url.Parse(requestUrl.String())
+		if err != nil {
+			fmt.Println(err)
+		}
+		cli.RetryableClient.HTTPClient.Transport = &http.Transport{
+			Proxy: http.ProxyURL(proxyUrl),
+		}
 	}
 	return requestUrl.String()
 }
@@ -409,7 +422,9 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	}
 
 	response, err := cli.do(req)
-	metricPublisher.publish(buildHttpMetric(transactionId, request.ResourcePath(), *response, err, duration(startTime, time.Now().UnixNano()), *req))
+	if response != nil {
+		metricPublisher.publish(buildHttpMetric(transactionId, request.ResourcePath(), response, err, duration(startTime, time.Now().UnixNano()), *req))
+	}
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
 		return err
@@ -420,7 +435,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	err = handleErrorIfExist(response)
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
-		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), *response, err))
+		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), response, err))
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "api-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
@@ -433,7 +448,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	}
 
 	rm := setResultMetadata(response, result)
-	metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *rm, *response, nil))
+	metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *rm, response, nil))
 	err = result.ValidateResultMetadata()
 	if err != nil {
 		cli.Config.Logger.Warn(err.Error())

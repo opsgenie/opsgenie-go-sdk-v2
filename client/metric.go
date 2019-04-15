@@ -105,7 +105,7 @@ func generateTransactionId() string {
 	return transactionId.String()
 }
 
-func buildHttpMetric(transactionId string, resourcePath string, response http.Response, err error, duration int64, httpRequest request) *HttpMetric {
+func buildHttpMetric(transactionId string, resourcePath string, response *http.Response, err error, duration int64, httpRequest request) *HttpMetric {
 	retryCount, convErr := strconv.Atoi(response.Header.Get("retryCount"))
 	metric := &HttpMetric{
 		TransactionId: transactionId,
@@ -137,7 +137,7 @@ func buildSdkMetric(transactionId string, resourcePath string, errorType string,
 	return metric
 }
 
-func buildApiMetric(transactionId string, resourcePath string, duration int64, metadata ResultMetadata, response http.Response, err error) *ApiMetric {
+func buildApiMetric(transactionId string, resourcePath string, duration int64, metadata ResultMetadata, response *http.Response, err error) *ApiMetric {
 	metric := &ApiMetric{}
 	metric.TransactionId = transactionId
 	metric.ResourcePath = resourcePath
@@ -157,6 +157,6 @@ func buildApiMetric(transactionId string, resourcePath string, duration int64, m
 		}
 		metric.ResultMetadata = rm
 	}
-	metric.HttpResponse = response
+	metric.HttpResponse = *response
 	return metric
 }
