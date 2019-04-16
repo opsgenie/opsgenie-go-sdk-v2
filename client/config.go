@@ -70,3 +70,26 @@ const (
 	Https  Protocol = "https"
 	Socks5 Protocol = "socks5"
 )
+
+func (conf *Config) ConfigureLogLevel(level string) {
+	var logLevel logrus.Level
+	switch level {
+	case "panic":
+		logLevel = logrus.PanicLevel
+	case "fatal":
+		logLevel = logrus.FatalLevel
+	case "error":
+		logLevel = logrus.ErrorLevel
+	case "warn":
+		logLevel = logrus.WarnLevel
+	case "info":
+		logLevel = logrus.InfoLevel
+	case "debug":
+		logLevel = logrus.DebugLevel
+	case "trace":
+		logLevel = logrus.TraceLevel
+	default:
+		logLevel = logrus.InfoLevel
+	}
+	conf.LogLevel = logLevel
+}
