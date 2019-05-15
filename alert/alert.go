@@ -20,413 +20,485 @@ func NewClient(config *client.Config) (*Client, error) {
 	return &Client{client: opsgenieClient}, nil
 }
 
-func (c *Client) Create(ctx context.Context, req *CreateAlertRequest) (*client.ResultMetadata, error) {
-	asyncRequestGet := &client.ResultMetadata{}
+func (c *Client) Create(ctx context.Context, req *CreateAlertRequest) (*AsyncAlertResult, error) {
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	result := &AsyncAlertResult{}
+
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return asyncRequestGet, nil
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 
 }
 
-func (c *Client) Delete(ctx context.Context, req *DeleteAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) Delete(ctx context.Context, req *DeleteAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return asyncRequestGet, nil
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 
 }
 
 func (c *Client) Get(ctx context.Context, req *GetAlertRequest) (*GetAlertResult, error) {
 
-	getAlertResult := &GetAlertResult{}
+	result := &GetAlertResult{}
 
-	err := c.client.Exec(ctx, req, getAlertResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return getAlertResult, nil
+	return result, nil
 
 }
 
 func (c *Client) List(ctx context.Context, req *ListAlertRequest) (*ListAlertResult, error) {
 
-	listAlertGet := &ListAlertResult{}
+	result := &ListAlertResult{}
 
-	err := c.client.Exec(ctx, req, listAlertGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return listAlertGet, nil
+	return result, nil
 
 }
 
 func (c *Client) CountAlerts(ctx context.Context, req *CountAlertsRequest) (*CountAlertResult, error) {
 
-	countAlertsGet := &CountAlertResult{}
+	result := &CountAlertResult{}
 
-	err := c.client.Exec(ctx, req, countAlertsGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return countAlertsGet, nil
+	return result, nil
 }
 
-func (c *Client) Acknowledge(ctx context.Context, req *AcknowledgeAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) Acknowledge(ctx context.Context, req *AcknowledgeAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) Close(ctx context.Context, req *CloseAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) Close(ctx context.Context, req *CloseAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AddNote(ctx context.Context, req *AddNoteRequest) (*client.ResultMetadata, error) {
+func (c *Client) AddNote(ctx context.Context, req *AddNoteRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) ExecuteCustomAction(ctx context.Context, req *ExecuteCustomActionAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) ExecuteCustomAction(ctx context.Context, req *ExecuteCustomActionAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) Unacknowledge(ctx context.Context, req *UnacknowledgeAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) Unacknowledge(ctx context.Context, req *UnacknowledgeAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) Snooze(ctx context.Context, req *SnoozeAlertRequest) (*client.ResultMetadata, error) {
+func (c *Client) Snooze(ctx context.Context, req *SnoozeAlertRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) EscalateToNext(ctx context.Context, req *EscalateToNextRequest) (*client.ResultMetadata, error) {
+func (c *Client) EscalateToNext(ctx context.Context, req *EscalateToNextRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AssignAlert(ctx context.Context, req *AssignRequest) (*client.ResultMetadata, error) {
+func (c *Client) AssignAlert(ctx context.Context, req *AssignRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AddTeam(ctx context.Context, req *AddTeamRequest) (*client.ResultMetadata, error) {
+func (c *Client) AddTeam(ctx context.Context, req *AddTeamRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AddResponder(ctx context.Context, req *AddResponderRequest) (*client.ResultMetadata, error) {
+func (c *Client) AddResponder(ctx context.Context, req *AddResponderRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AddTags(ctx context.Context, req *AddTagsRequest) (*client.ResultMetadata, error) {
+func (c *Client) AddTags(ctx context.Context, req *AddTagsRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) RemoveTags(ctx context.Context, req *RemoveTagsRequest) (*client.ResultMetadata, error) {
+func (c *Client) RemoveTags(ctx context.Context, req *RemoveTagsRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) AddDetails(ctx context.Context, req *AddDetailsRequest) (*client.ResultMetadata, error) {
+func (c *Client) AddDetails(ctx context.Context, req *AddDetailsRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) RemoveDetails(ctx context.Context, req *RemoveDetailsRequest) (*client.ResultMetadata, error) {
+func (c *Client) RemoveDetails(ctx context.Context, req *RemoveDetailsRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) UpdatePriority(ctx context.Context, req *UpdatePriorityRequest) (*client.ResultMetadata, error) {
+func (c *Client) UpdatePriority(ctx context.Context, req *UpdatePriorityRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) UpdateMessage(ctx context.Context, req *UpdateMessageRequest) (*client.ResultMetadata, error) {
+func (c *Client) UpdateMessage(ctx context.Context, req *UpdateMessageRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
-func (c *Client) UpdateDescription(ctx context.Context, req *UpdateDescriptionRequest) (*client.ResultMetadata, error) {
+func (c *Client) UpdateDescription(ctx context.Context, req *UpdateDescriptionRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
 func (c *Client) ListAlertRecipients(ctx context.Context, req *ListAlertRecipientRequest) (*ListAlertRecipientResult, error) {
 
-	listAlertRecipientResult := &ListAlertRecipientResult{}
+	result := &ListAlertRecipientResult{}
 
-	err := c.client.Exec(ctx, req, listAlertRecipientResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return listAlertRecipientResult, nil
+	return result, nil
 
 }
 
 func (c *Client) ListAlertLogs(ctx context.Context, req *ListAlertLogsRequest) (*ListAlertLogsResult, error) {
 
-	listAlertLogsResult := &ListAlertLogsResult{}
+	result := &ListAlertLogsResult{}
 
-	err := c.client.Exec(ctx, req, listAlertLogsResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return listAlertLogsResult, nil
+	return result, nil
 
 }
 
 func (c *Client) ListAlertNotes(ctx context.Context, req *ListAlertNotesRequest) (*ListAlertNotesResult, error) {
 
-	listAlertNotesResult := &ListAlertNotesResult{}
+	result := &ListAlertNotesResult{}
 
-	err := c.client.Exec(ctx, req, listAlertNotesResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return listAlertNotesResult, nil
+	return result, nil
 
 }
 
 func (c *Client) CreateSavedSearch(ctx context.Context, req *CreateSavedSearchRequest) (*SavedSearchResult, error) {
 
-	SavedSearchResult := &SavedSearchResult{}
+	result := &SavedSearchResult{}
 
-	err := c.client.Exec(ctx, req, SavedSearchResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return SavedSearchResult, nil
+	return result, nil
 
 }
 
 func (c *Client) UpdateSavedSearch(ctx context.Context, req *UpdateSavedSearchRequest) (*SavedSearchResult, error) {
 
-	SavedSearchResult := &SavedSearchResult{}
+	result := &SavedSearchResult{}
 
-	err := c.client.Exec(ctx, req, SavedSearchResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return SavedSearchResult, nil
+	return result, nil
 
 }
 
 func (c *Client) GetSavedSearch(ctx context.Context, req *GetSavedSearchRequest) (*GetSavedSearchResult, error) {
 
-	SavedSearchResult := &GetSavedSearchResult{}
+	result := &GetSavedSearchResult{}
 
-	err := c.client.Exec(ctx, req, SavedSearchResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return SavedSearchResult, nil
+	return result, nil
 }
 
-func (c *Client) DeleteSavedSearch(ctx context.Context, req *DeleteSavedSearchRequest) (*client.ResultMetadata, error) {
+func (c *Client) DeleteSavedSearch(ctx context.Context, req *DeleteSavedSearchRequest) (*AsyncAlertResult, error) {
 
-	asyncRequestGet := &client.ResultMetadata{}
+	result := &AsyncAlertResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
-	return asyncRequestGet, nil
+
+	result.asyncBaseResult = &client.AsyncBaseResult{Client: c.client}
+
+	return result, nil
 }
 
 func (c *Client) ListSavedSearches(ctx context.Context, req *ListSavedSearchRequest) (*SavedSearchResult, error) {
 
-	SavedSearchResult := &SavedSearchResult{}
+	result := &SavedSearchResult{}
 
-	err := c.client.Exec(ctx, req, SavedSearchResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return SavedSearchResult, nil
+	return result, nil
 
 }
 
-func (c *Client) GetAsyncRequestStatus(ctx context.Context, req *GetAsyncRequestStatusRequest) (*GetAsyncRequestStatusResult, error) {
+func (c *Client) GetRequestStatus(ctx context.Context, req *GetRequestStatusRequest) (*RequestStatusResult, error) {
 
-	asyncRequestStatusGet := &GetAsyncRequestStatusResult{}
+	result := &RequestStatusResult{}
 
-	err := c.client.Exec(ctx, req, asyncRequestStatusGet)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return asyncRequestStatusGet, nil
+	return result, nil
 
 }
 
 func (c *Client) CreateAlertAttachments(ctx context.Context, req *CreateAlertAttachmentRequest) (*CreateAlertAttachmentsResult, error) {
 
-	createAlertAttachmentsResult := &CreateAlertAttachmentsResult{}
+	result := &CreateAlertAttachmentsResult{}
 
-	err := c.client.Exec(ctx, req, createAlertAttachmentsResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return createAlertAttachmentsResult, nil
+	return result, nil
 
 }
 
 func (c *Client) GetAlertAttachment(ctx context.Context, req *GetAttachmentRequest) (*GetAttachmentResult, error) {
 
-	GetAttachmentResult := &GetAttachmentResult{}
+	result := &GetAttachmentResult{}
 
-	err := c.client.Exec(ctx, req, GetAttachmentResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return GetAttachmentResult, nil
+	return result, nil
 }
 
 func (c *Client) ListAlertsAttachments(ctx context.Context, req *ListAttachmentsRequest) (*ListAttachmentsResult, error) {
 
-	ListAttachmentsResult := &ListAttachmentsResult{}
+	result := &ListAttachmentsResult{}
 
-	err := c.client.Exec(ctx, req, ListAttachmentsResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return ListAttachmentsResult, nil
+	return result, nil
 }
 
 func (c *Client) DeleteAlertAttachment(ctx context.Context, req *DeleteAttachmentRequest) (*DeleteAlertAttachmentResult, error) {
 
-	DeleteAlertAttachmentsResult := &DeleteAlertAttachmentResult{}
+	result := &DeleteAlertAttachmentResult{}
 
-	err := c.client.Exec(ctx, req, DeleteAlertAttachmentsResult)
+	err := c.client.Exec(ctx, req, result)
 	if err != nil {
 		return nil, err
 	}
 
-	return DeleteAlertAttachmentsResult, nil
+	return result, nil
+}
+
+func (ar *AsyncAlertResult) RetrieveStatus(ctx context.Context) (*RequestStatusResult, error) {
+
+	req := &GetRequestStatusRequest{RequestId: ar.RequestId}
+	result := &RequestStatusResult{}
+
+	err := ar.asyncBaseResult.RetrieveStatus(ctx, req, result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }

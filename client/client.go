@@ -57,6 +57,50 @@ func (r *BaseRequest) RequestParams() map[string]string {
 	return nil
 }
 
+type AsyncApiResult interface {
+	ApiResult
+	RetrieveStatus(ctx context.Context, request ApiRequest, result ApiResult) error
+}
+
+type AsyncBaseResult struct {
+	Client *OpsGenieClient
+}
+
+func (ar *AsyncBaseResult) RetrieveStatus(ctx context.Context, request ApiRequest, result ApiResult) error {
+
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	for i := 0; ; i++ {
+
+		err := ar.Client.Exec(ctx, request, result)
+		if err != nil {
+			apiErr, ok := err.(*ApiError)
+			if !ok ||
+				apiErr.StatusCode != 404 ||
+				apiErr.ErrorHeader != "RequestNotProcessed" ||
+				i >= ar.Client.RetryableClient.RetryMax {
+				return err
+			}
+
+		} else {
+			return nil
+		}
+
+		wait := retryablehttp.DefaultBackoff(
+			ar.Client.RetryableClient.RetryWaitMin,
+			ar.Client.RetryableClient.RetryWaitMax,
+			i, nil)
+
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(wait):
+		}
+	}
+}
+
 type ApiResult interface {
 	Parse(response *http.Response, result ApiResult) error
 	ValidateResultMetadata() error
@@ -128,7 +172,7 @@ func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
 func setLogger(conf *Config) {
 	if conf.Logger == nil {
 		conf.Logger = logrus.New()
-		if conf.LogLevel != (logrus.Level(0)) {
+		if conf.LogLevel != (logrus.Level(0)) { // todo fix panic level
 			conf.Logger.SetLevel(conf.LogLevel)
 		}
 		conf.Logger.SetFormatter(
@@ -215,7 +259,7 @@ func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, nu
 		return nil, err
 	}
 	resp.Header.Add("retryCount", strconv.Itoa(numTries))
-	logrus.Errorf("Failed to process request after %d retries.", numTries)
+	cli.Config.Logger.Errorf("Failed to process request after %d attempts.", numTries)
 	return resp, nil
 }
 
@@ -249,12 +293,12 @@ type ApiError struct {
 	Took        float32           `json:"took"`
 	RequestId   string            `json:"requestId"`
 	Errors      map[string]string `json:"errors"`
-	StatusCode  string
+	StatusCode  int
 	ErrorHeader string
 }
 
 func (ar *ApiError) Error() string {
-	errMessage := "Error occurred with Status code: " + ar.StatusCode + ", " +
+	errMessage := "Error occurred with Status code: " + strconv.Itoa(ar.StatusCode) + ", " +
 		"Message: " + ar.Message + ", " +
 		"Took: " + fmt.Sprintf("%f", ar.Took) + ", " +
 		"RequestId: " + ar.RequestId
@@ -268,10 +312,9 @@ func (ar *ApiError) Error() string {
 }
 
 func handleErrorIfExist(response *http.Response) error {
-	if response != nil && response.StatusCode >= 300 {
+	if response != nil && response.StatusCode >= 400 {
 		apiError := &ApiError{}
-		statusCode := response.StatusCode
-		apiError.StatusCode = strconv.Itoa(statusCode)
+		apiError.StatusCode = response.StatusCode
 		apiError.ErrorHeader = response.Header.Get("X-Opsgenie-Errortype")
 		body, _ := ioutil.ReadAll(response.Body)
 		json.Unmarshal(body, apiError)
@@ -307,7 +350,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 	}
 
 	if contentType != nil {
-		req.Header.Add("Content-Type", *(contentType))
+		req.Header.Add("Content-Type", *contentType)
 	} else {
 		req.Header.Add("Content-Type", "application/json")
 	}

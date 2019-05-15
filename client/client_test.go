@@ -13,6 +13,13 @@ import (
 	"time"
 )
 
+var (
+	BaseURL     = "https://api.opsgenie.com"
+	Endpoint    = "v2/alerts"
+	EndpointURL = BaseURL + "/" + Endpoint
+	BadEndpoint = ":"
+)
+
 type Team struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
@@ -38,6 +45,33 @@ type aResultDoesNotWantDataFieldsToBeParsed struct {
 type aResultWantsDataFieldsToBeParsed struct {
 	ResultMetadata
 	Teams []Team `json:"data"`
+}
+
+type testRequest struct {
+	BaseRequest
+	MandatoryField string
+	ExtraField     string
+}
+
+func (tr testRequest) Validate() error {
+	if tr.MandatoryField == "" {
+		return errors.New("mandatory field cannot be empty")
+	}
+
+	return nil
+}
+
+func (tr testRequest) ResourcePath() string {
+	return "/an-enpoint"
+}
+
+func (tr testRequest) Method() string {
+	return "POST"
+}
+
+type testResult struct {
+	ResultMetadata
+	Data string
 }
 
 func TestParsingWithDataField(t *testing.T) {
@@ -70,21 +104,20 @@ func TestParsingWithDataField(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{})
+	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), errors.New("API key cannot be blank.").Error())
 
 	ogClient, err = NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
 	assert.Nil(t, err)
 
 	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultWantsDataFieldsToBeParsed{}
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+
 	err = ogClient.Exec(nil, request, result)
-	if err != nil {
-		t.Fail()
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, result.Teams[0], Team{Id: "1", Name: "n1", Description: "d1"})
 	assert.Equal(t, result.Teams[1], Team{Id: "2", Name: "n2", Description: "d2"})
 	assert.Equal(t, result.Teams[2], Team{Id: "3", Name: "n3", Description: "d3"})
@@ -118,17 +151,16 @@ func TestParsingWithoutDataField(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
+	assert.Nil(t, err)
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &aResultDoesNotWantDataFieldsToBeParsed{}
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+
 	err = ogClient.Exec(nil, &request, result)
-	if err != nil {
-		t.Fail()
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, result.Logs[0], Log{Owner: "o1", CreateDate: "c1", Log: "l1"})
 	assert.Equal(t, result.Logs[1], Log{Owner: "o2", CreateDate: "c2", Log: "l2"})
 	assert.Equal(t, result.Offset, "123")
@@ -148,52 +180,17 @@ func TestParsingWhenApiDoesNotReturnDataField(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
+	assert.Nil(t, err)
 
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &ResultWithoutDataField{}
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+
 	err = ogClient.Exec(nil, &request, result)
-	if err != nil {
-		t.Fail()
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, "processed", result.Result)
-}
-
-var (
-	BaseURL     = "https://api.opsgenie.com"
-	Endpoint    = "v2/alerts"
-	EndpointURL = BaseURL + "/" + Endpoint
-	BadEndpoint = ":"
-)
-
-type testRequest struct {
-	BaseRequest
-	MandatoryField string
-	ExtraField     string
-}
-
-func (tr testRequest) Validate() error {
-	if tr.MandatoryField == "" {
-		return errors.New("mandatory field cannot be empty")
-	}
-
-	return nil
-}
-
-func (tr testRequest) ResourcePath() string {
-	return "/an-enpoint"
-}
-
-func (tr testRequest) Method() string {
-	return "POST"
-}
-
-type testResult struct {
-	ResultMetadata
-	Data string
 }
 
 func TestExec(t *testing.T) {
@@ -205,18 +202,17 @@ func TestExec(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
+	assert.Nil(t, err)
 
-	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, &request, result)
+
+	err = ogClient.Exec(nil, request, result)
+	assert.Nil(t, err)
 	assert.Equal(t, result.Data, "processed")
-	if err != nil {
-		t.Fail()
-	}
 }
 
 func TestParsingErrorExec(t *testing.T) {
@@ -225,14 +221,16 @@ func TestParsingErrorExec(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
+	assert.Nil(t, err)
 
-	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
-	err = ogClient.Exec(nil, &request, result)
+
+	err = ogClient.Exec(nil, request, result)
+	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "Response could not be parsed, unexpected end of JSON input")
 }
 
@@ -245,15 +243,16 @@ func TestExecWhenRequestIsNotValid(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
 
 	request := testRequest{ExtraField: "extra"}
 	result := &testResult{}
 
 	err = ogClient.Exec(nil, &request, result)
+	assert.NotNil(t, err)
 	assert.Equal(t, err.Error(), "mandatory field cannot be empty")
 }
 
@@ -272,18 +271,20 @@ func TestExecWhenApiReturns422(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey: "apiKey",
+		ApiKey:         "apiKey",
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
 	err = ogClient.Exec(nil, &request, result)
-	fmt.Println(err.Error())
-	assert.Contains(t, err.Error(), "422")
-	assert.Contains(t, err.Error(), "Invalid recipient")
-
+	apiErr, ok := err.(*ApiError)
+	assert.True(t, ok)
+	assert.Equal(t, apiErr.StatusCode, 422)
+	assert.Contains(t, apiErr.Error(), "422")
+	assert.Contains(t, apiErr.Error(), "Invalid recipient")
 }
 
 func TestExecWhenApiReturns5XX(t *testing.T) {
@@ -298,18 +299,22 @@ func TestExecWhenApiReturns5XX(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
 	request := testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
 	err = ogClient.Exec(nil, &request, result)
-	fmt.Println(err.Error())
-	assert.Contains(t, err.Error(), "Internal Server Error")
-	assert.Contains(t, err.Error(), "500")
+	apiErr, ok := err.(*ApiError)
+	assert.True(t, ok)
+	assert.Equal(t, apiErr.StatusCode, 500)
+	assert.Contains(t, apiErr.Error(), "500")
+	assert.Contains(t, apiErr.Error(), "Internal Server Error")
 }
 
 func TestExecWhenApiReturnsRateLimitingDetails(t *testing.T) {
@@ -327,15 +332,18 @@ func TestExecWhenApiReturnsRateLimitingDetails(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
 	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
 	err = ogClient.Exec(nil, request, result)
+	assert.NotNil(t, err)
 	assert.Contains(t, err.Error(), "rId")
 	assert.Equal(t, "THROTTLED", result.ResultMetadata.RateLimitState)
 	assert.Equal(t, "ACCOUNT", result.ResultMetadata.RateLimitReason)
@@ -389,11 +397,12 @@ func TestHttpMetric(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+
 	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
@@ -434,11 +443,13 @@ func TestHttpMetricWhenRequestRetried(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
 	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
@@ -482,16 +493,22 @@ func TestApiMetric(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	ogClient, _ := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
 	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
 	result := &testResult{}
 
-	ogClient.Exec(nil, request, result)
+	err = ogClient.Exec(nil, request, result)
+	apiErr, ok := err.(*ApiError)
+	assert.True(t, ok)
+	assert.Equal(t, "TooManyRequests", apiErr.Message)
+
 	expectedMetric := ApiMetric{
 		ResourcePath: "/an-enpoint",
 		ResultMetadata: ResultMetadata{
@@ -529,11 +546,11 @@ func TestSdkMetricWhenRequestIsNotValid(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, _ := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+
 	request := &testRequest{ExtraField: "extra"}
 	result := &testResult{}
 
@@ -574,15 +591,17 @@ func TestSdkMetricWhenExecSuccessful(t *testing.T) {
 	defer ts.Close()
 
 	ogClient, _ := NewOpsGenieClient(&Config{
-		ApiKey:     "apiKey",
-		RetryCount: 1,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
 	})
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-	ogClient.Config.apiUrl = localUrl
+
 	request := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
 	result := &testResult{}
 
-	ogClient.Exec(nil, request, result)
+	err := ogClient.Exec(nil, request, result)
+	assert.Nil(t, err)
+
 	expectedMetric := &SdkMetric{
 		ErrorType:         "",
 		ErrorMessage:      "",
@@ -640,6 +659,7 @@ func TestConfiguration(t *testing.T) {
 
 	flag, err := ogClient.RetryableClient.CheckRetry(nil, nil, nil)
 	assert.False(t, flag)
+	assert.NotNil(t, err)
 	assert.Equal(t, "testError", err.Error())
 	assert.Equal(t, time.Millisecond*1500, ogClient.RetryableClient.Backoff(0, 0, 0, nil))
 }
@@ -667,16 +687,18 @@ func TestProxyConfiguration(t *testing.T) {
 		Protocol: "http",
 	}
 
-	ogClient, _ := NewOpsGenieClient(&Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey:             "apiKey",
 		RetryCount:         1,
 		ProxyConfiguration: proxyConf,
 	})
+	assert.Nil(t, err)
 
 	apiRequest := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
 	result := &testResult{}
 
-	ogClient.Exec(nil, apiRequest, result)
+	err = ogClient.Exec(nil, apiRequest, result)
+	assert.Nil(t, err)
 
 	assert.Equal(t, "GenieKey apiKey", request.Header.Get("Authorization"))
 	assert.NotEmpty(t, request.Header.Get("Proxy-Authorization"))
@@ -704,17 +726,175 @@ func TestProxyConfigurationWhenAuthorizationIsNotRequired(t *testing.T) {
 		Protocol: "http",
 	}
 
-	ogClient, _ := NewOpsGenieClient(&Config{
+	ogClient, err := NewOpsGenieClient(&Config{
 		ApiKey:             "apiKey",
 		RetryCount:         1,
 		ProxyConfiguration: proxyConf,
 	})
+	assert.Nil(t, err)
 
 	apiRequest := &testRequest{MandatoryField: "f1", ExtraField: "extra"}
 	result := &testResult{}
 
-	ogClient.Exec(nil, apiRequest, result)
+	err = ogClient.Exec(nil, apiRequest, result)
+	assert.Nil(t, err)
 
 	assert.Equal(t, "GenieKey apiKey", request.Header.Get("Authorization"))
 	assert.Empty(t, request.Header.Get("Proxy-Authorization"))
+}
+
+func TestRetrieveStatusWithRetrying(t *testing.T) {
+
+	attemptCount := 0
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("X-Opsgenie-Errortype", "RequestNotProcessed")
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, []byte(`{
+			"message": "request not processed",
+			"took": 1,
+			"requestId": "rId"
+		}`))
+		attemptCount++
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:         "apiKey",
+		RetryCount:     3,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
+	})
+	assert.Nil(t, err)
+	ogClient.RetryableClient.RetryWaitMax = time.Duration(0)
+
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	asyncBaseResult := AsyncBaseResult{Client: ogClient}
+
+	start := time.Now().UnixNano()
+	err = asyncBaseResult.RetrieveStatus(nil, request, result)
+	end := time.Now().UnixNano()
+
+	delta := float64(100 * time.Millisecond.Nanoseconds())
+	fmt.Println("start: ", start, "\nend  : ", end, "\ndiff : ", float64(end-start), "\ndelta: ", delta)
+	assert.InDelta(t, end, start, delta)
+
+	assert.Equal(t, ogClient.Config.RetryCount+1, attemptCount)
+
+	apiErr, ok := err.(*ApiError)
+
+	assert.True(t, ok)
+	assert.Equal(t, http.StatusNotFound, apiErr.StatusCode)
+	assert.Equal(t, "RequestNotProcessed", apiErr.ErrorHeader)
+}
+
+func TestRetrieveStatusWithoutErrorType(t *testing.T) {
+
+	attemptCount := 0
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		fmt.Fprintln(w, []byte(`{
+			"message": "request not found",
+			"took": 1,
+			"requestId": "rId"
+		}`))
+		attemptCount++
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:         "apiKey",
+		RetryCount:     4,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
+	})
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	asyncBaseResult := AsyncBaseResult{Client: ogClient}
+
+	err = asyncBaseResult.RetrieveStatus(nil, request, result)
+
+	assert.Equal(t, 1, attemptCount)
+
+	apiError, ok := err.(*ApiError)
+
+	assert.True(t, ok)
+	assert.Equal(t, http.StatusNotFound, apiError.StatusCode)
+}
+
+func TestRetrieveStatus(t *testing.T) {
+
+	attemptCount := 0
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintln(w, `{
+			"Data": "Success",
+			"took": 1,
+			"requestId": "rId"
+		}`)
+		attemptCount++
+	}))
+	defer ts.Close()
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:         "apiKey",
+		RetryCount:     4,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
+	})
+	assert.Nil(t, err)
+	setZeroBackoff(ogClient)
+
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	asyncBaseResult := AsyncBaseResult{Client: ogClient}
+
+	err = asyncBaseResult.RetrieveStatus(nil, request, result)
+
+	assert.Equal(t, 1, attemptCount)
+	assert.Nil(t, err)
+	assert.Equal(t, "Success", result.Data)
+}
+
+func TestRetrieveStatusContextDeadline(t *testing.T) {
+
+	ctx := context.Background()
+	ctx, _ = context.WithTimeout(ctx, time.Millisecond*50)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		time.Sleep(time.Millisecond * 250)
+	}))
+
+	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
+	result := &testResult{}
+
+	ogClient, err := NewOpsGenieClient(&Config{
+		ApiKey:         "apiKey",
+		RetryCount:     4,
+		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
+	})
+	assert.Nil(t, err)
+
+	asyncBaseResult := AsyncBaseResult{Client: ogClient}
+
+	start := time.Now().UnixNano()
+	err = asyncBaseResult.RetrieveStatus(ctx, request, result)
+	end := time.Now().UnixNano()
+
+	assert.EqualError(t, err, "context deadline exceeded")
+	delta := float64(100 * time.Millisecond.Nanoseconds())
+	fmt.Println("start: ", start, "\nend  : ", end, "\ndiff : ", float64(end-start), "\ndelta: ", delta)
+	assert.InDelta(t, end, start, delta)
+}
+
+func setZeroBackoff(client *OpsGenieClient) {
+	client.RetryableClient.Backoff = func(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
+		return time.Duration(0)
+	}
 }
