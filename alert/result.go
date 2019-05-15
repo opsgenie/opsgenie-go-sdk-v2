@@ -7,7 +7,7 @@ import (
 
 type Alert struct {
 	Seen           bool        `json:"seen,omitempty"`
-	ID             string      `json:"id,omitempty"`
+	Id             string      `json:"id,omitempty"`
 	TinyID         string      `json:"tinyId,omitempty"`
 	Alias          string      `json:"alias,omitempty"`
 	Message        string      `json:"message,omitempty"`
@@ -30,7 +30,7 @@ type Alert struct {
 }
 
 type Integration struct {
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 	Type string `json:"type,omitempty"`
 }
@@ -40,7 +40,7 @@ type ListAlertResult struct {
 	Alerts []Alert `json:"data"`
 }
 
-type GetAsyncRequestStatusResult struct {
+type RequestStatusResult struct {
 	client.ResultMetadata
 	IsSuccess     bool      `json:"isSuccess,omitempty"`
 	Action        string    `json:"action,omitempty"`
@@ -53,7 +53,7 @@ type GetAsyncRequestStatusResult struct {
 
 type SavedSearchResult struct {
 	client.ResultMetadata
-	ID   string `json:"id,omitempty"`
+	Id   string `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
@@ -148,7 +148,7 @@ type CreateAlertAttachmentsResult struct {
 }
 
 type CreatedAttachment struct {
-	Id string `json:id,omitempty"`
+	Id string `json:"id,omitempty"`
 }
 
 type GetAttachmentResult struct {
@@ -163,11 +163,17 @@ type ListAttachmentsResult struct {
 }
 
 type ListedAttachment struct {
-	Id   int64  `json:id,omitempty"`
-	Name string `json:name,omitempty"`
+	Id   int64  `json:"id,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 type DeleteAlertAttachmentResult struct {
 	client.ResultMetadata
 	Result string `json:"result,omitempty"`
+}
+
+type AsyncAlertResult struct {
+	client.ResultMetadata
+	Result          string `json:"result,omitempty"`
+	asyncBaseResult *client.AsyncBaseResult
 }

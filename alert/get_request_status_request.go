@@ -5,23 +5,23 @@ import (
 	"github.com/pkg/errors"
 )
 
-type GetAsyncRequestStatusRequest struct {
+type GetRequestStatusRequest struct {
 	client.BaseRequest
-	RequestID string `json:"requestId,omitempty"`
+	RequestId string `json:"requestId,omitempty"`
 }
 
-func (r *GetAsyncRequestStatusRequest) Validate() error {
-	if r.RequestID == "" {
-		return errors.New("RequestID can not be empty")
+func (r *GetRequestStatusRequest) Validate() error {
+	if r.RequestId == "" {
+		return errors.New("RequestId can not be empty")
 	}
 
 	return nil
 }
 
-func (r *GetAsyncRequestStatusRequest) ResourcePath() string {
-	return "/v2/alerts/requests/" + r.RequestID
+func (r *GetRequestStatusRequest) ResourcePath() string {
+	return "/v2/alerts/requests/" + r.RequestId
 }
 
-func (r *GetAsyncRequestStatusRequest) Method() string {
+func (r *GetRequestStatusRequest) Method() string {
 	return "GET"
 }

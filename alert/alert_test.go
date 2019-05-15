@@ -245,13 +245,13 @@ func TestGetAlertRequest_Validate(t *testing.T) {
 }
 
 func TestGetAsyncRequestStatusRequest_Validate(t *testing.T) {
-	getAsyncRequestStatusRequestWithError := &GetAsyncRequestStatusRequest{}
+	getAsyncRequestStatusRequestWithError := &GetRequestStatusRequest{}
 	err := getAsyncRequestStatusRequestWithError.Validate()
 
-	assert.Equal(t, err.Error(), errors.New("RequestID can not be empty").Error())
+	assert.Equal(t, err.Error(), errors.New("RequestId can not be empty").Error())
 
-	asyncRequestStatusRequest := &GetAsyncRequestStatusRequest{
-		RequestID: "reqId",
+	asyncRequestStatusRequest := &GetRequestStatusRequest{
+		RequestId: "reqId",
 	}
 	err = asyncRequestStatusRequest.Validate()
 
