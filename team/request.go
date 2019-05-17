@@ -83,7 +83,7 @@ func (r *DeleteTeamRequest) ResourcePath() string {
 }
 
 func (r *DeleteTeamRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteTeamRequest) RequestParams() map[string]string {
@@ -422,7 +422,7 @@ func (r *DeleteTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *DeleteTeamRoleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteTeamRoleRequest) RequestParams() map[string]string {
@@ -570,7 +570,7 @@ func (r *RemoveTeamMemberRequest) ResourcePath() string {
 }
 
 func (r *RemoveTeamMemberRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveTeamMemberRequest) RequestParams() map[string]string {
@@ -811,7 +811,7 @@ func (r *DeleteRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *DeleteRoutingRuleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRoutingRuleRequest) RequestParams() map[string]string {

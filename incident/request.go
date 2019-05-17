@@ -97,7 +97,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRequest) RequestParams() map[string]string {
@@ -389,7 +389,7 @@ func (r *RemoveTagsRequest) ResourcePath() string {
 }
 
 func (r *RemoveTagsRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveTagsRequest) RequestParams() map[string]string {
@@ -480,7 +480,7 @@ func (r *RemoveDetailsRequest) ResourcePath() string {
 }
 
 func (r *RemoveDetailsRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveDetailsRequest) RequestParams() map[string]string {

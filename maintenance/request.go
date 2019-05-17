@@ -109,7 +109,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRequest struct {

@@ -338,7 +338,7 @@ func (r *DeletePolicyRequest) ResourcePath() string {
 }
 
 func (r *DeletePolicyRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeletePolicyRequest) RequestParams() map[string]string {

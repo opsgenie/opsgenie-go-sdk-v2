@@ -174,7 +174,7 @@ func (r *DeleteIntegrationRequest) ResourcePath() string {
 }
 
 func (r *DeleteIntegrationRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type EnableIntegrationRequest struct {

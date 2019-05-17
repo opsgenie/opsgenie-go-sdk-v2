@@ -158,7 +158,7 @@ func (r *DeleteRequest) Validate() error {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRequest) ResourcePath() string {

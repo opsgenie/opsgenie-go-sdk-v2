@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
@@ -24,7 +26,7 @@ func (r *DeleteSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *DeleteSavedSearchRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteSavedSearchRequest) RequestParams() map[string]string {

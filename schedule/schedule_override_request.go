@@ -167,7 +167,7 @@ func (r *DeleteScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *DeleteScheduleOverrideRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteScheduleOverrideRequest) RequestParams() map[string]string {

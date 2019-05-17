@@ -122,7 +122,7 @@ func TestBuildDeleteIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules/id")
-	assert.Equal(t, request.Method(), "DELETE")
+	assert.Equal(t, request.Method(), http.MethodDelete)
 }
 
 func TestBuildGetIncidentRuleRequest_Validate(t *testing.T) {

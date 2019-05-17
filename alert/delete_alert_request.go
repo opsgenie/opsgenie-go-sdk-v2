@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
@@ -25,7 +27,7 @@ func (r *DeleteAlertRequest) ResourcePath() string {
 }
 
 func (r *DeleteAlertRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteAlertRequest) RequestParams() map[string]string {

@@ -113,7 +113,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 }
 
@@ -451,7 +451,7 @@ func TestDeleteRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 }
 

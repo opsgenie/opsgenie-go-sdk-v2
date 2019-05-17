@@ -97,7 +97,7 @@ func (r *DeleteIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *DeleteIncidentTemplateRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type GetIncidentTemplatesRequest struct {

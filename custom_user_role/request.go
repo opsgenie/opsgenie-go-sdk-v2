@@ -148,7 +148,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRequest) RequestParams() map[string]string {

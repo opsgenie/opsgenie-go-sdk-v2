@@ -110,7 +110,7 @@ func TestValidateDeleteRequest(t *testing.T) {
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/forwarding-rules/123")
 	assert.Equal(t, deleteRequest.RequestParams(), map[string]string{"identifierType": "id"})
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 	deleteRequest.IdentifierType = Alias
 	deleteRequest.IdentifierValue = "abc"

@@ -162,7 +162,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRequest struct {
@@ -368,7 +368,7 @@ func (r *DeleteSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *DeleteSavedSearchRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteSavedSearchRequest) RequestParams() map[string]string {

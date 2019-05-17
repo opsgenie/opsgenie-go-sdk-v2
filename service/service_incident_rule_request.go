@@ -109,7 +109,7 @@ func (r *DeleteIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *DeleteIncidentRuleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type GetIncidentRulesRequest struct {
