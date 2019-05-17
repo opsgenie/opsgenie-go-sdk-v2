@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -40,7 +42,7 @@ func (r *AddResponderRequest) ResourcePath() string {
 }
 
 func (r *AddResponderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddResponderRequest) RequestParams() map[string]string {

@@ -1,9 +1,11 @@
 package alert
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"time"
 )
 
 type SnoozeAlertRequest struct {
@@ -34,7 +36,7 @@ func (r *SnoozeAlertRequest) ResourcePath() string {
 }
 
 func (r *SnoozeAlertRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *SnoozeAlertRequest) RequestParams() map[string]string {

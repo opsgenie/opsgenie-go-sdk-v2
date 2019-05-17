@@ -33,7 +33,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -145,7 +145,7 @@ func (r *EnableRequest) ResourcePath() string {
 }
 
 func (r *EnableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRequest struct {
@@ -166,7 +166,7 @@ func (r *DisableRequest) ResourcePath() string {
 }
 
 func (r *DisableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func validateIdentifier(userIdentifier string, contactIdentifier string) error {

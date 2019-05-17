@@ -77,7 +77,7 @@ func (r *CreateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *CreateAlertPolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateNotificationPolicyRequest) Validate() error {
@@ -129,7 +129,7 @@ func (r *CreateNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *CreateNotificationPolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetAlertPolicyRequest struct {
@@ -373,7 +373,7 @@ func (r *DisablePolicyRequest) ResourcePath() string {
 }
 
 func (r *DisablePolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *DisablePolicyRequest) RequestParams() map[string]string {
@@ -408,7 +408,7 @@ func (r *EnablePolicyRequest) ResourcePath() string {
 }
 
 func (r *EnablePolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *EnablePolicyRequest) RequestParams() map[string]string {
@@ -447,7 +447,7 @@ func (r *ChangeOrderRequest) ResourcePath() string {
 }
 
 func (r *ChangeOrderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *ChangeOrderRequest) RequestParams() map[string]string {

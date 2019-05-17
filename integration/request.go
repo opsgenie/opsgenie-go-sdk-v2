@@ -72,7 +72,7 @@ func (r *APIBasedIntegrationRequest) ResourcePath() string {
 }
 
 func (r *APIBasedIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type EmailBasedIntegrationRequest struct {
@@ -102,7 +102,7 @@ func (r *EmailBasedIntegrationRequest) ResourcePath() string {
 }
 
 func (r *EmailBasedIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIntegrationRequest struct {
@@ -194,7 +194,7 @@ func (r *EnableIntegrationRequest) ResourcePath() string {
 }
 
 func (r *EnableIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableIntegrationRequest struct {
@@ -214,7 +214,7 @@ func (r *DisableIntegrationRequest) ResourcePath() string {
 }
 
 func (r *DisableIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type AuthenticateIntegrationRequest struct {
@@ -234,7 +234,7 @@ func (r *AuthenticateIntegrationRequest) ResourcePath() string {
 }
 
 func (r *AuthenticateIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetIntegrationActionsRequest struct {
@@ -312,7 +312,7 @@ func (r *CreateIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *CreateIntegrationActionsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateAllIntegrationActionsRequest struct {

@@ -73,7 +73,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DeleteRequest struct {
@@ -219,7 +219,7 @@ func (r *CloseRequest) ResourcePath() string {
 }
 
 func (r *CloseRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CloseRequest) RequestParams() map[string]string {
@@ -258,7 +258,7 @@ func (r *AddNoteRequest) ResourcePath() string {
 }
 
 func (r *AddNoteRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddNoteRequest) RequestParams() map[string]string {
@@ -305,7 +305,7 @@ func (r *AddResponderRequest) ResourcePath() string {
 }
 
 func (r *AddResponderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddResponderRequest) RequestParams() map[string]string {
@@ -347,7 +347,7 @@ func (r *AddTagsRequest) ResourcePath() string {
 }
 
 func (r *AddTagsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddTagsRequest) RequestParams() map[string]string {
@@ -438,7 +438,7 @@ func (r *AddDetailsRequest) ResourcePath() string {
 }
 
 func (r *AddDetailsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddDetailsRequest) RequestParams() map[string]string {
@@ -569,7 +569,7 @@ func (r *UpdateMessageRequest) ResourcePath() string {
 }
 
 func (r *UpdateMessageRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *UpdateMessageRequest) RequestParams() map[string]string {
@@ -607,7 +607,7 @@ func (r *UpdateDescriptionRequest) ResourcePath() string {
 }
 
 func (r *UpdateDescriptionRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *UpdateDescriptionRequest) RequestParams() map[string]string {

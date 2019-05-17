@@ -48,7 +48,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateRequest) RequestParams() map[string]string {

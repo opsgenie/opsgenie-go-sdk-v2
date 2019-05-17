@@ -50,7 +50,7 @@ func (r *CreateScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *CreateScheduleOverrideRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateScheduleOverrideRequest) RequestParams() map[string]string {

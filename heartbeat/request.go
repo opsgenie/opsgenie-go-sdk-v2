@@ -136,7 +136,7 @@ func (r AddRequest) ResourcePath() string {
 }
 
 func (r AddRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type Unit string
@@ -164,7 +164,7 @@ func (r enableRequest) ResourcePath() string {
 }
 
 func (r enableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type disableRequest struct {
@@ -184,5 +184,5 @@ func (r disableRequest) ResourcePath() string {
 }
 
 func (r disableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }

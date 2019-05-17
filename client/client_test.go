@@ -3,14 +3,15 @@ package client
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -66,7 +67,7 @@ func (tr testRequest) ResourcePath() string {
 }
 
 func (tr testRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type testResult struct {

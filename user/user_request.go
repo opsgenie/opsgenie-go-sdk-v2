@@ -74,7 +74,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {

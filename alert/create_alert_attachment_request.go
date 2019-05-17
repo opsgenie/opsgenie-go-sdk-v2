@@ -2,11 +2,13 @@ package alert
 
 import (
 	"errors"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"io"
+	"net/http"
 	"os"
 	"path"
 	"strings"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type CreateAlertAttachmentRequest struct {
@@ -53,7 +55,7 @@ func (r *CreateAlertAttachmentRequest) ResourcePath() string {
 }
 
 func (r *CreateAlertAttachmentRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateAlertAttachmentRequest) RequestParams() map[string]string {

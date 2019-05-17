@@ -41,7 +41,7 @@ func (r *CreateIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateIncidentRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIncidentRuleRequest struct {

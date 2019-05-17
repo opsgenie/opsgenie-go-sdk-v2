@@ -35,7 +35,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -150,7 +150,7 @@ func (r *CancelRequest) ResourcePath() string {
 }
 
 func (r *CancelRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type Rule struct {

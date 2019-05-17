@@ -42,7 +42,7 @@ func (r *CreateTeamRequest) ResourcePath() string {
 }
 
 func (r *CreateTeamRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type ListTeamRequest struct {
@@ -248,7 +248,7 @@ func (r *CreateTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *CreateTeamRoleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateTeamRoleRequest) RequestParams() map[string]string {
@@ -522,7 +522,7 @@ func (r *AddTeamMemberRequest) ResourcePath() string {
 }
 
 func (r *AddTeamMemberRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddTeamMemberRequest) RequestParams() map[string]string {
@@ -651,7 +651,7 @@ func (r *CreateRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateRoutingRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateRoutingRuleRequest) RequestParams() map[string]string {
@@ -897,7 +897,7 @@ func (r *ChangeRoutingRuleOrderRequest) ResourcePath() string {
 }
 
 func (r *ChangeRoutingRuleOrderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *ChangeRoutingRuleOrderRequest) RequestParams() map[string]string {

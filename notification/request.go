@@ -36,7 +36,7 @@ func (r *CreateRuleStepRequest) ResourcePath() string {
 }
 
 func (r *CreateRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRuleStepRequest struct {
@@ -165,7 +165,7 @@ func (r *EnableRuleStepRequest) ResourcePath() string {
 }
 
 func (r *EnableRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRuleStepRequest struct {
@@ -189,7 +189,7 @@ func (r *DisableRuleStepRequest) ResourcePath() string {
 }
 
 func (r *DisableRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type CreateRuleRequest struct {
@@ -263,7 +263,7 @@ func (r *CreateRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRuleRequest struct {
@@ -418,7 +418,7 @@ func (r *EnableRuleRequest) ResourcePath() string {
 }
 
 func (r *EnableRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRuleRequest struct {
@@ -441,7 +441,7 @@ func (r *DisableRuleRequest) ResourcePath() string {
 }
 
 func (r *DisableRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type CopyNotificationRulesRequest struct {
@@ -470,7 +470,7 @@ func (r *CopyNotificationRulesRequest) ResourcePath() string {
 }
 
 func (r *CopyNotificationRulesRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func validateRuleIdentifier(userIdentifier string, ruleIdentifier string) error {

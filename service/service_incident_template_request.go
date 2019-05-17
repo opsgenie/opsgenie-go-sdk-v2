@@ -32,7 +32,7 @@ func (r *CreateIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *CreateIncidentTemplateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIncidentTemplateRequest struct {

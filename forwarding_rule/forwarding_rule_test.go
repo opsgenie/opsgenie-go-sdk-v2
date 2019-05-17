@@ -33,7 +33,7 @@ func TestValidateCreateRequest(t *testing.T) {
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/forwarding-rules")
 	assert.Equal(t, createRequest.RequestParams(), make(map[string]string))
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 }
 
 func TestValidateGetRequest(t *testing.T) {

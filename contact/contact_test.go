@@ -27,7 +27,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/contacts")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -121,7 +121,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/contacts/1234/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -140,6 +140,6 @@ func TestDisableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRequest.ResourcePath(), "/v2/users/123/contacts/1234/disable")
-	assert.Equal(t, disableRequest.Method(), "POST")
+	assert.Equal(t, disableRequest.Method(), http.MethodPost)
 
 }

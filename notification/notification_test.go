@@ -32,7 +32,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -155,7 +155,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -178,7 +178,7 @@ func TestDisableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRuleStepRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234/disable")
-	assert.Equal(t, disableRuleStepRequest.Method(), "POST")
+	assert.Equal(t, disableRuleStepRequest.Method(), http.MethodPost)
 }
 
 func TestCreateRuleRequest_Validate(t *testing.T) {
@@ -301,7 +301,7 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/notification-rules")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -485,7 +485,7 @@ func TestEnableRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/notification-rules/123/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -504,7 +504,7 @@ func TestDisableRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRuleRequest.ResourcePath(), "/v2/users/123/notification-rules/123/disable")
-	assert.Equal(t, disableRuleRequest.Method(), "POST")
+	assert.Equal(t, disableRuleRequest.Method(), http.MethodPost)
 }
 
 func TestCopyNotificationRulesRequest_Validate(t *testing.T) {
@@ -530,5 +530,5 @@ func TestCopyNotificationRulesRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, copyNotificationRulesRequest.ResourcePath(), "/v2/users/123/notification-rules/copy-to")
-	assert.Equal(t, copyNotificationRulesRequest.Method(), "POST")
+	assert.Equal(t, copyNotificationRulesRequest.Method(), http.MethodPost)
 }
