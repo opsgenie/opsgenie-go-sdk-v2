@@ -1,9 +1,11 @@
 package contact
 
 import (
+	"net/http"
+	"testing"
+
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateRequest_Validate(t *testing.T) {
@@ -44,7 +46,7 @@ func TestGetRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/contacts/1234")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -100,7 +102,7 @@ func TestListRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/contacts")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 

@@ -1,8 +1,10 @@
 package alert
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/http"
 	"strconv"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type ListAlertNotesRequest struct {
@@ -28,7 +30,7 @@ func (r *ListAlertNotesRequest) ResourcePath() string {
 }
 
 func (r *ListAlertNotesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListAlertNotesRequest) RequestParams() map[string]string {

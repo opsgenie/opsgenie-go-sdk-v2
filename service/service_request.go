@@ -1,9 +1,11 @@
 package service
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 type CreateRequest struct {
@@ -100,7 +102,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type ListRequest struct {
@@ -118,7 +120,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRequest) RequestParams() map[string]string {

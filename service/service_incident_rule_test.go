@@ -1,11 +1,13 @@
 package service
 
 import (
+	"math/rand"
+	"net/http"
+	"testing"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"math/rand"
-	"testing"
 )
 
 func TestBuildCreateIncidentRuleRequest_Validate(t *testing.T) {
@@ -134,7 +136,7 @@ func TestBuildGetIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules")
-	assert.Equal(t, request.Method(), "GET")
+	assert.Equal(t, request.Method(), http.MethodGet)
 }
 
 func RandomString(n int) string {

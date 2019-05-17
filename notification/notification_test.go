@@ -1,10 +1,12 @@
 package notification
 
 import (
+	"net/http"
+	"testing"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateRequest_Validate(t *testing.T) {
@@ -53,7 +55,7 @@ func TestGetRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -130,7 +132,7 @@ func TestListRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/notification-rules/1234/steps")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 
@@ -318,7 +320,7 @@ func TestGetRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -464,7 +466,7 @@ func TestListRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/notification-rules")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 

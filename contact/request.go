@@ -1,6 +1,8 @@
 package contact
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -53,7 +55,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRequest struct {
@@ -122,7 +124,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRequest struct {

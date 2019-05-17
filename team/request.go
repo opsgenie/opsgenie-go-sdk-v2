@@ -2,9 +2,11 @@ package team
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
-	"strconv"
 )
 
 type Identifier uint32
@@ -58,7 +60,7 @@ func (r *ListTeamRequest) ResourcePath() string {
 }
 
 func (r *ListTeamRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type DeleteTeamRequest struct {
@@ -117,7 +119,7 @@ func (r *GetTeamRequest) ResourcePath() string {
 }
 
 func (r *GetTeamRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetTeamRequest) RequestParams() map[string]string {
@@ -182,7 +184,7 @@ func (r *ListTeamLogsRequest) ResourcePath() string {
 }
 
 func (r *ListTeamLogsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListTeamLogsRequest) RequestParams() map[string]string {
@@ -300,7 +302,7 @@ func (r *GetTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *GetTeamRoleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetTeamRoleRequest) RequestParams() map[string]string {
@@ -462,7 +464,7 @@ func (r *ListTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *ListTeamRoleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListTeamRoleRequest) RequestParams() map[string]string {
@@ -697,7 +699,7 @@ func (r *GetRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *GetRoutingRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRoutingRuleRequest) RequestParams() map[string]string {
@@ -847,7 +849,7 @@ func (r *ListRoutingRulesRequest) ResourcePath() string {
 }
 
 func (r *ListRoutingRulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRoutingRulesRequest) RequestParams() map[string]string {

@@ -1,10 +1,12 @@
 package service
 
 import (
+	"net/http"
+	"testing"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestBuildCreateIncidentTemplateRequest_Validate(t *testing.T) {
@@ -141,5 +143,5 @@ func TestBuildGetIncidentTemplateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-templates")
-	assert.Equal(t, request.Method(), "GET")
+	assert.Equal(t, request.Method(), http.MethodGet)
 }

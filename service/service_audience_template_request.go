@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -24,7 +26,7 @@ func (r *GetAudienceTemplateRequest) ResourcePath() string {
 }
 
 func (r *GetAudienceTemplateRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateAudienceTemplateRequest struct {

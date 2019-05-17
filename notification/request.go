@@ -1,6 +1,8 @@
 package notification
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -58,7 +60,7 @@ func (r *GetRuleStepRequest) ResourcePath() string {
 }
 
 func (r *GetRuleStepRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRuleStepRequest struct {
@@ -139,7 +141,7 @@ func (r *ListRuleStepsRequest) ResourcePath() string {
 }
 
 func (r *ListRuleStepsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRuleStepRequest struct {
@@ -284,7 +286,7 @@ func (r *GetRuleRequest) ResourcePath() string {
 }
 
 func (r *GetRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRuleRequest struct {
@@ -393,7 +395,7 @@ func (r *ListRuleRequest) ResourcePath() string {
 }
 
 func (r *ListRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRuleRequest struct {

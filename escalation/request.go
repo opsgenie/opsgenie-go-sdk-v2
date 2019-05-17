@@ -1,6 +1,8 @@
 package escalation
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -77,7 +79,7 @@ func (r *GetRequest) Validate() error {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) ResourcePath() string {
@@ -185,7 +187,7 @@ func (r *listRequest) Validate() error {
 }
 
 func (r *listRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *listRequest) ResourcePath() string {

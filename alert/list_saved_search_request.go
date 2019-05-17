@@ -1,6 +1,10 @@
 package alert
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"net/http"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type ListSavedSearchRequest struct {
 	client.BaseRequest
@@ -17,5 +21,5 @@ func (r *ListSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *ListSavedSearchRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }

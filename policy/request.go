@@ -2,6 +2,8 @@ package policy
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
@@ -157,7 +159,7 @@ func (r *GetAlertPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *GetAlertPolicyRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type GetNotificationPolicyRequest struct {
@@ -190,7 +192,7 @@ func (r *GetNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *GetNotificationPolicyRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateAlertPolicyRequest struct {
@@ -471,7 +473,7 @@ func (r *ListAlertPoliciesRequest) ResourcePath() string {
 }
 
 func (r *ListAlertPoliciesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListAlertPoliciesRequest) RequestParams() map[string]string {
@@ -500,7 +502,7 @@ func (r *ListNotificationPoliciesRequest) ResourcePath() string {
 }
 
 func (r *ListNotificationPoliciesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListNotificationPoliciesRequest) RequestParams() map[string]string {

@@ -1,11 +1,13 @@
 package schedule
 
 import (
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
-	"strconv"
-	"time"
 )
 
 type Identifier uint32
@@ -59,7 +61,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) RequestParams() map[string]string {
@@ -172,7 +174,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRequest) RequestParams() map[string]string {
@@ -216,7 +218,7 @@ func (r *GetTimelineRequest) ResourcePath() string {
 }
 
 func (r *GetTimelineRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetTimelineRequest) RequestParams() map[string]string {
@@ -273,7 +275,7 @@ func (r *ExportScheduleRequest) Validate() error {
 }
 
 func (r *ExportScheduleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ExportScheduleRequest) getFileName() string {
@@ -404,7 +406,7 @@ func (r *GetRotationRequest) ResourcePath() string {
 }
 
 func (r *GetRotationRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRotationRequest) RequestParams() map[string]string {
@@ -531,7 +533,7 @@ func (r *ListRotationsRequest) ResourcePath() string {
 }
 
 func (r *ListRotationsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRotationsRequest) RequestParams() map[string]string {

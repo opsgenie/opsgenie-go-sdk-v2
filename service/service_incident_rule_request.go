@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
@@ -128,7 +130,7 @@ func (r *GetIncidentRulesRequest) ResourcePath() string {
 }
 
 func (r *GetIncidentRulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type IncidentProperties struct {

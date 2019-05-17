@@ -1,6 +1,8 @@
 package integration
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -23,7 +25,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type listRequest struct {
@@ -39,7 +41,7 @@ func (r *listRequest) ResourcePath() string {
 }
 
 func (r *listRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type APIBasedIntegrationRequest struct {
@@ -252,7 +254,7 @@ func (r *GetIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *GetIntegrationActionsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type CreateIntegrationActionsRequest struct {

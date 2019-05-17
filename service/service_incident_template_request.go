@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -116,7 +118,7 @@ func (r *GetIncidentTemplatesRequest) ResourcePath() string {
 }
 
 func (r *GetIncidentTemplatesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func validateIncidentTemplate(template IncidentTemplateRequest) error {

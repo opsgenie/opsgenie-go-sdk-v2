@@ -1,10 +1,12 @@
 package incident
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/pkg/errors"
+	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type RequestStatusRequest struct {
@@ -24,7 +26,7 @@ func (r *RequestStatusRequest) ResourcePath() string {
 }
 
 func (r *RequestStatusRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type CreateRequest struct {
@@ -132,7 +134,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) RequestParams() map[string]string {
@@ -168,7 +170,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRequest) RequestParams() map[string]string {
@@ -646,7 +648,7 @@ func (r *ListLogsRequest) ResourcePath() string {
 }
 
 func (r *ListLogsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListLogsRequest) RequestParams() map[string]string {
@@ -702,7 +704,7 @@ func (r *ListNotesRequest) ResourcePath() string {
 }
 
 func (r *ListNotesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListNotesRequest) RequestParams() map[string]string {
