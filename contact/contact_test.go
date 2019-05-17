@@ -69,7 +69,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/users/123/contacts/1234")
-	assert.Equal(t, updateRequest.Method(), "PATCH")
+	assert.Equal(t, updateRequest.Method(), http.MethodPatch)
 
 }
 func TestDeleteRequest_Validate(t *testing.T) {

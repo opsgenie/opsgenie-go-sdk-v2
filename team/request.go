@@ -156,7 +156,7 @@ func (r *UpdateTeamRequest) ResourcePath() string {
 }
 
 func (r *UpdateTeamRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type ListTeamLogsRequest struct {
@@ -364,7 +364,7 @@ func (r *UpdateTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *UpdateTeamRoleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateTeamRoleRequest) RequestParams() map[string]string {
@@ -768,7 +768,7 @@ func (r *UpdateRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateRoutingRuleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateRoutingRuleRequest) RequestParams() map[string]string {

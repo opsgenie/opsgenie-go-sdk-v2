@@ -90,7 +90,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, updateRequest.Method(), "PATCH")
+	assert.Equal(t, updateRequest.Method(), http.MethodPatch)
 
 }
 
@@ -433,7 +433,7 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRuleRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, updateRuleRequest.Method(), "PATCH")
+	assert.Equal(t, updateRuleRequest.Method(), http.MethodPatch)
 }
 
 func TestDeleteRuleRequest_Validate(t *testing.T) {

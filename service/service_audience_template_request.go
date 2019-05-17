@@ -63,7 +63,7 @@ func (r *UpdateAudienceTemplateRequest) ResourcePath() string {
 }
 
 func (r *UpdateAudienceTemplateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type ResponderOfAudience struct {

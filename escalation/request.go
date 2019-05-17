@@ -140,7 +140,7 @@ func (r *UpdateRequest) RequestParams() map[string]string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRequest struct {

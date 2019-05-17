@@ -94,7 +94,7 @@ func (r *UpdateRuleStepRequest) ResourcePath() string {
 }
 
 func (r *UpdateRuleStepRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRuleStepRequest struct {
@@ -351,7 +351,7 @@ func (r *UpdateRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateRuleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRuleRequest struct {

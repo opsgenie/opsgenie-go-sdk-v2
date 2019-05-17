@@ -48,7 +48,7 @@ func TestBuildUpdateAudienceTemplateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/audience-templates")
-	assert.Equal(t, request.Method(), "PATCH")
+	assert.Equal(t, request.Method(), http.MethodPatch)
 }
 
 func TestBuildGetAudienceTemplateRequest_Validate(t *testing.T) {

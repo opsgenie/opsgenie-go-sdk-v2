@@ -62,7 +62,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRequest struct {

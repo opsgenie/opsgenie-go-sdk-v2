@@ -107,7 +107,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateRequest) RequestParams() map[string]string {
@@ -450,7 +450,7 @@ func (r *UpdateRotationRequest) ResourcePath() string {
 }
 
 func (r *UpdateRotationRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateRotationRequest) RequestParams() map[string]string {
