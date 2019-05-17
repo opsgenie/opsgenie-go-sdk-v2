@@ -111,7 +111,7 @@ func TestBuildUpdateIncidentTemplateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-templates/id")
-	assert.Equal(t, request.Method(), "PUT")
+	assert.Equal(t, request.Method(), http.MethodPut)
 }
 
 func TestBuildDeleteIncidentTemplateRequest_Validate(t *testing.T) {

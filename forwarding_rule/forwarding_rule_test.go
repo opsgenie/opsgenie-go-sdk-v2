@@ -87,7 +87,7 @@ func TestValidateUpdateRequest(t *testing.T) {
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/forwarding-rules/123")
 	assert.Equal(t, updateRequest.RequestParams(), map[string]string{"identifierType": "id"})
-	assert.Equal(t, updateRequest.Method(), "PUT")
+	assert.Equal(t, updateRequest.Method(), http.MethodPut)
 
 	updateRequest.IdentifierType = Alias
 	updateRequest.IdentifierValue = "abc"

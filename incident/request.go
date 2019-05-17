@@ -530,7 +530,7 @@ func (r *UpdatePriorityRequest) ResourcePath() string {
 }
 
 func (r *UpdatePriorityRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r *UpdatePriorityRequest) RequestParams() map[string]string {

@@ -70,7 +70,7 @@ func (r *UpdateIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *UpdateIncidentTemplateRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeleteIncidentTemplateRequest struct {

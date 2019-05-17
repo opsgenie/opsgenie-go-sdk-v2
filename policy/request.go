@@ -248,7 +248,7 @@ func (r *UpdateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *UpdateAlertPolicyRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type UpdateNotificationPolicyRequest struct {
@@ -312,7 +312,7 @@ func (r *UpdateNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *UpdateNotificationPolicyRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeletePolicyRequest struct {

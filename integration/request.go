@@ -143,7 +143,7 @@ func (r OtherFields) ResourcePath() string {
 }
 
 func (r OtherFields) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r OtherFields) RequestParams() map[string]string {
@@ -370,7 +370,7 @@ func (r *UpdateAllIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *UpdateAllIntegrationActionsRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func validateRecipients(recipients []Recipient) error {

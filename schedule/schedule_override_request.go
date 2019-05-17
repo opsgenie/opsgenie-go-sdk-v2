@@ -224,7 +224,7 @@ func (r *UpdateScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *UpdateScheduleOverrideRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r *UpdateScheduleOverrideRequest) RequestParams() map[string]string {

@@ -82,7 +82,7 @@ func (r *UpdateIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateIncidentRuleRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeleteIncidentRuleRequest struct {

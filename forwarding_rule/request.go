@@ -134,7 +134,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r *UpdateRequest) RequestParams() map[string]string {
