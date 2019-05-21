@@ -452,6 +452,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	if err != nil {
 		cli.Config.Logger.Errorf("could not create transaction id: %s ", err.Error())
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "transaction-id-error", err, request, result, duration(startTime, time.Now().UnixNano())))
+		return err
 	}
 	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.ResourcePath())
 	if err := request.Validate(); err != nil {
