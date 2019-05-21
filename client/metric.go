@@ -1,11 +1,12 @@
 package client
 
 import (
-	"github.com/satori/go.uuid"
 	"net/http"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/gofrs/uuid"
 )
 
 const (
@@ -100,9 +101,12 @@ func duration(start, end int64) int64 {
 	return endMillisecond - startMillisecond
 }
 
-func generateTransactionId() string {
-	transactionId := uuid.NewV4()
-	return transactionId.String()
+func generateTransactionId() (string, error) {
+	transactionId, err := uuid.NewV4()
+	if err != nil {
+		return "", err
+	}
+	return transactionId.String(), nil
 }
 
 func buildHttpMetric(transactionId string, resourcePath string, response *http.Response, err error, duration int64, httpRequest request) *HttpMetric {
