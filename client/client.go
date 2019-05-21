@@ -5,9 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/go-retryablehttp"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -19,6 +16,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/hashicorp/go-retryablehttp"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type OpsGenieClient struct {
@@ -447,7 +448,11 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 	startTime := time.Now().UnixNano()
-	transactionId := generateTransactionId()
+	transactionId, err := generateTransactionId()
+	if err != nil {
+		cli.Config.Logger.Errorf("could not create transaction id: %s ", err.Error())
+		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "transaction-id-error", err, request, result, duration(startTime, time.Now().UnixNano())))
+	}
 	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.ResourcePath())
 	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
