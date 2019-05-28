@@ -95,12 +95,11 @@ type CreateAction struct {
 	Entity                           string            `json:"entity"`
 	AppendAttachments                bool              `json:"appendAttachments"`
 	IgnoreAlertActionsFromPayload    bool              `json:"ignoreAlertActionsFromPayload"`
-	IgnoreRecipientsFromPayload      bool              `json:"ignoreRecipientsFromPayload"`
-	IgnoreTeamsFromPayload           bool              `json:"ignoreTeamsFromPayload"`
+	IgnoreRespondersFromPayload      bool              `json:"ignoreRespondersFromPayload"`
 	IgnoreTagsFromPayload            bool              `json:"ignoreTagsFromPayload"`
 	IgnoreExtraPropertiesFromPayload bool              `json:"ignoreExtraPropertiesFromPayload"`
 	AlertActions                     []string          `json:"alertActions"`
-	Recipients                       []Recipient       `json:"recipients"`
+	Responders                       []Responder       `json:"responders"`
 	Tags                             []string          `json:"tags"`
 	ExtraProperties                  map[string]string `json:"extraProperties"`
 }
@@ -130,16 +129,14 @@ type IgnoreAction struct {
 	GenericActionFields
 }
 
-type RecipientType string
+type ResponderType string
 type ActionType string
 
 const (
-	User       RecipientType = "user"
-	Team       RecipientType = "team"
-	Escalation RecipientType = "escalation"
-	Schedule   RecipientType = "schedule"
-	None       RecipientType = "none"
-	All        RecipientType = "all"
+	User       ResponderType = "user"
+	Team       ResponderType = "team"
+	Escalation ResponderType = "escalation"
+	Schedule   ResponderType = "schedule"
 
 	Create      ActionType = "create"
 	Close       ActionType = "close"
@@ -147,8 +144,8 @@ const (
 	AddNote     ActionType = "AddNote"
 )
 
-type Recipient struct {
-	Type     RecipientType `json:"type, omitempty"`
+type Responder struct {
+	Type     ResponderType `json:"type, omitempty"`
 	Name     string        `json:"name,omitempty"`
 	Id       string        `json:"id,omitempty"`
 	Username string        `json:"username, omitempty"`

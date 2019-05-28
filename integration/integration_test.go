@@ -65,7 +65,7 @@ func TestUpdateIntegrationRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("Type field cannot be empty.").Error())
 
 	request.OtherFields["type"] = "CemType"
-	request.OtherFields["recipients"] = []Recipient{}
+	request.OtherFields["responders"] = []Responder{}
 	err = request.Validate()
 	assert.Nil(t, err)
 }
@@ -138,103 +138,114 @@ func TestUpdateAllIntegrationActionsRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("Integration ID cannot be blank.").Error())
 
 	request.Id = "8b1e6075-b3b6-43fc-9a2c-8068a3f5883e"
+	request.Close = []IntegrationAction{
+		{
+			Name: "Close the alert",
+		},
+	}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Name, Type and Alias fields cannot be empty.").Error())
 
-	request.Name = "Close the alert"
+	request.Close = []IntegrationAction{
+		{
+			Alias: "Alias",
+		},
+	}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Name, Type and Alias fields cannot be empty.").Error())
 
-	request.Alias = "cem"
-	err = request.Validate()
-	assert.Equal(t, err.Error(), errors.New("Name, Type and Alias fields cannot be empty.").Error())
-
-	request.Type = Close
+	request.Close = []IntegrationAction{
+		{
+			Type:  Close,
+			Alias: "Alias",
+			Name:  "Close the alert",
+		},
+	}
 	err = request.Validate()
 	assert.Nil(t, err)
 }
 
-func TestRecipients_Validate(t *testing.T) {
-	var recipients = []Recipient{
+func TestResponders_Validate(t *testing.T) {
+	var responders = []Responder{
 		{Type: ""},
 	}
-	err := validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("Recipient type cannot be empty.").Error())
+	err := validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("Responder type cannot be empty.").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{Type: "Cem"},
 	}
-	err = validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("Recipient type should be one of these: "+
+	err = validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("Responder type should be one of these: " +
 		"'User', 'Team', 'Schedule', 'Escalation'").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{Type: User},
 	}
-	err = validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("For recipient type user either"+
+	err = validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("For responder type user either" +
 		" username or id must be provided.").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type:     User,
 			Username: "cem",
 		},
 	}
-	err = validateRecipients(recipients)
+	err = validateResponders(responders)
 	assert.Nil(t, err)
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Team},
 	}
-	err = validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("For recipient type team either team"+
+	err = validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("For responder type team either team" +
 		" name or id must be provided.").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Team,
 			Id:   "06",
 		},
 	}
-	err = validateRecipients(recipients)
+	err = validateResponders(responders)
 	assert.Nil(t, err)
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Schedule,
 		},
 	}
-	err = validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("For recipient type schedule either schedule"+
+	err = validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("For responder type schedule either schedule" +
 		" name or id must be provided.").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Schedule,
 			Name: "Takvim",
 		},
 	}
-	err = validateRecipients(recipients)
+	err = validateResponders(responders)
 	assert.Nil(t, err)
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Escalation,
 		},
 	}
-	err = validateRecipients(recipients)
-	assert.Equal(t, err.Error(), errors.New("For recipient type escalation either escalation"+
+	err = validateResponders(responders)
+	assert.Equal(t, err.Error(), errors.New("For responder type escalation either escalation" +
 		" name or id must be provided.").Error())
 
-	recipients = []Recipient{
+	responders = []Responder{
 		{
 			Type: Escalation,
 			Id:   "12356",
 		},
 	}
-	err = validateRecipients(recipients)
+	err = validateResponders(responders)
 	assert.Nil(t, err)
 }
 

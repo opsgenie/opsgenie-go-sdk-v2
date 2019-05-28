@@ -47,18 +47,17 @@ type APIBasedIntegrationRequest struct {
 	Name                        string        `json:"name"`
 	Type                        string        `json:"type"`
 	AllowWriteAccess            bool          `json:"allowWriteAccess,omitempty"`
-	IgnoreRecipientsFromPayload bool          `json:"ignoreRecipientsFromPayload,omitempty"`
-	IgnoreTeamsFromPayload      bool          `json:"ignoreTeamsFromPayload,omitempty"`
+	IgnoreRespondersFromPayload bool          `json:"ignoreRespondersFromPayload,omitempty"`
 	SuppressNotifications       bool          `json:"suppressNotifications,omitempty"`
 	OwnerTeam                   *og.OwnerTeam `json:"ownerTeam,omitempty"`
-	Recipients                  []Recipient   `json:"recipients,omitempty"`
+	Responders                  []Responder   `json:"responders,omitempty"`
 }
 
 func (r *APIBasedIntegrationRequest) Validate() error {
 	if r.Name == "" || r.Type == "" {
 		return errors.New("Name and Type fields cannot be empty.")
 	}
-	err := validateRecipients(r.Recipients)
+	err := validateResponders(r.Responders)
 	if err != nil {
 		return err
 	}
@@ -78,17 +77,16 @@ type EmailBasedIntegrationRequest struct {
 	Name                        string      `json:"name"`
 	Type                        string      `json:"type"`
 	EmailUsername               string      `json:"emailUsername"`
-	IgnoreRecipientsFromPayload bool        `json:"ignoreRecipientsFromPayload,omitempty"`
-	IgnoreTeamsFromPayload      bool        `json:"ignoreTeamsFromPayload,omitempty"`
+	IgnoreRespondersFromPayload bool        `json:"ignoreRespondersFromPayload,omitempty"`
 	SuppressNotifications       bool        `json:"suppressNotifications,omitempty"`
-	Recipients                  []Recipient `json:"recipients,omitempty"`
+	Responders                  []Responder `json:"responders,omitempty"`
 }
 
 func (r *EmailBasedIntegrationRequest) Validate() error {
 	if r.Name == "" || r.Type == "" || r.EmailUsername == "" {
 		return errors.New("Name, Type and EmailUsername fields cannot be empty.")
 	}
-	err := validateRecipients(r.Recipients)
+	err := validateResponders(r.Responders)
 	if err != nil {
 		return err
 	}
@@ -108,11 +106,11 @@ type UpdateIntegrationRequest struct {
 	Id                          string
 	Name                        string
 	Type                        string
+	EmailUsername               string
 	Enabled                     bool
-	IgnoreRecipientsFromPayload bool
-	IgnoreTeamsFromPayload      bool
+	IgnoreRespondersFromPayload bool
 	SuppressNotifications       bool
-	Recipients                  []Recipient
+	Responders                  []Responder
 	OtherFields
 }
 
@@ -129,7 +127,7 @@ func (r OtherFields) Validate() error {
 	if _, ok := r["type"]; !ok {
 		return errors.New("Type field cannot be empty.")
 	}
-	err := validateRecipients(r["recipients"].([]Recipient))
+	err := validateResponders(r["responders"].([]Responder))
 	if err != nil {
 		return err
 	}
@@ -272,11 +270,10 @@ type CreateIntegrationActionsRequest struct {
 	AppendAttachments                bool              `json:"appendAttachments,omitempty"`
 	AlertActions                     []string          `json:"alertActions,omitempty"`
 	IgnoreAlertActionsFromPayload    bool              `json:"ignoreAlertActionsFromPayload,omitempty"`
-	IgnoreRecipientsFromPayload      bool              `json:"ignoreRecipientsFromPayload,omitempty"`
-	IgnoreTeamsFromPayload           bool              `json:"ignoreTeamsFromPayload,omitempty"`
+	IgnoreRespondersFromPayload      bool              `json:"ignoreRespondersFromPayload,omitempty"`
 	IgnoreTagsFromPayload            bool              `json:"ignoreTagsFromPayload,omitempty"`
 	IgnoreExtraPropertiesFromPayload bool              `json:"ignoreExtraPropertiesFromPayload,omitempty"`
-	Recipients                       []Recipient       `json:"recipients,omitempty"`
+	Responders                       []Responder       `json:"responders,omitempty"`
 	Tags                             []string          `json:"tags,omitempty"`
 	ExtraProperties                  map[string]string `json:"extraProperties,omitempty"`
 }
@@ -315,7 +312,14 @@ func (r *CreateIntegrationActionsRequest) Method() string {
 
 type UpdateAllIntegrationActionsRequest struct {
 	client.BaseRequest
-	Id                               string
+	Id          string
+	Create      []IntegrationAction `json:"create"`
+	Close       []IntegrationAction `json:"close"`
+	Acknowledge []IntegrationAction `json:"acknowledge"`
+	AddNote     []IntegrationAction `json:"addNote"`
+}
+
+type IntegrationAction struct {
 	Type                             ActionType        `json:"type"`
 	Name                             string            `json:"name"`
 	Alias                            string            `json:"alias"`
@@ -330,11 +334,10 @@ type UpdateAllIntegrationActionsRequest struct {
 	AppendAttachments                bool              `json:"appendAttachments,omitempty"`
 	AlertActions                     []string          `json:"alertActions,omitempty"`
 	IgnoreAlertActionsFromPayload    bool              `json:"ignoreAlertActionsFromPayload,omitempty"`
-	IgnoreRecipientsFromPayload      bool              `json:"ignoreRecipientsFromPayload,omitempty"`
-	IgnoreTeamsFromPayload           bool              `json:"ignoreTeamsFromPayload,omitempty"`
+	IgnoreRespondersFromPayload      bool              `json:"ignoreRespondersFromPayload,omitempty"`
 	IgnoreTagsFromPayload            bool              `json:"ignoreTagsFromPayload,omitempty"`
 	IgnoreExtraPropertiesFromPayload bool              `json:"ignoreExtraPropertiesFromPayload,omitempty"`
-	Recipients                       []Recipient       `json:"recipients,omitempty"`
+	Responders                       []Responder       `json:"responders,omitempty"`
 	Tags                             []string          `json:"tags,omitempty"`
 	ExtraProperties                  map[string]string `json:"extraProperties,omitempty"`
 }
@@ -343,21 +346,40 @@ func (r *UpdateAllIntegrationActionsRequest) Validate() error {
 	if r.Id == "" {
 		return errors.New("Integration ID cannot be blank.")
 	}
-	if r.Name == "" || r.Type == "" || r.Alias == "" {
-		return errors.New("Name, Type and Alias fields cannot be empty.")
-	}
-	err := validateActionType(r.Type)
+	err := validateActions(r.Create)
 	if err != nil {
 		return err
 	}
-	if r.Filter != nil {
-		err = validateConditionMatchType(r.Filter.ConditionMatchType)
-		if err != nil {
-			return err
+	err = validateActions(r.Close)
+	if err != nil {
+		return err
+	}
+	err = validateActions(r.AddNote)
+	if err != nil {
+		return err
+	}
+	err = validateActions(r.Acknowledge)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func validateActions(actions []IntegrationAction) error {
+	for _, r := range actions {
+		err := validateActionType(r.Type)
+		if r.Name == "" || r.Type == "" || r.Alias == "" {
+			return errors.New("Name, Type and Alias fields cannot be empty.")
 		}
-		err = og.ValidateFilter(*r.Filter)
-		if err != nil {
-			return err
+		if r.Filter != nil {
+			err = validateConditionMatchType(r.Filter.ConditionMatchType)
+			if err != nil {
+				return err
+			}
+			err = og.ValidateFilter(*r.Filter)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -371,25 +393,25 @@ func (r *UpdateAllIntegrationActionsRequest) Method() string {
 	return "PUT"
 }
 
-func validateRecipients(recipients []Recipient) error {
-	for _, recipient := range recipients {
-		if recipient.Type == "" {
-			return errors.New("Recipient type cannot be empty.")
+func validateResponders(responders []Responder) error {
+	for _, responder := range responders {
+		if responder.Type == "" {
+			return errors.New("Responder type cannot be empty.")
 		}
-		if !(recipient.Type == User || recipient.Type == Team || recipient.Type == Schedule || recipient.Type == Escalation) {
-			return errors.New("Recipient type should be one of these: 'User', 'Team', 'Schedule', 'Escalation'")
+		if !(responder.Type == User || responder.Type == Team || responder.Type == Schedule || responder.Type == Escalation) {
+			return errors.New("Responder type should be one of these: 'User', 'Team', 'Schedule', 'Escalation'")
 		}
-		if recipient.Type == User && recipient.Username == "" && recipient.Id == "" {
-			return errors.New("For recipient type user either username or id must be provided.")
+		if responder.Type == User && responder.Username == "" && responder.Id == "" {
+			return errors.New("For responder type user either username or id must be provided.")
 		}
-		if recipient.Type == Team && recipient.Name == "" && recipient.Id == "" {
-			return errors.New("For recipient type team either team name or id must be provided.")
+		if responder.Type == Team && responder.Name == "" && responder.Id == "" {
+			return errors.New("For responder type team either team name or id must be provided.")
 		}
-		if recipient.Type == Schedule && recipient.Name == "" && recipient.Id == "" {
-			return errors.New("For recipient type schedule either schedule name or id must be provided.")
+		if responder.Type == Schedule && responder.Name == "" && responder.Id == "" {
+			return errors.New("For responder type schedule either schedule name or id must be provided.")
 		}
-		if recipient.Type == Escalation && recipient.Name == "" && recipient.Id == "" {
-			return errors.New("For recipient type escalation either escalation name or id must be provided.")
+		if responder.Type == Escalation && responder.Name == "" && responder.Id == "" {
+			return errors.New("For responder type escalation either escalation name or id must be provided.")
 		}
 	}
 	return nil
