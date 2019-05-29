@@ -117,7 +117,7 @@ type EscalationDelay struct {
 
 type ListUserTeamsResult struct {
 	client.ResultMetadata
-	Escalations []Team `json:"data"`
+	Teams []Team `json:"data"`
 }
 
 type Team struct {
