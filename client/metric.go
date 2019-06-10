@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/satori/go.uuid"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
@@ -101,8 +101,21 @@ func duration(start, end int64) int64 {
 }
 
 func generateTransactionId() string {
-	transactionId := uuid.NewV4()
-	return transactionId.String()
+	return randStringRunes(20)
+}
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+
+func randStringRunes(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+	}
+	return string(b)
 }
 
 func buildHttpMetric(transactionId string, resourcePath string, response *http.Response, err error, duration int64, httpRequest request) *HttpMetric {
