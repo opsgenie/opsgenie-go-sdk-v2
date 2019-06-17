@@ -1,10 +1,12 @@
 package incident
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/pkg/errors"
+	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type RequestStatusRequest struct {
@@ -24,7 +26,7 @@ func (r *RequestStatusRequest) ResourcePath() string {
 }
 
 func (r *RequestStatusRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type CreateRequest struct {
@@ -71,7 +73,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DeleteRequest struct {
@@ -95,7 +97,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRequest) RequestParams() map[string]string {
@@ -132,7 +134,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) RequestParams() map[string]string {
@@ -168,7 +170,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRequest) RequestParams() map[string]string {
@@ -217,7 +219,7 @@ func (r *CloseRequest) ResourcePath() string {
 }
 
 func (r *CloseRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CloseRequest) RequestParams() map[string]string {
@@ -256,7 +258,7 @@ func (r *AddNoteRequest) ResourcePath() string {
 }
 
 func (r *AddNoteRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddNoteRequest) RequestParams() map[string]string {
@@ -303,7 +305,7 @@ func (r *AddResponderRequest) ResourcePath() string {
 }
 
 func (r *AddResponderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddResponderRequest) RequestParams() map[string]string {
@@ -345,7 +347,7 @@ func (r *AddTagsRequest) ResourcePath() string {
 }
 
 func (r *AddTagsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddTagsRequest) RequestParams() map[string]string {
@@ -387,7 +389,7 @@ func (r *RemoveTagsRequest) ResourcePath() string {
 }
 
 func (r *RemoveTagsRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveTagsRequest) RequestParams() map[string]string {
@@ -436,7 +438,7 @@ func (r *AddDetailsRequest) ResourcePath() string {
 }
 
 func (r *AddDetailsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddDetailsRequest) RequestParams() map[string]string {
@@ -478,7 +480,7 @@ func (r *RemoveDetailsRequest) ResourcePath() string {
 }
 
 func (r *RemoveDetailsRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveDetailsRequest) RequestParams() map[string]string {
@@ -528,7 +530,7 @@ func (r *UpdatePriorityRequest) ResourcePath() string {
 }
 
 func (r *UpdatePriorityRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r *UpdatePriorityRequest) RequestParams() map[string]string {
@@ -567,7 +569,7 @@ func (r *UpdateMessageRequest) ResourcePath() string {
 }
 
 func (r *UpdateMessageRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *UpdateMessageRequest) RequestParams() map[string]string {
@@ -605,7 +607,7 @@ func (r *UpdateDescriptionRequest) ResourcePath() string {
 }
 
 func (r *UpdateDescriptionRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *UpdateDescriptionRequest) RequestParams() map[string]string {
@@ -646,7 +648,7 @@ func (r *ListLogsRequest) ResourcePath() string {
 }
 
 func (r *ListLogsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListLogsRequest) RequestParams() map[string]string {
@@ -702,7 +704,7 @@ func (r *ListNotesRequest) ResourcePath() string {
 }
 
 func (r *ListNotesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListNotesRequest) RequestParams() map[string]string {

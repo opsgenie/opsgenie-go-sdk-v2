@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
@@ -20,7 +22,7 @@ func (r *CountAlertsRequest) ResourcePath() string {
 }
 
 func (r *CountAlertsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *CountAlertsRequest) RequestParams() map[string]string {

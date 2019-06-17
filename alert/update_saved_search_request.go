@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -43,7 +45,7 @@ func (r *UpdateSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *UpdateSavedSearchRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateSavedSearchRequest) RequestParams() map[string]string {

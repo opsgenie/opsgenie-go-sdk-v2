@@ -1,6 +1,8 @@
 package escalation
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -59,7 +61,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -77,7 +79,7 @@ func (r *GetRequest) Validate() error {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) ResourcePath() string {
@@ -138,7 +140,7 @@ func (r *UpdateRequest) RequestParams() map[string]string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRequest struct {
@@ -156,7 +158,7 @@ func (r *DeleteRequest) Validate() error {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRequest) ResourcePath() string {
@@ -185,7 +187,7 @@ func (r *listRequest) Validate() error {
 }
 
 func (r *listRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *listRequest) ResourcePath() string {

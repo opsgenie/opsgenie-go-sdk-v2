@@ -2,8 +2,10 @@ package schedule
 
 import (
 	"errors"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/http"
 	"time"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type RotationIdentifier struct {
@@ -48,7 +50,7 @@ func (r *CreateScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *CreateScheduleOverrideRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateScheduleOverrideRequest) RequestParams() map[string]string {
@@ -89,7 +91,7 @@ func (r *GetScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *GetScheduleOverrideRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetScheduleOverrideRequest) RequestParams() map[string]string {
@@ -124,7 +126,7 @@ func (r *ListScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *ListScheduleOverrideRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListScheduleOverrideRequest) RequestParams() map[string]string {
@@ -165,7 +167,7 @@ func (r *DeleteScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *DeleteScheduleOverrideRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteScheduleOverrideRequest) RequestParams() map[string]string {
@@ -222,7 +224,7 @@ func (r *UpdateScheduleOverrideRequest) ResourcePath() string {
 }
 
 func (r *UpdateScheduleOverrideRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r *UpdateScheduleOverrideRequest) RequestParams() map[string]string {

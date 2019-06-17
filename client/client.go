@@ -5,9 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/hashicorp/go-retryablehttp"
-	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 	"mime/multipart"
@@ -19,6 +16,9 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type OpsGenieClient struct {
@@ -45,9 +45,9 @@ type BaseRequest struct {
 
 func (r *BaseRequest) Metadata(apiRequest ApiRequest) map[string]interface{} {
 	headers := make(map[string]interface{})
-	if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
+	if apiRequest.Method() != http.MethodGet && apiRequest.Method() != http.MethodDelete {
 		headers["Content-Type"] = "application/json; charset=utf-8"
-	} else if apiRequest.Method() == "GET" {
+	} else if apiRequest.Method() == http.MethodGet {
 		headers["Content-Type"] = "application/x-www-form-urlencoded; charset=UTF-8"
 	}
 	return headers
@@ -332,7 +332,7 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 	details := apiRequest.Metadata(apiRequest)
 	if values, ok := details["form-data-values"].(map[string]io.Reader); ok {
 		setBodyAsFormData(&buf, values, contentType)
-	} else if apiRequest.Method() != "GET" && apiRequest.Method() != "DELETE" {
+	} else if apiRequest.Method() != http.MethodGet && apiRequest.Method() != http.MethodDelete {
 		err = setBodyAsJson(&buf, apiRequest, contentType, details)
 	}
 	if err != nil {

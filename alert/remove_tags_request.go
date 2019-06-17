@@ -1,6 +1,8 @@
 package alert
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -32,7 +34,7 @@ func (r *RemoveTagsRequest) ResourcePath() string {
 }
 
 func (r *RemoveTagsRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveTagsRequest) RequestParams() map[string]string {

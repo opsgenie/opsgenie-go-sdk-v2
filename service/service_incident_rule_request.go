@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
@@ -39,7 +41,7 @@ func (r *CreateIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateIncidentRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIncidentRuleRequest struct {
@@ -80,7 +82,7 @@ func (r *UpdateIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateIncidentRuleRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeleteIncidentRuleRequest struct {
@@ -107,7 +109,7 @@ func (r *DeleteIncidentRuleRequest) ResourcePath() string {
 }
 
 func (r *DeleteIncidentRuleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type GetIncidentRulesRequest struct {
@@ -128,7 +130,7 @@ func (r *GetIncidentRulesRequest) ResourcePath() string {
 }
 
 func (r *GetIncidentRulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type IncidentProperties struct {

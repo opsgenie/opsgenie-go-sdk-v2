@@ -1,9 +1,11 @@
 package contact
 
 import (
+	"net/http"
+	"testing"
+
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateRequest_Validate(t *testing.T) {
@@ -25,7 +27,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/contacts")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -44,7 +46,7 @@ func TestGetRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/contacts/1234")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -67,7 +69,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/users/123/contacts/1234")
-	assert.Equal(t, updateRequest.Method(), "PATCH")
+	assert.Equal(t, updateRequest.Method(), http.MethodPatch)
 
 }
 func TestDeleteRequest_Validate(t *testing.T) {
@@ -85,7 +87,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/contacts/1234")
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 }
 
@@ -100,7 +102,7 @@ func TestListRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/contacts")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 
@@ -119,7 +121,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/contacts/1234/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -138,6 +140,6 @@ func TestDisableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRequest.ResourcePath(), "/v2/users/123/contacts/1234/disable")
-	assert.Equal(t, disableRequest.Method(), "POST")
+	assert.Equal(t, disableRequest.Method(), http.MethodPost)
 
 }

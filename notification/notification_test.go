@@ -1,10 +1,12 @@
 package notification
 
 import (
+	"net/http"
+	"testing"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateRequest_Validate(t *testing.T) {
@@ -30,7 +32,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -53,7 +55,7 @@ func TestGetRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -88,7 +90,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, updateRequest.Method(), "PATCH")
+	assert.Equal(t, updateRequest.Method(), http.MethodPatch)
 
 }
 
@@ -111,7 +113,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234")
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 }
 
@@ -130,7 +132,7 @@ func TestListRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/notification-rules/1234/steps")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 
@@ -153,7 +155,7 @@ func TestEnableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -176,7 +178,7 @@ func TestDisableRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRuleStepRequest.ResourcePath(), "/v2/users/123/notification-rules/123/steps/1234/disable")
-	assert.Equal(t, disableRuleStepRequest.Method(), "POST")
+	assert.Equal(t, disableRuleStepRequest.Method(), http.MethodPost)
 }
 
 func TestCreateRuleRequest_Validate(t *testing.T) {
@@ -299,7 +301,7 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/users/123/notification-rules")
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 
 }
 
@@ -318,7 +320,7 @@ func TestGetRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 }
 
@@ -431,7 +433,7 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, updateRuleRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, updateRuleRequest.Method(), "PATCH")
+	assert.Equal(t, updateRuleRequest.Method(), http.MethodPatch)
 }
 
 func TestDeleteRuleRequest_Validate(t *testing.T) {
@@ -449,7 +451,7 @@ func TestDeleteRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/users/123/notification-rules/123")
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 }
 
@@ -464,7 +466,7 @@ func TestListRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/users/123/notification-rules")
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }
 
@@ -483,7 +485,7 @@ func TestEnableRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, enableRequest.ResourcePath(), "/v2/users/123/notification-rules/123/enable")
-	assert.Equal(t, enableRequest.Method(), "POST")
+	assert.Equal(t, enableRequest.Method(), http.MethodPost)
 
 }
 
@@ -502,7 +504,7 @@ func TestDisableRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, disableRuleRequest.ResourcePath(), "/v2/users/123/notification-rules/123/disable")
-	assert.Equal(t, disableRuleRequest.Method(), "POST")
+	assert.Equal(t, disableRuleRequest.Method(), http.MethodPost)
 }
 
 func TestCopyNotificationRulesRequest_Validate(t *testing.T) {
@@ -528,5 +530,5 @@ func TestCopyNotificationRulesRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, copyNotificationRulesRequest.ResourcePath(), "/v2/users/123/notification-rules/copy-to")
-	assert.Equal(t, copyNotificationRulesRequest.Method(), "POST")
+	assert.Equal(t, copyNotificationRulesRequest.Method(), http.MethodPost)
 }

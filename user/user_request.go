@@ -1,9 +1,11 @@
 package user
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 type UserRoleRequest struct {
@@ -72,7 +74,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -94,7 +96,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRequest) RequestParams() map[string]string {
@@ -139,7 +141,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRequest struct {
@@ -160,7 +162,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRequest struct {
@@ -182,7 +184,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRequest) RequestParams() map[string]string {
@@ -230,7 +232,7 @@ func (r *ListUserEscalationsRequest) ResourcePath() string {
 }
 
 func (r *ListUserEscalationsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type ListUserTeamsRequest struct {
@@ -251,7 +253,7 @@ func (r *ListUserTeamsRequest) ResourcePath() string {
 }
 
 func (r *ListUserTeamsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type ListUserForwardingRulesRequest struct {
@@ -272,7 +274,7 @@ func (r *ListUserForwardingRulesRequest) ResourcePath() string {
 }
 
 func (r *ListUserForwardingRulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type ListUserSchedulesRequest struct {
@@ -293,7 +295,7 @@ func (r *ListUserSchedulesRequest) ResourcePath() string {
 }
 
 func (r *ListUserSchedulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type GetSavedSearchRequest struct {
@@ -315,7 +317,7 @@ func (r *GetSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *GetSavedSearchRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetSavedSearchRequest) RequestParams() map[string]string {
@@ -344,7 +346,7 @@ func (r *ListSavedSearchesRequest) ResourcePath() string {
 }
 
 func (r *ListSavedSearchesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type DeleteSavedSearchRequest struct {
@@ -366,7 +368,7 @@ func (r *DeleteSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *DeleteSavedSearchRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteSavedSearchRequest) RequestParams() map[string]string {

@@ -1,6 +1,8 @@
 package notification
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -34,7 +36,7 @@ func (r *CreateRuleStepRequest) ResourcePath() string {
 }
 
 func (r *CreateRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRuleStepRequest struct {
@@ -58,7 +60,7 @@ func (r *GetRuleStepRequest) ResourcePath() string {
 }
 
 func (r *GetRuleStepRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRuleStepRequest struct {
@@ -92,7 +94,7 @@ func (r *UpdateRuleStepRequest) ResourcePath() string {
 }
 
 func (r *UpdateRuleStepRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRuleStepRequest struct {
@@ -116,7 +118,7 @@ func (r *DeleteRuleStepRequest) ResourcePath() string {
 }
 
 func (r *DeleteRuleStepRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRuleStepsRequest struct {
@@ -139,7 +141,7 @@ func (r *ListRuleStepsRequest) ResourcePath() string {
 }
 
 func (r *ListRuleStepsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRuleStepRequest struct {
@@ -163,7 +165,7 @@ func (r *EnableRuleStepRequest) ResourcePath() string {
 }
 
 func (r *EnableRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRuleStepRequest struct {
@@ -187,7 +189,7 @@ func (r *DisableRuleStepRequest) ResourcePath() string {
 }
 
 func (r *DisableRuleStepRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type CreateRuleRequest struct {
@@ -261,7 +263,7 @@ func (r *CreateRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRuleRequest struct {
@@ -284,7 +286,7 @@ func (r *GetRuleRequest) ResourcePath() string {
 }
 
 func (r *GetRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRuleRequest struct {
@@ -349,7 +351,7 @@ func (r *UpdateRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateRuleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRuleRequest struct {
@@ -372,7 +374,7 @@ func (r *DeleteRuleRequest) ResourcePath() string {
 }
 
 func (r *DeleteRuleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRuleRequest struct {
@@ -393,7 +395,7 @@ func (r *ListRuleRequest) ResourcePath() string {
 }
 
 func (r *ListRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRuleRequest struct {
@@ -416,7 +418,7 @@ func (r *EnableRuleRequest) ResourcePath() string {
 }
 
 func (r *EnableRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRuleRequest struct {
@@ -439,7 +441,7 @@ func (r *DisableRuleRequest) ResourcePath() string {
 }
 
 func (r *DisableRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type CopyNotificationRulesRequest struct {
@@ -468,7 +470,7 @@ func (r *CopyNotificationRulesRequest) ResourcePath() string {
 }
 
 func (r *CopyNotificationRulesRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func validateRuleIdentifier(userIdentifier string, ruleIdentifier string) error {
