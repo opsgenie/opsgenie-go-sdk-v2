@@ -1,6 +1,10 @@
 package alert
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"net/http"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type ListAlertRecipientRequest struct {
 	client.BaseRequest
@@ -22,7 +26,7 @@ func (r *ListAlertRecipientRequest) ResourcePath() string {
 }
 
 func (r *ListAlertRecipientRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListAlertRecipientRequest) RequestParams() map[string]string {

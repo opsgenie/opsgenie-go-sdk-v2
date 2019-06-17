@@ -1,9 +1,11 @@
 package maintenance
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"time"
 )
 
 type CreateRequest struct {
@@ -33,7 +35,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -53,7 +55,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRequest struct {
@@ -87,7 +89,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeleteRequest struct {
@@ -107,7 +109,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRequest struct {
@@ -128,7 +130,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type CancelRequest struct {
@@ -148,7 +150,7 @@ func (r *CancelRequest) ResourcePath() string {
 }
 
 func (r *CancelRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type Rule struct {

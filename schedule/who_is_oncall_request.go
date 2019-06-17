@@ -1,8 +1,10 @@
 package schedule
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"net/http"
 	"time"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
 type GetOnCallsRequest struct {
@@ -22,7 +24,7 @@ func (r *GetOnCallsRequest) Validate() error {
 }
 
 func (r *GetOnCallsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetOnCallsRequest) ResourcePath() string {
@@ -66,7 +68,7 @@ func (r *GetNextOnCallsRequest) Validate() error {
 }
 
 func (r *GetNextOnCallsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetNextOnCallsRequest) ResourcePath() string {
@@ -108,7 +110,7 @@ func (r *ExportOnCallUserRequest) Validate() error {
 }
 
 func (r *ExportOnCallUserRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ExportOnCallUserRequest) getFileName() string {

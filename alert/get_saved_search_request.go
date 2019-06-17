@@ -1,6 +1,10 @@
 package alert
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"net/http"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type GetSavedSearchRequest struct {
 	client.BaseRequest
@@ -22,7 +26,7 @@ func (r *GetSavedSearchRequest) ResourcePath() string {
 }
 
 func (r *GetSavedSearchRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetSavedSearchRequest) RequestParams() map[string]string {

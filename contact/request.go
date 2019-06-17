@@ -1,6 +1,8 @@
 package contact
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -31,7 +33,7 @@ func (r *CreateRequest) ResourcePath() string {
 }
 
 func (r *CreateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetRequest struct {
@@ -53,7 +55,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRequest struct {
@@ -82,7 +84,7 @@ func (r *UpdateRequest) ResourcePath() string {
 }
 
 func (r *UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type DeleteRequest struct {
@@ -103,7 +105,7 @@ func (r *DeleteRequest) ResourcePath() string {
 }
 
 func (r *DeleteRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type ListRequest struct {
@@ -122,7 +124,7 @@ func (r *ListRequest) ResourcePath() string {
 }
 
 func (r *ListRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type EnableRequest struct {
@@ -143,7 +145,7 @@ func (r *EnableRequest) ResourcePath() string {
 }
 
 func (r *EnableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableRequest struct {
@@ -164,7 +166,7 @@ func (r *DisableRequest) ResourcePath() string {
 }
 
 func (r *DisableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func validateIdentifier(userIdentifier string, contactIdentifier string) error {

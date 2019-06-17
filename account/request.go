@@ -1,6 +1,10 @@
 package account
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import (
+	"net/http"
+
+	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+)
 
 type GetRequest struct {
 	client.BaseRequest
@@ -15,5 +19,5 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }

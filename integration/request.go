@@ -1,6 +1,8 @@
 package integration
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
@@ -23,7 +25,7 @@ func (r *GetRequest) ResourcePath() string {
 }
 
 func (r *GetRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type listRequest struct {
@@ -39,7 +41,7 @@ func (r *listRequest) ResourcePath() string {
 }
 
 func (r *listRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type APIBasedIntegrationRequest struct {
@@ -69,7 +71,7 @@ func (r *APIBasedIntegrationRequest) ResourcePath() string {
 }
 
 func (r *APIBasedIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type EmailBasedIntegrationRequest struct {
@@ -98,7 +100,7 @@ func (r *EmailBasedIntegrationRequest) ResourcePath() string {
 }
 
 func (r *EmailBasedIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIntegrationRequest struct {
@@ -139,7 +141,7 @@ func (r OtherFields) ResourcePath() string {
 }
 
 func (r OtherFields) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func (r OtherFields) RequestParams() map[string]string {
@@ -170,7 +172,7 @@ func (r *DeleteIntegrationRequest) ResourcePath() string {
 }
 
 func (r *DeleteIntegrationRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type EnableIntegrationRequest struct {
@@ -190,7 +192,7 @@ func (r *EnableIntegrationRequest) ResourcePath() string {
 }
 
 func (r *EnableIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type DisableIntegrationRequest struct {
@@ -210,7 +212,7 @@ func (r *DisableIntegrationRequest) ResourcePath() string {
 }
 
 func (r *DisableIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type AuthenticateIntegrationRequest struct {
@@ -230,7 +232,7 @@ func (r *AuthenticateIntegrationRequest) ResourcePath() string {
 }
 
 func (r *AuthenticateIntegrationRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetIntegrationActionsRequest struct {
@@ -250,7 +252,7 @@ func (r *GetIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *GetIntegrationActionsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type CreateIntegrationActionsRequest struct {
@@ -307,7 +309,7 @@ func (r *CreateIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *CreateIntegrationActionsRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateAllIntegrationActionsRequest struct {
@@ -390,7 +392,7 @@ func (r *UpdateAllIntegrationActionsRequest) ResourcePath() string {
 }
 
 func (r *UpdateAllIntegrationActionsRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 func validateResponders(responders []Responder) error {

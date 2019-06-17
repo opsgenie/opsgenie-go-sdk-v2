@@ -2,6 +2,8 @@ package policy
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
@@ -75,7 +77,7 @@ func (r *CreateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *CreateAlertPolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateNotificationPolicyRequest) Validate() error {
@@ -127,7 +129,7 @@ func (r *CreateNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *CreateNotificationPolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type GetAlertPolicyRequest struct {
@@ -157,7 +159,7 @@ func (r *GetAlertPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *GetAlertPolicyRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type GetNotificationPolicyRequest struct {
@@ -190,7 +192,7 @@ func (r *GetNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *GetNotificationPolicyRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateAlertPolicyRequest struct {
@@ -246,7 +248,7 @@ func (r *UpdateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *UpdateAlertPolicyRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type UpdateNotificationPolicyRequest struct {
@@ -310,7 +312,7 @@ func (r *UpdateNotificationPolicyRequest) RequestParams() map[string]string {
 }
 
 func (r *UpdateNotificationPolicyRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeletePolicyRequest struct {
@@ -336,7 +338,7 @@ func (r *DeletePolicyRequest) ResourcePath() string {
 }
 
 func (r *DeletePolicyRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeletePolicyRequest) RequestParams() map[string]string {
@@ -371,7 +373,7 @@ func (r *DisablePolicyRequest) ResourcePath() string {
 }
 
 func (r *DisablePolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *DisablePolicyRequest) RequestParams() map[string]string {
@@ -406,7 +408,7 @@ func (r *EnablePolicyRequest) ResourcePath() string {
 }
 
 func (r *EnablePolicyRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *EnablePolicyRequest) RequestParams() map[string]string {
@@ -445,7 +447,7 @@ func (r *ChangeOrderRequest) ResourcePath() string {
 }
 
 func (r *ChangeOrderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *ChangeOrderRequest) RequestParams() map[string]string {
@@ -471,7 +473,7 @@ func (r *ListAlertPoliciesRequest) ResourcePath() string {
 }
 
 func (r *ListAlertPoliciesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListAlertPoliciesRequest) RequestParams() map[string]string {
@@ -500,7 +502,7 @@ func (r *ListNotificationPoliciesRequest) ResourcePath() string {
 }
 
 func (r *ListNotificationPoliciesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListNotificationPoliciesRequest) RequestParams() map[string]string {

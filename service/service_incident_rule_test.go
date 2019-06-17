@@ -1,11 +1,13 @@
 package service
 
 import (
+	"math/rand"
+	"net/http"
+	"testing"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"math/rand"
-	"testing"
 )
 
 func TestBuildCreateIncidentRuleRequest_Validate(t *testing.T) {
@@ -54,7 +56,7 @@ func TestBuildCreateIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules")
-	assert.Equal(t, request.Method(), "POST")
+	assert.Equal(t, request.Method(), http.MethodPost)
 }
 
 func TestBuildUpdateIncidentRuleRequest_Validate(t *testing.T) {
@@ -102,7 +104,7 @@ func TestBuildUpdateIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules/id")
-	assert.Equal(t, request.Method(), "PUT")
+	assert.Equal(t, request.Method(), http.MethodPut)
 }
 
 func TestBuildDeleteIncidentRuleRequest_Validate(t *testing.T) {
@@ -120,7 +122,7 @@ func TestBuildDeleteIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules/id")
-	assert.Equal(t, request.Method(), "DELETE")
+	assert.Equal(t, request.Method(), http.MethodDelete)
 }
 
 func TestBuildGetIncidentRuleRequest_Validate(t *testing.T) {
@@ -134,7 +136,7 @@ func TestBuildGetIncidentRuleRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	assert.Equal(t, request.ResourcePath(), "/v1/services/id/incident-rules")
-	assert.Equal(t, request.Method(), "GET")
+	assert.Equal(t, request.Method(), http.MethodGet)
 }
 
 func RandomString(n int) string {

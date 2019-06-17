@@ -2,6 +2,8 @@ package heartbeat
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 )
@@ -27,7 +29,7 @@ func (r pingRequest) ResourcePath() string {
 }
 
 func (r pingRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type getRequest struct {
@@ -44,7 +46,7 @@ func (r getRequest) ResourcePath() string {
 }
 
 func (r getRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type listRequest struct {
@@ -60,7 +62,7 @@ func (r listRequest) ResourcePath() string {
 }
 
 func (r listRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type UpdateRequest struct {
@@ -97,7 +99,7 @@ func (r UpdateRequest) ResourcePath() string {
 }
 
 func (r UpdateRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type AddRequest struct {
@@ -134,7 +136,7 @@ func (r AddRequest) ResourcePath() string {
 }
 
 func (r AddRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type Unit string
@@ -162,7 +164,7 @@ func (r enableRequest) ResourcePath() string {
 }
 
 func (r enableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type disableRequest struct {
@@ -182,5 +184,5 @@ func (r disableRequest) ResourcePath() string {
 }
 
 func (r disableRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }

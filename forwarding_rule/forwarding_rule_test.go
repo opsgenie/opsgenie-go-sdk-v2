@@ -1,10 +1,12 @@
 package forwarding_rule
 
 import (
-	"github.com/pkg/errors"
-	"github.com/stretchr/testify/assert"
+	"net/http"
 	"testing"
 	"time"
+
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestValidateCreateRequest(t *testing.T) {
@@ -31,7 +33,7 @@ func TestValidateCreateRequest(t *testing.T) {
 
 	assert.Equal(t, createRequest.ResourcePath(), "/v2/forwarding-rules")
 	assert.Equal(t, createRequest.RequestParams(), make(map[string]string))
-	assert.Equal(t, createRequest.Method(), "POST")
+	assert.Equal(t, createRequest.Method(), http.MethodPost)
 }
 
 func TestValidateGetRequest(t *testing.T) {
@@ -46,7 +48,7 @@ func TestValidateGetRequest(t *testing.T) {
 
 	assert.Equal(t, getRequest.ResourcePath(), "/v2/forwarding-rules/123")
 	assert.Equal(t, getRequest.RequestParams(), map[string]string{"identifierType": "id"})
-	assert.Equal(t, getRequest.Method(), "GET")
+	assert.Equal(t, getRequest.Method(), http.MethodGet)
 
 	getRequest.IdentifierType = Alias
 	getRequest.IdentifierValue = "abc"
@@ -85,7 +87,7 @@ func TestValidateUpdateRequest(t *testing.T) {
 
 	assert.Equal(t, updateRequest.ResourcePath(), "/v2/forwarding-rules/123")
 	assert.Equal(t, updateRequest.RequestParams(), map[string]string{"identifierType": "id"})
-	assert.Equal(t, updateRequest.Method(), "PUT")
+	assert.Equal(t, updateRequest.Method(), http.MethodPut)
 
 	updateRequest.IdentifierType = Alias
 	updateRequest.IdentifierValue = "abc"
@@ -108,7 +110,7 @@ func TestValidateDeleteRequest(t *testing.T) {
 
 	assert.Equal(t, deleteRequest.ResourcePath(), "/v2/forwarding-rules/123")
 	assert.Equal(t, deleteRequest.RequestParams(), map[string]string{"identifierType": "id"})
-	assert.Equal(t, deleteRequest.Method(), "DELETE")
+	assert.Equal(t, deleteRequest.Method(), http.MethodDelete)
 
 	deleteRequest.IdentifierType = Alias
 	deleteRequest.IdentifierValue = "abc"
@@ -127,6 +129,6 @@ func TestValidateListRequest(t *testing.T) {
 
 	assert.Equal(t, listRequest.ResourcePath(), "/v2/forwarding-rules")
 	assert.Equal(t, listRequest.RequestParams(), make(map[string]string))
-	assert.Equal(t, listRequest.Method(), "GET")
+	assert.Equal(t, listRequest.Method(), http.MethodGet)
 
 }

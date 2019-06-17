@@ -2,9 +2,11 @@ package team
 
 import (
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
-	"strconv"
 )
 
 type Identifier uint32
@@ -40,7 +42,7 @@ func (r *CreateTeamRequest) ResourcePath() string {
 }
 
 func (r *CreateTeamRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type ListTeamRequest struct {
@@ -58,7 +60,7 @@ func (r *ListTeamRequest) ResourcePath() string {
 }
 
 func (r *ListTeamRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 type DeleteTeamRequest struct {
@@ -81,7 +83,7 @@ func (r *DeleteTeamRequest) ResourcePath() string {
 }
 
 func (r *DeleteTeamRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteTeamRequest) RequestParams() map[string]string {
@@ -117,7 +119,7 @@ func (r *GetTeamRequest) ResourcePath() string {
 }
 
 func (r *GetTeamRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetTeamRequest) RequestParams() map[string]string {
@@ -154,7 +156,7 @@ func (r *UpdateTeamRequest) ResourcePath() string {
 }
 
 func (r *UpdateTeamRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 type ListTeamLogsRequest struct {
@@ -182,7 +184,7 @@ func (r *ListTeamLogsRequest) ResourcePath() string {
 }
 
 func (r *ListTeamLogsRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListTeamLogsRequest) RequestParams() map[string]string {
@@ -246,7 +248,7 @@ func (r *CreateTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *CreateTeamRoleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateTeamRoleRequest) RequestParams() map[string]string {
@@ -300,7 +302,7 @@ func (r *GetTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *GetTeamRoleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetTeamRoleRequest) RequestParams() map[string]string {
@@ -362,7 +364,7 @@ func (r *UpdateTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *UpdateTeamRoleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateTeamRoleRequest) RequestParams() map[string]string {
@@ -420,7 +422,7 @@ func (r *DeleteTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *DeleteTeamRoleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteTeamRoleRequest) RequestParams() map[string]string {
@@ -462,7 +464,7 @@ func (r *ListTeamRoleRequest) ResourcePath() string {
 }
 
 func (r *ListTeamRoleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListTeamRoleRequest) RequestParams() map[string]string {
@@ -520,7 +522,7 @@ func (r *AddTeamMemberRequest) ResourcePath() string {
 }
 
 func (r *AddTeamMemberRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *AddTeamMemberRequest) RequestParams() map[string]string {
@@ -568,7 +570,7 @@ func (r *RemoveTeamMemberRequest) ResourcePath() string {
 }
 
 func (r *RemoveTeamMemberRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *RemoveTeamMemberRequest) RequestParams() map[string]string {
@@ -649,7 +651,7 @@ func (r *CreateRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *CreateRoutingRuleRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *CreateRoutingRuleRequest) RequestParams() map[string]string {
@@ -697,7 +699,7 @@ func (r *GetRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *GetRoutingRuleRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *GetRoutingRuleRequest) RequestParams() map[string]string {
@@ -766,7 +768,7 @@ func (r *UpdateRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *UpdateRoutingRuleRequest) Method() string {
-	return "PATCH"
+	return http.MethodPatch
 }
 
 func (r *UpdateRoutingRuleRequest) RequestParams() map[string]string {
@@ -809,7 +811,7 @@ func (r *DeleteRoutingRuleRequest) ResourcePath() string {
 }
 
 func (r *DeleteRoutingRuleRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 func (r *DeleteRoutingRuleRequest) RequestParams() map[string]string {
@@ -847,7 +849,7 @@ func (r *ListRoutingRulesRequest) ResourcePath() string {
 }
 
 func (r *ListRoutingRulesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListRoutingRulesRequest) RequestParams() map[string]string {
@@ -895,7 +897,7 @@ func (r *ChangeRoutingRuleOrderRequest) ResourcePath() string {
 }
 
 func (r *ChangeRoutingRuleOrderRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 func (r *ChangeRoutingRuleOrderRequest) RequestParams() map[string]string {

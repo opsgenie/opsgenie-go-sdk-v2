@@ -1,9 +1,11 @@
 package logs
 
 import (
+	"net/http"
+	"strconv"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
-	"strconv"
 )
 
 type ListLogFilesRequest struct {
@@ -25,7 +27,7 @@ func (r *ListLogFilesRequest) ResourcePath() string {
 }
 
 func (r *ListLogFilesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func (r *ListLogFilesRequest) RequestParams() map[string]string {
@@ -57,5 +59,5 @@ func (r *GenerateLogFileDownloadLinkRequest) ResourcePath() string {
 }
 
 func (r *GenerateLogFileDownloadLinkRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }

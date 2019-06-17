@@ -2,6 +2,8 @@ package alert
 
 import (
 	"errors"
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 )
 
@@ -35,5 +37,5 @@ func (r *CreateAlertRequest) ResourcePath() string {
 }
 
 func (r *CreateAlertRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }

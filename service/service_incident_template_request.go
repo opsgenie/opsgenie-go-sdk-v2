@@ -1,6 +1,8 @@
 package service
 
 import (
+	"net/http"
+
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"github.com/pkg/errors"
 )
@@ -30,7 +32,7 @@ func (r *CreateIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *CreateIncidentTemplateRequest) Method() string {
-	return "POST"
+	return http.MethodPost
 }
 
 type UpdateIncidentTemplateRequest struct {
@@ -68,7 +70,7 @@ func (r *UpdateIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *UpdateIncidentTemplateRequest) Method() string {
-	return "PUT"
+	return http.MethodPut
 }
 
 type DeleteIncidentTemplateRequest struct {
@@ -95,7 +97,7 @@ func (r *DeleteIncidentTemplateRequest) ResourcePath() string {
 }
 
 func (r *DeleteIncidentTemplateRequest) Method() string {
-	return "DELETE"
+	return http.MethodDelete
 }
 
 type GetIncidentTemplatesRequest struct {
@@ -116,7 +118,7 @@ func (r *GetIncidentTemplatesRequest) ResourcePath() string {
 }
 
 func (r *GetIncidentTemplatesRequest) Method() string {
-	return "GET"
+	return http.MethodGet
 }
 
 func validateIncidentTemplate(template IncidentTemplateRequest) error {
