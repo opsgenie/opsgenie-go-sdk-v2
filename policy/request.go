@@ -80,6 +80,15 @@ func (r *CreateAlertPolicyRequest) Method() string {
 	return http.MethodPost
 }
 
+func (r *CreateAlertPolicyRequest) RequestParams() map[string]string {
+	if r.TeamId == "" {
+		return nil
+	}
+	params := make(map[string]string)
+	params["teamId"] = r.TeamId
+	return params
+}
+
 func (r *CreateNotificationPolicyRequest) Validate() error {
 	err := ValidateMainFields(&r.MainFields)
 	if err != nil {
