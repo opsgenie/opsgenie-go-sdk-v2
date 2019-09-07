@@ -44,3 +44,8 @@ type AddResult struct {
 	client.ResultMetadata
 	Heartbeat
 }
+
+type DeleteResult struct {
+	client.ResultMetadata
+	Message string `json:"result"`
+}
