@@ -108,7 +108,7 @@ type AddRequest struct {
 	Description   string       `json:"description,omitempty"`
 	Interval      int          `json:"interval"`
 	IntervalUnit  Unit         `json:"intervalUnit"`
-	Enabled       bool         `json:"enabled,omitempty"`
+	Enabled       bool         `json:"enabled"`
 	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
 	AlertMessage  string       `json:"alertMessage,omitempty"`
 	AlertTag      []string     `json:"alertTags,omitempty"`
@@ -185,4 +185,21 @@ func (r disableRequest) ResourcePath() string {
 
 func (r disableRequest) Method() string {
 	return http.MethodPost
+}
+
+type deleteRequest struct {
+	client.BaseRequest
+	HeartbeatName string
+}
+
+func (r deleteRequest) Validate() error {
+	return nameValidation(r.HeartbeatName)
+}
+
+func (r deleteRequest) ResourcePath() string {
+	return "/v2/heartbeats/" + r.HeartbeatName
+}
+
+func (r deleteRequest) Method() string {
+	return http.MethodDelete
 }

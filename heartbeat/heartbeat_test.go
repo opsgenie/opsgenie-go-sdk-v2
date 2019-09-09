@@ -35,3 +35,10 @@ func TestGetRequest_Validate(t *testing.T) {
 
 	assert.Equal(t, err.Error(), errors.New("HeartbeatName cannot be empty").Error())
 }
+
+func TestDeleteRequest_Validate(t *testing.T) {
+	deleteRequest := &deleteRequest{}
+	err := deleteRequest.Validate()
+
+	assert.Equal(t, err.Error(), errors.New("HeartbeatName cannot be empty").Error())
+}

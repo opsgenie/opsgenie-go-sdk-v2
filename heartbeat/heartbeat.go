@@ -84,3 +84,13 @@ func (c *Client) Disable(context context.Context, heartbeatName string) (*Heartb
 	}
 	return result, nil
 }
+
+func (c *Client) Delete(context context.Context, heartbeatName string) (*DeleteResult, error) {
+	deleteResult := &DeleteResult{}
+	request := &deleteRequest{HeartbeatName: heartbeatName}
+	err := c.client.Exec(context, request, deleteResult)
+	if err != nil {
+		return nil, err
+	}
+	return deleteResult, nil
+}
