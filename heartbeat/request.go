@@ -74,7 +74,7 @@ type UpdateRequest struct {
 	Enabled       bool         `json:"enabled,omitempty"`
 	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
 	AlertMessage  string       `json:"alertMessage,omitempty"`
-	AlertTag      string       `json:"alertTags,omitempty"`
+	AlertTag      []string     `json:"alertTags,omitempty"`
 	AlertPriority string       `json:"alertPriority,omitempty"`
 }
 
