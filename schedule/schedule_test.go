@@ -15,8 +15,8 @@ func TestBuildCreateRequest(t *testing.T) {
 	participants[0] = *participant1
 	participants[1] = *participant2
 
-	restriction1 := og.Restriction{StartDay: og.Saturday, StartHour: 5, StartMin: 3, EndDay: og.Friday, EndMin: 5, EndHour: 2}
-	restriction2 := og.Restriction{StartDay: og.Monday, StartHour: 12, StartMin: 33, EndDay: og.Friday, EndMin: 6, EndHour: 20}
+	restriction1 := og.Restriction{StartDay: og.Saturday, StartHour: og.Hour(5), StartMin: og.Minute(3), EndDay: og.Friday, EndMin: og.Minute(3), EndHour: og.Hour(2)}
+	restriction2 := og.Restriction{StartDay: og.Monday, StartHour: og.Hour(12), StartMin: og.Minute(33), EndDay: og.Friday, EndMin: og.Minute(6), EndHour: og.Hour(20)}
 	restrictions := make([]og.Restriction, 2)
 	restrictions[0] = restriction1
 	restrictions[1] = restriction2
@@ -126,7 +126,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1},
+		og.Restriction{EndMin: og.Minute(1)},
 	}
 	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -137,7 +137,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1, StartHour: 5},
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(5)},
 	}
 	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -148,7 +148,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1},
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(5), StartMin: og.Minute(1)},
 	}
 	tr = og.TimeRestriction{Type: og.TimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -159,7 +159,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1},
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(22), StartMin: og.Minute(1), EndHour: og.Hour(23)},
 	}
 	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -167,10 +167,10 @@ func TestCreateRequest_Validate(t *testing.T) {
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, endDay cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1, EndDay: og.Monday},
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(5), StartMin: og.Minute(1), EndHour: og.Hour(4), EndDay: og.Monday},
 	}
 	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -178,10 +178,10 @@ func TestCreateRequest_Validate(t *testing.T) {
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, endDay cannot be empty.").Error())
 
 	restrictions = []og.Restriction{
-		og.Restriction{EndMin: 1, StartHour: 5, StartMin: 1, EndHour: 1, EndDay: og.Monday, StartDay: og.Monday},
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(55), StartMin: og.Minute(1), EndHour: og.Hour(1), EndDay: og.Monday, StartDay: og.Monday},
 	}
 	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	rotation.Participants = nil
@@ -189,6 +189,18 @@ func TestCreateRequest_Validate(t *testing.T) {
 	createRequest.Rotations = nil
 	createRequest.WithRotation(rotation)
 	err = createRequest.Validate()
+	assert.Equal(t, err.Error(), errors.New("restriction start hour should between 0 and 24.").Error())
+
+	restrictions = []og.Restriction{
+		og.Restriction{EndMin: og.Minute(1), StartHour: og.Hour(5), StartMin: og.Minute(1), EndHour: og.Hour(1), EndDay: og.Monday, StartDay: og.Monday},
+	}
+	tr = og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
+	rotation.Participants = nil
+	rotation = rotation.WithParticipants(og.Participant{Type: og.Team, Name: "tram1"}).WithTimeRestriction(tr)
+	createRequest.Rotations = nil
+	createRequest.WithRotation(rotation)
+	err = createRequest.Validate()
+	assert.Nil(t, err)
 
 }
 
