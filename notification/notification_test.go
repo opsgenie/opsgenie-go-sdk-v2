@@ -277,17 +277,17 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}
-	createRequest.TimeRestriction = &og.TimeRestriction{Type: og.TimeOfDay, Restriction: og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18)}
+	createRequest.TimeRestriction = &og.TimeRestriction{Type: og.TimeOfDay, Restriction: og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18)}}
 	err = createRequest.Validate()
 	assert.Nil(t, err)
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18)}
 	createRequest.TimeRestriction = &og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, endDay cannot be empty.").Error())
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18, StartDay: og.Wednesday, EndDay: og.Friday}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18), StartDay: og.Wednesday, EndDay: og.Friday}
 	createRequest.TimeRestriction = &og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	err = createRequest.Validate()
 	assert.Nil(t, err)
@@ -409,17 +409,17 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 	err = updateRuleRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("startHour, startMin, endHour, endMin cannot be empty.").Error())
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}
-	updateRuleRequest.TimeRestriction = &og.TimeRestriction{Type: og.TimeOfDay, Restriction: og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18)}
+	updateRuleRequest.TimeRestriction = &og.TimeRestriction{Type: og.TimeOfDay, Restriction: og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(18)}}
 	err = updateRuleRequest.Validate()
 	assert.Nil(t, err)
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(12)}
 	updateRuleRequest.TimeRestriction = &og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	err = updateRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("startDay, startHour, startMin, endDay, endHour, endMin cannot be empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("startDay, endDay cannot be empty.").Error())
 
-	restrictions[0] = og.Restriction{StartMin: 12, StartHour: 1, EndHour: 1, EndMin: 18, StartDay: og.Wednesday, EndDay: og.Friday}
+	restrictions[0] = og.Restriction{StartMin: og.Minute(12), StartHour: og.Hour(1), EndHour: og.Hour(1), EndMin: og.Minute(12), StartDay: og.Wednesday, EndDay: og.Friday}
 	updateRuleRequest.TimeRestriction = &og.TimeRestriction{Type: og.WeekdayAndTimeOfDay, RestrictionList: restrictions}
 	err = updateRuleRequest.Validate()
 	assert.Nil(t, err)
