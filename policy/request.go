@@ -13,18 +13,18 @@ type CreateAlertPolicyRequest struct {
 	client.BaseRequest
 	MainFields
 	Message                  string             `json:"message,omitempty"`
-	Continue                 bool               `json:"continue,omitempty"`
+	Continue                 *bool              `json:"continue,omitempty"`
 	Alias                    string             `json:"alias,omitempty"`
 	AlertDescription         string             `json:"alertDescription,omitempty"`
 	Entity                   string             `json:"entity,omitempty"`
 	Source                   string             `json:"source,omitempty"`
-	IgnoreOriginalDetails    bool               `json:"ignoreOriginalDetails,omitempty"`
+	IgnoreOriginalDetails    *bool              `json:"ignoreOriginalDetails,omitempty"`
 	Actions                  []string           `json:"actions,omitempty"`
-	IgnoreOriginalActions    bool               `json:"ignoreOriginalActions,omitempty"`
+	IgnoreOriginalActions    *bool              `json:"ignoreOriginalActions,omitempty"`
 	Details                  []string           `json:"details,omitempty"`
-	IgnoreOriginalResponders bool               `json:"ignoreOriginalResponders,omitempty"`
+	IgnoreOriginalResponders *bool              `json:"ignoreOriginalResponders,omitempty"`
 	Responders               *[]alert.Responder `json:"responders,omitempty"`
-	IgnoreOriginalTags       bool               `json:"ignoreOriginalTags,omitempty"`
+	IgnoreOriginalTags       *bool              `json:"ignoreOriginalTags,omitempty"`
 	Tags                     []string           `json:"tags,omitempty"`
 	Priority                 alert.Priority     `json:"priority,omitempty"`
 }
@@ -36,13 +36,13 @@ type CreateNotificationPolicyRequest struct {
 	AutoCloseAction     *AutoCloseAction     `json:"autoCloseAction,omitempty"`
 	DeDuplicationAction *DeDuplicationAction `json:"deduplicationActionAction,omitempty"`
 	DelayAction         *DelayAction         `json:"delayAction,omitempty"`
-	Suppress            bool                 `json:"suppress,omitempty"`
+	Suppress            *bool                `json:"suppress,omitempty"`
 }
 
 type MainFields struct {
 	PolicyType        string              `json:"type,omitempty"`
 	Name              string              `json:"name,omitempty"`
-	Enabled           bool                `json:"enabled"`
+	Enabled           *bool               `json:"enabled"`
 	PolicyDescription string              `json:"policyDescription"`
 	Filter            *og.Filter          `json:"filter,omitempty"`
 	TimeRestriction   *og.TimeRestriction `json:"timeRestrictions,omitempty"`
@@ -208,18 +208,18 @@ type UpdateAlertPolicyRequest struct {
 	client.BaseRequest
 	MainFields
 	Message                  string                 `json:"message,omitempty"`
-	Continue                 bool                   `json:"continue,omitempty"`
+	Continue                 *bool                  `json:"continue,omitempty"`
 	Alias                    string                 `json:"alias,omitempty"`
 	AlertDescription         string                 `json:"alertDescription,omitempty"`
 	Entity                   string                 `json:"entity,omitempty"`
 	Source                   string                 `json:"source,omitempty"`
-	IgnoreOriginalDetails    bool                   `json:"ignoreOriginalDetails,omitempty"`
+	IgnoreOriginalDetails    *bool                  `json:"ignoreOriginalDetails,omitempty"`
 	Actions                  []string               `json:"actions,omitempty"`
-	IgnoreOriginalActions    bool                   `json:"ignoreOriginalActions,omitempty"`
+	IgnoreOriginalActions    *bool                  `json:"ignoreOriginalActions,omitempty"`
 	Details                  map[string]interface{} `json:"details,omitempty"`
-	IgnoreOriginalResponders bool                   `json:"ignoreOriginalResponders,omitempty"`
+	IgnoreOriginalResponders *bool                  `json:"ignoreOriginalResponders,omitempty"`
 	Responders               *[]alert.Responder     `json:"responders,omitempty"`
-	IgnoreOriginalTags       bool                   `json:"ignoreOriginalTags,omitempty"`
+	IgnoreOriginalTags       *bool                  `json:"ignoreOriginalTags,omitempty"`
 	Tags                     []string               `json:"tags,omitempty"`
 	Priority                 alert.Priority         `json:"priority,omitempty"`
 	Id                       string
@@ -267,7 +267,7 @@ type UpdateNotificationPolicyRequest struct {
 	AutoCloseAction     *AutoCloseAction     `json:"autoCloseAction,omitempty"`
 	DeDuplicationAction *DeDuplicationAction `json:"deduplicationActionAction,omitempty"`
 	DelayAction         *DelayAction         `json:"delayAction,omitempty"`
-	Suppress            bool                 `json:"suppress,omitempty"`
+	Suppress            *bool                `json:"suppress,omitempty"`
 	Id                  string
 }
 

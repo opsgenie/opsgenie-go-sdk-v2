@@ -14,7 +14,7 @@ type CreateRuleStepRequest struct {
 	RuleId         string
 	Contact        og.Contact    `json:"contact"`
 	SendAfter      *og.SendAfter `json:"sendAfter,omitempty"`
-	Enabled        bool          `json:"enabled,omitempty"`
+	Enabled        *bool         `json:"enabled,omitempty"`
 }
 
 func (r *CreateRuleStepRequest) Validate() error {
@@ -70,7 +70,7 @@ type UpdateRuleStepRequest struct {
 	RuleStepId     string
 	Contact        *og.Contact   `json:"contact,omitempty"`
 	SendAfter      *og.SendAfter `json:"sendAfter,omitempty"`
-	Enabled        bool          `json:"enabled,omitempty"`
+	Enabled        *bool         `json:"enabled,omitempty"`
 }
 
 func (r *UpdateRuleStepRequest) Validate() error {
@@ -204,7 +204,7 @@ type CreateRuleRequest struct {
 	Steps            []*og.Step             `json:"step,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
 	Repeat           *Repeat                `json:"repeat,omitempty"`
-	Enabled          bool                   `json:"enabled,omitempty"`
+	Enabled          *bool                  `json:"enabled,omitempty"`
 }
 
 func (r *CreateRuleRequest) Validate() error {
@@ -300,7 +300,7 @@ type UpdateRuleRequest struct {
 	Steps            []*og.Step             `json:"step,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
 	Repeat           *Repeat                `json:"repeat,omitempty"`
-	Enabled          bool                   `json:"enabled,omitempty"`
+	Enabled          *bool                  `json:"enabled,omitempty"`
 }
 
 func (r *UpdateRuleRequest) Validate() error {
@@ -548,7 +548,7 @@ func validateSchedule(schedule Schedule) error {
 
 type Repeat struct {
 	LoopAfter uint32 `json:"loopAfter,omitempty"`
-	Enabled   bool   `json:"loopAfter,omitempty"`
+	Enabled   *bool  `json:"loopAfter,omitempty"`
 }
 
 func validateStep(step *og.Step, actionType ActionType) error {

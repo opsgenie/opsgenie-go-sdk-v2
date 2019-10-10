@@ -31,11 +31,12 @@ func TestBuildCreateRequest(t *testing.T) {
 		*rotation1, *rotation2,
 	}
 
-	expectedCreateRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: true, OwnerTeam: ownerTeam, Rotations: rotations}
+	enabled := true
+	expectedCreateRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: &enabled, OwnerTeam: ownerTeam, Rotations: rotations}
 
 	tr := og.TimeRestriction{Type: og.WeekdayAndTimeOfDay}
 	tr.WithRestrictions(restriction1, restriction2)
-	createRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: true, OwnerTeam: ownerTeam}
+	createRequest := &CreateRequest{Name: "sch1", Description: "desc", Timezone: "aZone", Enabled: &enabled, OwnerTeam: ownerTeam}
 	createRequest.WithRotation(rotation1.WithParticipants(*participant1, *participant2)).
 		WithRotation(rotation2.WithParticipants(*participant1, *participant2).
 			WithTimeRestriction(tr))
