@@ -74,8 +74,14 @@ type GetRuleResult struct {
 	Enabled          bool                   `json:"bool,omitempty"`
 	NotificationTime []NotificationTimeType `json:"notificationTime,omitempty"`
 	TimeRestriction  *og.TimeRestriction    `json:"timeRestriction,omitempty"`
-	Steps            []*og.Step             `json:"steps,omitempty"`
+	Steps            []*StepResult          `json:"steps,omitempty"`
 	Schedules        []*Schedule            `json:"schedules,omitempty"`
+}
+
+type StepResult struct {
+	Contact   og.Contact    `json:"contact,omitempty"`
+	SendAfter *og.SendAfter `json:"sendAfter,omitempty"`
+	Enabled   bool          `json:"enabled,omitempty"`
 }
 
 type UpdateRuleResult struct {

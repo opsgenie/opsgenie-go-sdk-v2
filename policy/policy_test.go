@@ -34,10 +34,11 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	err = req.Validate()
 	assert.Equal(t, err.Error(), errors.New("filter conditions cannot be empty").Error())
 
+	isNot := false
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         "random field",
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     "",
 			ExpectedValue: "",
 			Key:           "",
@@ -49,7 +50,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Message,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.Contains,
 			ExpectedValue: "",
 			Key:           "asd",
@@ -61,7 +62,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Actions,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.LessThan,
 			ExpectedValue: "",
 		},
@@ -72,7 +73,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Actions,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.GreaterThan,
 			ExpectedValue: "",
 		},
@@ -83,7 +84,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Message,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.GreaterThan,
 			ExpectedValue: "",
 		},
@@ -94,7 +95,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Details,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.EqualsIgnoreWhitespcae,
 			ExpectedValue: "",
 		},
@@ -105,7 +106,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Priority,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.Matches,
 			ExpectedValue: "",
 		},
@@ -116,7 +117,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Priority,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.GreaterThan,
 			ExpectedValue: "critical",
 		},
@@ -127,7 +128,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Filter.Conditions = []og.Condition{
 		{
 			Field:         og.Priority,
-			IsNot:         false,
+			IsNot:         &isNot,
 			Operation:     og.GreaterThan,
 			ExpectedValue: "P4",
 		},

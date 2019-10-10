@@ -40,7 +40,7 @@ type CreateRequest struct {
 	Note               string            `json:"note,omitempty"`
 	ServiceId          string            `json:"serviceId"`
 	StatusPageEntity   *StatusPageEntity `json:"statusPageEntry,omitempty"`
-	NotifyStakeholders bool              `json:"notifyStakeholders,omitempty"`
+	NotifyStakeholders *bool             `json:"notifyStakeholders,omitempty"`
 }
 
 type StatusPageEntity struct {

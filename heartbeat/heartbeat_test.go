@@ -8,23 +8,24 @@ import (
 )
 
 func TestAddRequest_Validate(t *testing.T) {
-	request := &AddRequest{Description: "Descriptio2", Interval: 2, IntervalUnit: Minutes, Enabled: true, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
+	enabled := true
+	request := &AddRequest{Description: "Descriptio2", Interval: 2, IntervalUnit: Minutes, Enabled: &enabled, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
 	err := request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Invalid request. Name cannot be empty. ").Error())
 
-	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 2, IntervalUnit: Minutes, Enabled: true}
+	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 2, IntervalUnit: Minutes, Enabled: &enabled}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Invalid request. Owner team cannot be empty. ").Error())
 
-	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 0, IntervalUnit: Minutes, Enabled: true, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
+	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 0, IntervalUnit: Minutes, Enabled: &enabled, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Invalid request. Interval cannot be smaller than 1. ").Error())
 
-	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 10, Enabled: true, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
+	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 10, Enabled: &enabled, OwnerTeam: og.OwnerTeam{Name: "Sales"}}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Invalid request. IntervalUnit cannot be empty. ").Error())
 
-	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 10, IntervalUnit: Minutes, Enabled: true, OwnerTeam: og.OwnerTeam{}}
+	request = &AddRequest{Name: "NewSDK", Description: "Descriptio2", Interval: 10, IntervalUnit: Minutes, Enabled: &enabled, OwnerTeam: og.OwnerTeam{}}
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Invalid request. Owner team cannot be empty. ").Error())
 }

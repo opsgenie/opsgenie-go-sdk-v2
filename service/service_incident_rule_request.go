@@ -143,7 +143,7 @@ type IncidentProperties struct {
 }
 
 type StakeholderProperties struct {
-	Enable      bool   `json:"enable,omitempty"`
+	Enable      *bool  `json:"enable,omitempty"`
 	Message     string `json:"message"`
 	Description string `json:"description,omitempty"`
 }

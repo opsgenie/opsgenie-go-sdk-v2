@@ -71,7 +71,7 @@ type UpdateRequest struct {
 	Description   string       `json:"description,omitempty"`
 	Interval      int          `json:"interval"`
 	IntervalUnit  Unit         `json:"intervalUnit"`
-	Enabled       bool         `json:"enabled,omitempty"`
+	Enabled       *bool        `json:"enabled,omitempty"`
 	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
 	AlertMessage  string       `json:"alertMessage,omitempty"`
 	AlertTag      []string     `json:"alertTags,omitempty"`
@@ -108,7 +108,7 @@ type AddRequest struct {
 	Description   string       `json:"description,omitempty"`
 	Interval      int          `json:"interval"`
 	IntervalUnit  Unit         `json:"intervalUnit"`
-	Enabled       bool         `json:"enabled"`
+	Enabled       *bool        `json:"enabled"`
 	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
 	AlertMessage  string       `json:"alertMessage,omitempty"`
 	AlertTag      []string     `json:"alertTags,omitempty"`
