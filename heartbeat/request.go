@@ -82,9 +82,6 @@ func (r UpdateRequest) Validate() error {
 	if r.Name == "" {
 		return errors.New("Invalid request. Name cannot be empty. ")
 	}
-	if &r.OwnerTeam == nil || (r.OwnerTeam.Id == "" && r.OwnerTeam.Name == "") {
-		return errors.New("Invalid request. Owner team cannot be empty. ")
-	}
 	if r.Interval < 1 {
 		return errors.New("Invalid request. Interval cannot be smaller than 1. ")
 	}
@@ -109,7 +106,7 @@ type AddRequest struct {
 	Interval      int          `json:"interval"`
 	IntervalUnit  Unit         `json:"intervalUnit"`
 	Enabled       *bool        `json:"enabled"`
-	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
+	OwnerTeam     og.OwnerTeam `json:"ownerTeam,omitempty"`
 	AlertMessage  string       `json:"alertMessage,omitempty"`
 	AlertTag      []string     `json:"alertTags,omitempty"`
 	AlertPriority string       `json:"alertPriority,omitempty"`
