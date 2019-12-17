@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 	"time"
@@ -669,29 +670,28 @@ func TestProxyConfiguration(t *testing.T) {
 
 	var request *http.Request
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	proxyServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		request = r
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintln(w, `{
-    "message": "",
-    "took": 1,
-    "requestId": "rId"
-}`)
+		_, _ = fmt.Fprintln(w, `{
+    		"message": "Success",
+    		"took": 1,
+    		"requestId": "32c9e6ba-e5b0-4dea-aa18-e3c3352a6d96"
+		}`)
 	}))
 
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-
-	proxyConf := &ProxyConfiguration{
-		Username: "eren",
-		Password: "123",
-		Host:     localUrl,
-		Protocol: "http",
-	}
+	psUrl, _ := url.Parse(proxyServer.URL)
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:             "apiKey",
-		RetryCount:         1,
-		ProxyConfiguration: proxyConf,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: "--",
+		ProxyConfiguration: &ProxyConfiguration{
+			Username: "admin",
+			Password: "1234",
+			Host:     psUrl.Host,
+			Protocol: Http,
+		},
 	})
 	assert.Nil(t, err)
 
@@ -710,27 +710,26 @@ func TestProxyConfigurationWhenAuthorizationIsNotRequired(t *testing.T) {
 
 	var request *http.Request
 
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	proxyServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		request = r
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintln(w, `{
-    "message": "",
-    "took": 1,
-    "requestId": "rId"
-}`)
+			"message": "",
+			"took": 1,
+			"requestId": "1d3993a1-9058-46f0-bbc0-93f639ad2e27"
+		}`)
 	}))
 
-	localUrl := strings.Replace(ts.URL, "http://", "", len(ts.URL)-1)
-
-	proxyConf := &ProxyConfiguration{
-		Host:     localUrl,
-		Protocol: "http",
-	}
+	psUrl, _ := url.Parse(proxyServer.URL)
 
 	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:             "apiKey",
-		RetryCount:         1,
-		ProxyConfiguration: proxyConf,
+		ApiKey:         "apiKey",
+		RetryCount:     1,
+		OpsGenieAPIURL: "--",
+		ProxyConfiguration: &ProxyConfiguration{
+			Host:     psUrl.Host,
+			Protocol: Http,
+		},
 	})
 	assert.Nil(t, err)
 
