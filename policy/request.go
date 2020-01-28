@@ -34,7 +34,7 @@ type CreateNotificationPolicyRequest struct {
 	MainFields
 	AutoRestartAction   *AutoRestartAction   `json:"autoRestartAction,omitempty"`
 	AutoCloseAction     *AutoCloseAction     `json:"autoCloseAction,omitempty"`
-	DeDuplicationAction *DeDuplicationAction `json:"deduplicationActionAction,omitempty"`
+	DeDuplicationAction *DeDuplicationAction `json:"deduplicationAction,omitempty"`
 	DelayAction         *DelayAction         `json:"delayAction,omitempty"`
 	Suppress            *bool                `json:"suppress,omitempty"`
 }
@@ -265,7 +265,7 @@ type UpdateNotificationPolicyRequest struct {
 	MainFields
 	AutoRestartAction   *AutoRestartAction   `json:"autoRestartAction,omitempty"`
 	AutoCloseAction     *AutoCloseAction     `json:"autoCloseAction,omitempty"`
-	DeDuplicationAction *DeDuplicationAction `json:"deduplicationActionAction,omitempty"`
+	DeDuplicationAction *DeDuplicationAction `json:"deduplicationAction,omitempty"`
 	DelayAction         *DelayAction         `json:"delayAction,omitempty"`
 	Suppress            *bool                `json:"suppress,omitempty"`
 	Id                  string
