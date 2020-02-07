@@ -71,7 +71,7 @@ type GetRuleResult struct {
 	Name             string                 `json:"name,omitempty"`
 	ActionType       ActionType             `json:"actionType,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
-	Enabled          bool                   `json:"bool,omitempty"`
+	Enabled          bool                   `json:"enabled,omitempty"`
 	NotificationTime []NotificationTimeType `json:"notificationTime,omitempty"`
 	TimeRestriction  *og.TimeRestriction    `json:"timeRestriction,omitempty"`
 	Steps            []*StepResult          `json:"steps,omitempty"`
