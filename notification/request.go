@@ -201,7 +201,7 @@ type CreateRuleRequest struct {
 	NotificationTime []NotificationTimeType `json:"notificationTime,omitempty"`
 	TimeRestriction  *og.TimeRestriction    `json:"timeRestriction,omitempty"`
 	Schedules        []Schedule             `json:"schedules,omitempty"`
-	Steps            []*og.Step             `json:"step,omitempty"`
+	Steps            []*og.Step             `json:"steps,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
 	Repeat           *Repeat                `json:"repeat,omitempty"`
 	Enabled          *bool                  `json:"enabled,omitempty"`
@@ -297,7 +297,7 @@ type UpdateRuleRequest struct {
 	NotificationTime []NotificationTimeType `json:"notificationTime,omitempty"`
 	TimeRestriction  *og.TimeRestriction    `json:"timeRestriction,omitempty"`
 	Schedules        []Schedule             `json:"schedules,omitempty"`
-	Steps            []*og.Step             `json:"step,omitempty"`
+	Steps            []*og.Step             `json:"steps,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
 	Repeat           *Repeat                `json:"repeat,omitempty"`
 	Enabled          *bool                  `json:"enabled,omitempty"`
