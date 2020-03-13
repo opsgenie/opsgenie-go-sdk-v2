@@ -1,0 +1,23 @@
+language: go
+go:
+  - 1.12.x
+  - 1.13.x
+  - 1.14.x
+os:
+  - linux
+  - osx
+  - windows
+
+env:
+  - GO111MODULE=on
+
+install:
+  - go get golang.org/x/tools/cmd/cover
+  - go get github.com/mattn/goveralls
+
+script:
+  - go test ./... -v -covermode=count -coverprofile=coverage.out
+
+after_success:
+  - goveralls -coverprofile=coverage.out -service=travis-ci -repotoken $COVERALLS_REPO_TOKEN
+
