@@ -98,17 +98,18 @@ func TestCreateRoutingRuleRequest_Validate(t *testing.T) {
 	err = createRoutingRuleRequest.Validate()
 	assert.Nil(t, err)
 
-	createRoutingRuleRequest.Criteria = &og.Filter{
-		ConditionMatchType: "invalid type",
-		Conditions:         nil,
+	createRoutingRuleRequest.Criteria = &og.Criteria{
+		CriteriaType: "invalid type",
+		Conditions:   nil,
 	}
 	err = createRoutingRuleRequest.Validate()
-	assert.Contains(t, err.Error(), errors.New("filter condition type should be one of").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria condition type should be one of match-all, match-any-condition "+
+		"or match-all-conditions").Error())
 
-	createRoutingRuleRequest.Criteria.ConditionMatchType = og.MatchAllConditions
+	createRoutingRuleRequest.Criteria.CriteriaType = og.MatchAllConditions
 	createRoutingRuleRequest.Criteria.Conditions = []og.Condition{}
 	err = createRoutingRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("filter conditions cannot be empty").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria conditions cannot be empty").Error())
 
 	isNot := false
 	createRoutingRuleRequest.Criteria.Conditions = []og.Condition{
