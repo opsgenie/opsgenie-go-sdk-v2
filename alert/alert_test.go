@@ -275,7 +275,7 @@ func TestSnoozeAlertRequest_Validate(t *testing.T) {
 	snoozeAlertRequestWithInvalidEndtime2 := &SnoozeAlertRequest{
 		IdentifierValue: "alias1",
 		IdentifierType:  ALIAS,
-		EndTime:         time.Now(),
+		EndTime:         time.Now().AddDate(0, 0, -1),
 	}
 	err = snoozeAlertRequestWithInvalidEndtime2.Validate()
 
