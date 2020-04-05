@@ -34,7 +34,7 @@ type CreateRequest struct {
 	Message            string            `json:"message"`
 	Description        string            `json:"description,omitempty"`
 	Responders         []Responder       `json:"responders,omitempty"`
-	Tags               []string          `json:"description,omitempty"`
+	Tags               []string          `json:"tags,omitempty"`
 	Details            map[string]string `json:"details,omitempty"`
 	Priority           Priority          `json:"priority,omitempty"`
 	Note               string            `json:"note,omitempty"`
