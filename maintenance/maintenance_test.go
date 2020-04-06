@@ -74,6 +74,20 @@ func TestUpdateRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestChangeEndDateRequest_Validate(t *testing.T) {
+	now := time.Now()
+	after := now.Add(time.Minute)
+	request := &ChangeEndDateRequest{}
+	err := request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Maintenance ID cannot be blank.").Error())
+	request.Id = "e14dda76-488e-4e98-a1c7-78cda1900e27"
+	err = request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Maintenance End Date cannot be blank.").Error())
+	request.EndDate = &after
+	err = request.Validate()
+	assert.Nil(t, err)
+}
+
 func TestDeleteRequest_Validate(t *testing.T) {
 	request := &DeleteRequest{}
 	err := request.Validate()
