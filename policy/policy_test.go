@@ -282,15 +282,18 @@ func TestCreateNotificationPolicy_Validate(t *testing.T) {
 	err = request.Validate()
 	assert.Nil(t, err)
 
-	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: -3}
+	invalidHour, validHour := -3, 3
+	invalidMinute, validMinute := 60, 55
+
+	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: &invalidHour}
 	err = request.Validate()
 	assert.Equal(t, "delayAction's UntilHour or UntilMinute is not valid", err.Error())
 
-	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: 5, UntilMinute: 60}
+	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: &validHour, UntilMinute: &invalidMinute}
 	err = request.Validate()
 	assert.Equal(t, "delayAction's UntilHour or UntilMinute is not valid", err.Error())
 
-	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: 5, UntilMinute: 55}
+	request.DelayAction = &DelayAction{DelayOption: NextSunday, UntilHour: &validHour, UntilMinute: &validMinute}
 	err = request.Validate()
 	assert.Nil(t, err)
 
