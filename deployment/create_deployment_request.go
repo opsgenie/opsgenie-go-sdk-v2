@@ -22,14 +22,20 @@ type CreateDeploymentRequest struct {
 }
 
 func (r *CreateDeploymentRequest) Validate() error {
-	if r.Message == "" {
-		return errors.New("message can not be empty")
-	}
 	if r.State == "" {
 		return errors.New("state can not be empty")
 	}
 	if r.Environment == nil {
 		return errors.New("environment can not be empty")
+	}
+	if len(r.Releases) == 0 {
+		return errors.New("releases can not be empty")
+	}
+	for _, release := range r.Releases {
+		err := release.Validate()
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
