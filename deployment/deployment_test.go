@@ -17,7 +17,23 @@ func TestCreateRequest_Validate(t *testing.T) {
 	}
 	err := createRequestWithoutMessage.Validate()
 
-	assert.Equal(t, err.Error(), errors.New("message can not be empty").Error())
+	assert.Equal(t, err.Error(), errors.New("releases can not be empty").Error())
+
+	releases := []Release{}
+	release := &BBCRelease{
+		Repository: Repository{
+			Workspace: Workspace{
+				Identifier: "kagan-test",
+				Type:       "name",
+			},
+			RepoSlug: "test",
+		},
+		Commit: Commit{
+			Sha: "asd123hsad1232sadasd",
+		},
+	}
+
+	releases = append(releases, release)
 
 	createRequest := &CreateDeploymentRequest{
 		State: Started,
@@ -27,6 +43,7 @@ func TestCreateRequest_Validate(t *testing.T) {
 		},
 		Message:   "test deployment",
 		StartedAt: time.Now(),
+		Releases:  releases,
 	}
 
 	err = createRequest.Validate()
