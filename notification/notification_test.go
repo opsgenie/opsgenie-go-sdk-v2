@@ -242,27 +242,27 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 	err = createRequest.Validate()
 	assert.Nil(t, err)
 
-	createRequest.Criteria = &og.Filter{}
+	createRequest.Criteria = &og.Criteria{}
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("filter condition type should be one of match-all, match-any-condition or match-all-conditions").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria condition type should be one of match-all, match-any-condition or match-all-conditions").Error())
 
-	createRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition}
+	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition}
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("filter conditions cannot be empty").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria conditions cannot be empty").Error())
 
 	conditions := make([]og.Condition, 1)
 	conditions[0] = og.Condition{Operation: og.Contains}
-	createRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams or priority").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: "a"}
-	createRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = createRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("a is not valid operation for alias").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: og.Contains}
-	createRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = createRequest.Validate()
 	assert.Nil(t, err)
 
@@ -374,27 +374,27 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 	err = updateRuleRequest.Validate()
 	assert.Nil(t, err)
 
-	updateRuleRequest.Criteria = &og.Filter{}
+	updateRuleRequest.Criteria = &og.Criteria{}
 	err = updateRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("filter condition type should be one of match-all, match-any-condition or match-all-conditions").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria condition type should be one of match-all, match-any-condition or match-all-conditions").Error())
 
-	updateRuleRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition}
+	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition}
 	err = updateRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("filter conditions cannot be empty").Error())
+	assert.Equal(t, err.Error(), errors.New("criteria conditions cannot be empty").Error())
 
 	conditions := make([]og.Condition, 1)
 	conditions[0] = og.Condition{Operation: og.Contains}
-	updateRuleRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = updateRuleRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams or priority").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: "a"}
-	updateRuleRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = updateRuleRequest.Validate()
 	assert.Equal(t, err.Error(), errors.New("a is not valid operation for alias").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: og.Contains}
-	updateRuleRequest.Criteria = &og.Filter{ConditionMatchType: og.MatchAnyCondition, Conditions: conditions}
+	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = updateRuleRequest.Validate()
 	assert.Nil(t, err)
 
