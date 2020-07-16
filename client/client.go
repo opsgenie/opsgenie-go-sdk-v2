@@ -252,8 +252,10 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 func printInfoLog(client *OpsGenieClient) {
 	client.Config.Logger.
 		WithFields(logrus.Fields{
-			"config":          client.Config.OpsGenieAPIURL,
+			"api_url":         client.Config.OpsGenieAPIURL,
 			"retry_max_count": client.RetryableClient.RetryMax,
+			"timeout":         client.Config.RequestTimeout,
+			"log_level":       client.Config.Logger.Logger.Level.String(),
 		}).
 		Infof("Client configured")
 
