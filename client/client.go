@@ -175,18 +175,21 @@ func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
 
 func setLogger(conf *Config) {
 	if conf.Logger == nil {
-		conf.Logger = logrus.New()
+		logger := logrus.New()
 		if conf.LogLevel != (logrus.Level(0)) { // todo fix panic level
-			conf.Logger.SetLevel(conf.LogLevel)
+			logger.SetLevel(conf.LogLevel)
 		}
-		conf.Logger.SetFormatter(
+		logger.SetFormatter(
 			&logrus.TextFormatter{
 				ForceColors:     true,
 				FullTimestamp:   true,
 				TimestampFormat: time.RFC3339Nano,
 			},
 		)
+		conf.Logger = &logrus.Entry{Logger: logger}
 	}
+	// add library field so logs from this library can be easily searched
+	conf.Logger = conf.Logger.WithField("library", "opsgenie")
 }
 
 func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
@@ -247,22 +250,29 @@ func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
 }
 
 func printInfoLog(client *OpsGenieClient) {
-	client.Config.Logger.Infof("Client is configured with ApiUrl: %s, LogLevel: %s, RetryMaxCount: %v",
-		client.Config.OpsGenieAPIURL,
-		client.Config.Logger.GetLevel().String(),
-		client.RetryableClient.RetryMax)
+	client.Config.Logger.
+		WithFields(logrus.Fields{
+			"config":          client.Config.OpsGenieAPIURL,
+			"retry_max_count": client.RetryableClient.RetryMax,
+		}).
+		Infof("Client configured")
+
 }
 
 func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
 	if err != nil {
-		cli.Config.Logger.Errorf("Unable to send the request %s ", err.Error())
+		cli.Config.Logger.
+			WithError(err).
+			Error("Unable to send the request ")
 		if err == context.DeadlineExceeded {
 			return nil, err
 		}
 		return nil, err
 	}
 	resp.Header.Add("retryCount", strconv.Itoa(numTries))
-	cli.Config.Logger.Errorf("Failed to process request after %d attempts.", numTries)
+	cli.Config.Logger.
+		WithField("retry_count", numTries).
+		Error("Failed to process request ")
 	return resp, nil
 }
 
@@ -443,7 +453,14 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 	startTime := time.Now().UnixNano()
 	transactionId := generateTransactionId()
-	cli.Config.Logger.Debugf("Starting to process Request %+v: to send: %s", request, request.ResourcePath())
+	cli.Config.Logger.
+		WithFields(logrus.Fields{
+			"metadata":      request.Metadata,
+			"resource_path": request.ResourcePath(),
+			"params":        request.RequestParams(),
+			"method":        request.Method(),
+		}).
+		Debug("Starting to process Request")
 	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "request-validation-error", err, request, result, duration(startTime, time.Now().UnixNano())))
@@ -451,7 +468,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	}
 	req, err := cli.buildHttpRequest(request)
 	if err != nil {
-		cli.Config.Logger.Errorf("Could not create request: %s", err.Error())
+		cli.Config.Logger.WithError(err).Error("Could not create request")
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "sdk-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
@@ -472,7 +489,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = handleErrorIfExist(response)
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
+		cli.Config.Logger.WithError(err).Error("Error in response from api")
 		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), response, err))
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "api-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
@@ -480,7 +497,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = result.Parse(response, result)
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
+		cli.Config.Logger.WithError(err).Error("Error parsing response from api")
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "http-response-parsing-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
 	}
@@ -489,10 +506,10 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 	metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *rm, response, nil))
 	err = result.ValidateResultMetadata()
 	if err != nil {
-		cli.Config.Logger.Warn(err.Error())
+		cli.Config.Logger.WithError(err).Warning("Error setting metadata")
 	}
 	metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "", nil, request, result, duration(startTime, time.Now().UnixNano())))
-	cli.Config.Logger.Debugf("Request processed. The result: %+v", result)
+	cli.Config.Logger.WithField("result", result).Debug("Request processed")
 	return nil
 }
 

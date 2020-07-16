@@ -631,6 +631,8 @@ func TestConfiguration(t *testing.T) {
 		PrettyPrint:     true,
 	})
 
+	customLoggerEntry := &logrus.Entry{Logger: customLogger}
+
 	retryFunc := func(ctx context.Context, resp *http.Response, err error) (b bool, e error) {
 		return false, errors.New("testError")
 	}
@@ -646,7 +648,7 @@ func TestConfiguration(t *testing.T) {
 		RetryCount:     7,
 		RetryPolicy:    retryFunc,
 		Backoff:        backOff,
-		Logger:         customLogger,
+		Logger:         customLoggerEntry,
 		LogLevel:       logrus.ErrorLevel,
 	}
 
