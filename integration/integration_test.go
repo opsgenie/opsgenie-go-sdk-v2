@@ -1,10 +1,11 @@
 package integration
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"testing"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestGetRequest_Validate(t *testing.T) {
@@ -176,14 +177,14 @@ func TestResponders_Validate(t *testing.T) {
 		{Type: "Cem"},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("Responder type should be one of these: " +
+	assert.Equal(t, err.Error(), errors.New("Responder type should be one of these: "+
 		"'User', 'Team', 'Schedule', 'Escalation'").Error())
 
 	responders = []Responder{
 		{Type: User},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type user either" +
+	assert.Equal(t, err.Error(), errors.New("For responder type user either"+
 		" username or id must be provided.").Error())
 
 	responders = []Responder{
@@ -200,7 +201,7 @@ func TestResponders_Validate(t *testing.T) {
 			Type: Team},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type team either team" +
+	assert.Equal(t, err.Error(), errors.New("For responder type team either team"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{
@@ -218,7 +219,7 @@ func TestResponders_Validate(t *testing.T) {
 		},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type schedule either schedule" +
+	assert.Equal(t, err.Error(), errors.New("For responder type schedule either schedule"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{
@@ -236,7 +237,7 @@ func TestResponders_Validate(t *testing.T) {
 		},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type escalation either escalation" +
+	assert.Equal(t, err.Error(), errors.New("For responder type escalation either escalation"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{

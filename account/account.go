@@ -2,7 +2,8 @@ package account
 
 import (
 	"context"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
 )
 
 type Client struct {

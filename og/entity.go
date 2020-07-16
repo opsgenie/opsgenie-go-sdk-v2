@@ -1,10 +1,11 @@
 package og
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/pkg/errors"
 	"time"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/alert"
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
+	"github.com/pkg/errors"
 )
 
 type OwnerTeam struct {

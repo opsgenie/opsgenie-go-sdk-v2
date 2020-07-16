@@ -1,10 +1,11 @@
 package escalation
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"testing"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestCreateRequest_Validate(t *testing.T) {

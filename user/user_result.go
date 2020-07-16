@@ -1,9 +1,10 @@
 package user
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"time"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 )
 
 type User struct {

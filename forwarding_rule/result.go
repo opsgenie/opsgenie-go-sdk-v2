@@ -1,8 +1,9 @@
 package forwarding_rule
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"time"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
 )
 
 type ForwardingRule struct {

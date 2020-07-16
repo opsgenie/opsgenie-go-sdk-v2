@@ -2,8 +2,9 @@ package schedule
 
 import (
 	"context"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"os"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
 )
 
 type Client struct {

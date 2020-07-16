@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"github.com/crepehat/opsgenie-go-sdk-v2/alert"
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 )
 
 type CreateAlertPolicyRequest struct {
@@ -257,9 +257,9 @@ func (r *UpdateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *UpdateAlertPolicyRequest) RequestParams() map[string]string {
-        params := make(map[string]string)
-        params["teamId"] = r.TeamId
-        return params
+	params := make(map[string]string)
+	params["teamId"] = r.TeamId
+	return params
 }
 
 func (r *UpdateAlertPolicyRequest) Method() string {

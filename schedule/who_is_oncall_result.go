@@ -1,11 +1,12 @@
 package schedule
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
+	"github.com/pkg/errors"
 )
 
 type GetOnCallsResult struct {

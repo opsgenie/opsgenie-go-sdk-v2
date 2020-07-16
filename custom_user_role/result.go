@@ -1,6 +1,6 @@
 package custom_user_role
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import "github.com/crepehat/opsgenie-go-sdk-v2/client"
 
 type CreateResult struct {
 	client.ResultMetadata

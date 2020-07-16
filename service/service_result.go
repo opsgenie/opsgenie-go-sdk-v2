@@ -1,6 +1,6 @@
 package service
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import "github.com/crepehat/opsgenie-go-sdk-v2/client"
 
 type Service struct {
 	Id          string     `json:"id"`

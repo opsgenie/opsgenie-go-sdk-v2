@@ -1,11 +1,12 @@
 package schedule
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
-	"github.com/pkg/errors"
-	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
+
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
+	"github.com/pkg/errors"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBuildCreateRequest(t *testing.T) {

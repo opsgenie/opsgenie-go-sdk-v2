@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )

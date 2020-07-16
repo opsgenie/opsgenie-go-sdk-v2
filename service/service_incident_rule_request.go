@@ -3,9 +3,9 @@ package service
 import (
 	"net/http"
 
-	"github.com/opsgenie/opsgenie-go-sdk-v2/alert"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"github.com/crepehat/opsgenie-go-sdk-v2/alert"
+	"github.com/crepehat/opsgenie-go-sdk-v2/client"
+	"github.com/crepehat/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 )
 
