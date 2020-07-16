@@ -455,14 +455,7 @@ func setBodyAsFormData(buf *io.ReadWriter, values map[string]io.Reader, contentT
 func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result ApiResult) error {
 	startTime := time.Now().UnixNano()
 	transactionId := generateTransactionId()
-	cli.Config.Logger.
-		WithFields(logrus.Fields{
-			"metadata":      request.Metadata,
-			"resource_path": request.ResourcePath(),
-			"params":        request.RequestParams(),
-			"method":        request.Method(),
-		}).
-		Debug("Starting to process Request")
+
 	if err := request.Validate(); err != nil {
 		cli.Config.Logger.Errorf("Request validation err: %s ", err.Error())
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "request-validation-error", err, request, result, duration(startTime, time.Now().UnixNano())))
@@ -511,7 +504,16 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		cli.Config.Logger.WithError(err).Warning("Error setting metadata")
 	}
 	metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "", nil, request, result, duration(startTime, time.Now().UnixNano())))
-	cli.Config.Logger.WithField("result", result).Debug("Request processed")
+	cli.Config.Logger.
+		WithFields(logrus.Fields{
+			"metadata":      request.Metadata,
+			"resource_path": request.ResourcePath(),
+			"params":        request.RequestParams(),
+			"method":        request.Method(),
+			"result":        result,
+		}).
+		Debug("Request processed")
+
 	return nil
 }
 
