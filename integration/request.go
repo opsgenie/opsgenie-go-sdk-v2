@@ -265,7 +265,7 @@ type CreateIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           *og.Filter        `json:"filter,omitempty"`
+	Filter                           *og.IntegrationActionFilter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -297,7 +297,7 @@ func (r *CreateIntegrationActionsRequest) Validate() error {
 		if err != nil {
 			return err
 		}
-		err = og.ValidateFilter(*r.Filter)
+		err = og.ValidateFilter(og.Filter(*r.Filter))
 		if err != nil {
 			return err
 		}
@@ -329,7 +329,7 @@ type IntegrationAction struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           *og.Filter        `json:"filter,omitempty"`
+	Filter                           *og.IntegrationActionFilter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -379,7 +379,7 @@ func validateActions(actions []IntegrationAction) error {
 			if err != nil {
 				return err
 			}
-			err = og.ValidateFilter(*r.Filter)
+			err = og.ValidateFilter(og.Filter(*r.Filter))
 			if err != nil {
 				return err
 			}

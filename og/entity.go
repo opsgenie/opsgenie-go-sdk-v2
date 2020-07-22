@@ -316,6 +316,11 @@ type Filter struct {
 	Conditions         []Condition        `json:"conditions,omitempty"`
 }
 
+type IntegrationActionFilter struct {
+	ConditionMatchType ConditionMatchType `json:"conditionMatchType,omitempty"`
+	Conditions         []Condition        `json:"conditions,omitempty"`
+}
+
 type Condition struct {
 	Field         ConditionFieldType `json:"field,omitempty"`
 	IsNot         *bool              `json:"not,omitempty"`
