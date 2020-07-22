@@ -256,6 +256,11 @@ func (r *GetIntegrationActionsRequest) Method() string {
 	return http.MethodGet
 }
 
+type IntegrationActionFilter struct {
+       ConditionMatchType og.ConditionMatchType `json:"conditionMatchType,omitempty"`
+       Conditions         []og.Condition        `json:"conditions,omitempty"`
+}
+
 type CreateIntegrationActionsRequest struct {
 	client.BaseRequest
 	Id                               string
@@ -265,7 +270,7 @@ type CreateIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           *og.IntegrationActionFilter        `json:"filter,omitempty"`
+	Filter                           *IntegrationActionFilter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
@@ -329,7 +334,7 @@ type IntegrationAction struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
-	Filter                           *og.IntegrationActionFilter        `json:"filter,omitempty"`
+	Filter                           *IntegrationActionFilter        `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
 	Description                      string            `json:"description,omitempty"`
