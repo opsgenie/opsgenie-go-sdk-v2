@@ -141,17 +141,17 @@ func ValidateConditions(conditions []Condition) error {
 			return errors.New("condition key is only valid for extra-properties field")
 		}
 		switch condition.Field {
-		case Message, Alias, Description, Source, Entity, EventType, Tags, Actions, Details, ExtraProperties, Recipients, Teams, Priority, ConversationSub, FromAddress, FromName, Subject:
+		case Message, MessageAWS, Alias, Description, Source, Entity, EventType, Tags, Actions, Details, ExtraProperties, Recipients, Teams, Priority, ConversationSub, FromAddress, FromName, Subject, SubjectAWS, Timestamp, TopicArn:
 			break
 		default:
-			return errors.New("condition field should be one of message, alias, description, source, entity, eventType, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject")
+			return errors.New("condition field should be one of message, Message, alias, description, source, entity, eventType, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name, subject, Subject, Timestamp or TopicArn")
 		}
 		switch condition.Field {
 		case Actions, Tags, Recipients:
 			if condition.Operation != Contains && condition.Operation != IsEmpty && condition.Operation != Matches {
 				return errors.New(string(condition.Operation) + " is not valid operation for " + string(condition.Field))
 			}
-		case Message, Alias, Description, Source, Entity, Teams:
+		case Message, MessageAWS, Alias, Description, Source, Entity, EventType, Teams, Subject, SubjectAWS, Timestamp, TopicArn:
 			if condition.Operation != Contains && condition.Operation != IsEmpty && condition.Operation != Matches &&
 				condition.Operation != Equals && condition.Operation != StartsWith && condition.Operation != EndsWith &&
 				condition.Operation != EqualsIgnoreWhitespcae {
@@ -259,6 +259,7 @@ const (
 	Hours   TimeUnit = "hours"
 
 	Message         ConditionFieldType = "message"
+	MessageAWS      ConditionFieldType = "Message"
 	Alias           ConditionFieldType = "alias"
 	Description     ConditionFieldType = "description"
 	Source          ConditionFieldType = "source"
@@ -275,6 +276,9 @@ const (
 	FromAddress     ConditionFieldType = "from_address"
 	FromName        ConditionFieldType = "from_name"
 	Subject         ConditionFieldType = "subject"
+	SubjectAWS      ConditionFieldType = "Subject"
+	Timestamp       ConditionFieldType = "Timestamp"
+	TopicArn        ConditionFieldType = "TopicArn"
 
 	Matches                ConditionOperation = "matches"
 	Contains               ConditionOperation = "contains"
