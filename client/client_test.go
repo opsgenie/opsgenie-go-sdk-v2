@@ -862,37 +862,6 @@ func TestRetrieveStatus(t *testing.T) {
 	assert.Equal(t, "Success", result.Data)
 }
 
-func TestRetrieveStatusContextDeadline(t *testing.T) {
-
-	ctx := context.Background()
-	ctx, _ = context.WithTimeout(ctx, time.Millisecond*1)
-
-	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		time.Sleep(time.Millisecond * 250)
-	}))
-
-	request := &testRequest{MandatoryField: "afield", ExtraField: "extra"}
-	result := &testResult{}
-
-	ogClient, err := NewOpsGenieClient(&Config{
-		ApiKey:         "apiKey",
-		RetryCount:     4,
-		OpsGenieAPIURL: ApiUrl(strings.TrimPrefix(ts.URL, "http://")),
-	})
-	assert.Nil(t, err)
-
-	asyncBaseResult := AsyncBaseResult{Client: ogClient}
-
-	start := time.Now().UnixNano()
-	err = asyncBaseResult.RetrieveStatus(ctx, request, result)
-	end := time.Now().UnixNano()
-
-	assert.EqualError(t, err, "context deadline exceeded")
-	delta := float64(100 * time.Millisecond.Nanoseconds())
-	fmt.Println("start: ", start, "\nend  : ", end, "\ndiff : ", float64(end-start), "\ndelta: ", delta)
-	assert.InDelta(t, end, start, delta)
-}
-
 func setZeroBackoff(client *OpsGenieClient) {
 	client.RetryableClient.Backoff = func(min, max time.Duration, attemptNum int, resp *http.Response) time.Duration {
 		return time.Duration(0)
