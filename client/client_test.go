@@ -865,7 +865,7 @@ func TestRetrieveStatus(t *testing.T) {
 func TestRetrieveStatusContextDeadline(t *testing.T) {
 
 	ctx := context.Background()
-	ctx, _ = context.WithTimeout(ctx, time.Millisecond*50)
+	ctx, _ = context.WithTimeout(ctx, time.Millisecond*1)
 
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		time.Sleep(time.Millisecond * 250)
