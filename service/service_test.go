@@ -21,6 +21,9 @@ func TestCreateRequest_Validate(t *testing.T) {
 	request.Visibility = OpsgenieUsers
 	err = request.Validate()
 	assert.Nil(t, err)
+	request.Tags = []string{"foo", "bar"}
+	err = request.Validate()
+	assert.Nil(t, err)
 }
 
 func TestUpdateRequest_Validate(t *testing.T) {
