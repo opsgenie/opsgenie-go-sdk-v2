@@ -45,7 +45,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 		},
 	}
 	err = req.Validate()
-	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
+	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, eventType, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
 
 	req.Filter.Conditions = []og.Condition{
 		{
