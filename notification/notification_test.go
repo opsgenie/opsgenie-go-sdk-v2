@@ -254,7 +254,7 @@ func TestCreateRuleRequest_Validate(t *testing.T) {
 	conditions[0] = og.Condition{Operation: og.Contains}
 	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = createRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
+	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, eventType, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: "a"}
 	createRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
@@ -386,7 +386,7 @@ func TestUpdateRuleRequest_Validate(t *testing.T) {
 	conditions[0] = og.Condition{Operation: og.Contains}
 	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
 	err = updateRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
+	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, eventType, tags, actions, details, extra-properties, recipients, teams, priority, conversationSubject, from_address, from_name or subject").Error())
 
 	conditions[0] = og.Condition{Field: og.Alias, Operation: "a"}
 	updateRuleRequest.Criteria = &og.Criteria{CriteriaType: og.MatchAnyCondition, Conditions: conditions}
