@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 )
 
@@ -14,7 +13,7 @@ type CreateIncidentTemplateRequest struct {
 	Message               string 				`json:"message"`
 	Description           string 				`json:"description,omitempty"`
 	Tags                  []string 				`json:"tags,omitempty"`
-	Details               map[string]string 	`json:"details,omitempty"`
+	Details               map[string]string     `json:"details,omitempty"`
 	Priority              Priority 				`json:"priority"`
 	ImpactedServices      []string 				`json:"impacted_services,omitempty"`
 	StakeholderProperties StakeholderProperties `json:"stakeholderProperties"`
@@ -28,12 +27,6 @@ func (r *CreateIncidentTemplateRequest) Validate() error {
 		return err
 	}
 	if err := validateDescription(r.Description); err != nil {
-		return err
-	}
-	if err := validateTags(r.Tags); err != nil {
-		return err
-	}
-	if err := validateDetails(r.Details); err != nil {
 		return err
 	}
 	if err := validatePriority(r.Priority); err != nil {
@@ -63,8 +56,8 @@ type UpdateIncidentTemplateRequest struct {
 	Message               string 				`json:"message"`
 	Description           string 				`json:"description,omitempty"`
 	Tags                  []string 				`json:"tags,omitempty"`
-	Details               map[string]string 	`json:"details,omitempty"`
-	Priority              Priority 				`json:"priority"`
+	Details               map[string]string     `json:"details,omitempty"`
+	Priority              Priority              `json:"priority"`
 	ImpactedServices      []string 				`json:"impacted_services,omitempty"`
 	StakeholderProperties StakeholderProperties `json:"stakeholderProperties"`
 }
@@ -79,13 +72,7 @@ func (r *UpdateIncidentTemplateRequest) Validate() error {
 	if err := validateMessage(r.Message); err != nil {
 		return err
 	}
-	if err := validatePriority(r.Priority); err != nil {
-		return err
-	}
-	if err := validateTags(r.Tags); err != nil {
-		return err
-	}
-	if err := validateDetails(r.Details); err != nil {
+	if err := validateDescription(r.Description); err != nil {
 		return err
 	}
 	if err := validatePriority(r.Priority); err != nil {
@@ -141,7 +128,7 @@ func (r *GetIncidentTemplateRequest) Validate() error {
 }
 
 func (r *GetIncidentTemplateRequest) ResourcePath() string {
-	return "v1/incident-templates/" + r.IncidentTemplateId
+	return "v1/incident-templates/"
 }
 
 func (r *GetIncidentTemplateRequest) Method() string {
@@ -177,16 +164,6 @@ func validateDescription(description string) error {
 	return nil
 }
 
-// TODO
-func validateTags(tags []string) error {
-	return nil
-}
-
-// TODO
-func validateDetails(details map[string]string) error {
-	return nil
-}
-
 func validatePriority(priority Priority) error {
 	switch priority {
 	case P1, P2, P3, P4, P5, "":
@@ -196,8 +173,10 @@ func validatePriority(priority Priority) error {
 		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty")
 }
 
-// TODO
 func validateImpactedServices(impactedServices []string) error {
+	if len(impactedServices) > 20 {
+		return errors.New("Impacted services property cannot have services more than 20.")
+	}
 	return nil
 }
 
