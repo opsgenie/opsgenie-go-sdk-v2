@@ -117,13 +117,13 @@ func (r *DeleteIncidentTemplateRequest) Method() string {
 
 type GetIncidentTemplateRequest struct {
 	client.BaseRequest
-	IncidentTemplateId string `json:"incident_template_id"`
+	//IncidentTemplateId string `json:"incident_template_id"`
 }
 
 func (r *GetIncidentTemplateRequest) Validate() error {
-	if err := validateIncidentTemplateId(r.IncidentTemplateId); err != nil {
-		return err
-	}
+	//if err := validateIncidentTemplateId(r.IncidentTemplateId); err != nil {
+	//	return err
+	//}
 	return nil
 }
 
@@ -166,11 +166,11 @@ func validateDescription(description string) error {
 
 func validatePriority(priority Priority) error {
 	switch priority {
-	case P1, P2, P3, P4, P5, "":
+	case P1, P2, P3, P4, P5:
 		return nil
 	}
 	return errors.New("Priority should be one of these: " +
-		"'P1', 'P2', 'P3', 'P4' and 'P5' or empty")
+		"'P1', 'P2', 'P3', 'P4' and 'P5'")
 }
 
 func validateImpactedServices(impactedServices []string) error {
