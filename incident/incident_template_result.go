@@ -10,6 +10,12 @@ type CreateIncidentTemplateResult struct {
 	IncidentTemplateId string `json:"incident_template_id"`
 }
 
+type UpdateIncidentTemplateResult struct {
+	client.ResultMetadata
+	Result string `json:"result"`
+	IncidentTemplateId string `json:"incident_template_id"`
+}
+
 type DeleteIncidentTemplateResult struct {
 	client.ResultMetadata
 	Result string `json:"result"`
@@ -26,10 +32,4 @@ type GetIncidentTemplateResult struct {
 	Priority              Priority 				`json:"priority"`
 	ImpactedServices      []string 				`json:"impacted_services,omitempty"`
 	StakeholderProperties StakeholderProperties `json:"stakeholderProperties"`
-}
-
-type UpdateIncidentTemplateResult struct {
-	client.ResultMetadata
-	Result string `json:"result"`
-	IncidentTemplateId string `json:"incident_template_id"`
 }

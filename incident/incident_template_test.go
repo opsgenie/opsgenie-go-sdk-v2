@@ -32,16 +32,6 @@ func TestCreateIncidentTemplateRequest_Validate(t *testing.T) {
 	assert.Equal(t, request.Method(), http.MethodPut)
 }
 
-func TestGetIncidentTemplateRequest_Validate(t *testing.T) {
-	var err error
-	request := &GetIncidentTemplateRequest{}
-	err = request.Validate()
-	assert.Nil(t, err)
-
-	assert.Equal(t, request.ResourcePath(), "v1/incident-templates/")
-	assert.Equal(t, request.Method(), http.MethodGet)
-}
-
 func TestUpdateIncidentTemplateRequest_Validate(t *testing.T) {
 	var err error
 	request := &UpdateIncidentTemplateRequest{}
@@ -81,4 +71,14 @@ func TestDeleteIncidentTemplateRequest_Validate(t *testing.T) {
 
 	assert.Equal(t, request.ResourcePath(), "v1/incident-templates/929fa6a4-ef29-4bda-8172-135335a9e8f2")
 	assert.Equal(t, request.Method(), http.MethodDelete)
+}
+
+func TestGetIncidentTemplateRequest_Validate(t *testing.T) {
+	var err error
+	request := &GetIncidentTemplateRequest{}
+	err = request.Validate()
+	assert.Nil(t, err)
+
+	assert.Equal(t, request.ResourcePath(), "v1/incident-templates/")
+	assert.Equal(t, request.Method(), http.MethodGet)
 }
