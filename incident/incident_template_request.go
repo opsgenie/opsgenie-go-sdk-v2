@@ -20,8 +20,8 @@ type CreateIncidentTemplateRequest struct {
 }
 
 func (r *CreateIncidentTemplateRequest) Validate() error {
-	if err := validateName(r.Name); err != nil {
-		return err
+	if r.Name == "" {
+		return errors.New("Name property cannot be empty.")
 	}
 	if err := validateMessage(r.Message); err != nil {
 		return err
@@ -66,8 +66,8 @@ func (r *UpdateIncidentTemplateRequest) Validate() error {
 	if err := validateIncidentTemplateId(r.IncidentTemplateId); err != nil {
 		return err
 	}
-	if err := validateName(r.Name); err != nil {
-		return err
+	if r.Name == "" {
+		return errors.New("Name property cannot be empty.")
 	}
 	if err := validateMessage(r.Message); err != nil {
 		return err
@@ -139,13 +139,6 @@ type StakeholderProperties struct {
 	Enable      *bool  `json:"enable,omitempty"`
 	Message     string `json:"message"`
 	Description string `json:"description,omitempty"`
-}
-
-func validateName(name string) error {
-	if name == "" {
-		return errors.New("Name property cannot be empty.")
-	}
-	return nil
 }
 
 func validateMessage(message string) error {
