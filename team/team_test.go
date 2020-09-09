@@ -114,18 +114,6 @@ func TestCreateRoutingRuleRequest_Validate(t *testing.T) {
 	isNot := false
 	createRoutingRuleRequest.Criteria.Conditions = []og.Condition{
 		{
-			Field:         "random field",
-			IsNot:         &isNot,
-			Operation:     "",
-			ExpectedValue: "",
-			Key:           "",
-		},
-	}
-	err = createRoutingRuleRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams or priority").Error())
-
-	createRoutingRuleRequest.Criteria.Conditions = []og.Condition{
-		{
 			Field:         og.Message,
 			IsNot:         &isNot,
 			Operation:     og.Contains,

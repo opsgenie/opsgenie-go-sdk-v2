@@ -37,18 +37,6 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	isNot := false
 	req.Filter.Conditions = []og.Condition{
 		{
-			Field:         "random field",
-			IsNot:         &isNot,
-			Operation:     "",
-			ExpectedValue: "",
-			Key:           "",
-		},
-	}
-	err = req.Validate()
-	assert.Equal(t, err.Error(), errors.New("condition field should be one of message, alias, description, source, entity, tags, actions, details, extra-properties, recipients, teams or priority").Error())
-
-	req.Filter.Conditions = []og.Condition{
-		{
 			Field:         og.Message,
 			IsNot:         &isNot,
 			Operation:     og.Contains,
