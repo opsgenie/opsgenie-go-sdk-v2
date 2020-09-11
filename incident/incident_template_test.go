@@ -21,7 +21,7 @@ func TestCreateIncidentTemplateRequest_Validate(t *testing.T) {
 	request.Priority = "P2"
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Message field of stakeholder property cannot be empty.").Error())
-	request.StakeholderProperties = StakeholderProperties {Message: "Stakeholder Message"}
+	request.StakeholderProperties = StakeholderProperties{Message: "Stakeholder Message"}
 	err = request.Validate()
 	assert.Nil(t, err)
 
@@ -46,7 +46,7 @@ func TestUpdateIncidentTemplateRequest_Validate(t *testing.T) {
 	request.Priority = "P2"
 	err = request.Validate()
 	assert.Equal(t, err.Error(), errors.New("Message field of stakeholder property cannot be empty.").Error())
-	request.StakeholderProperties = StakeholderProperties {Message: "Stakeholder Message"}
+	request.StakeholderProperties = StakeholderProperties{Message: "Stakeholder Message"}
 	err = request.Validate()
 	assert.Nil(t, err)
 
@@ -70,9 +70,9 @@ func TestDeleteIncidentTemplateRequest_Validate(t *testing.T) {
 func TestGetIncidentTemplateRequest_Validate(t *testing.T) {
 	var err error
 	request := &GetIncidentTemplateRequest{
-		Limit:       20,
-		Offset:      2,
-		Order:       "desc",
+		Limit:  20,
+		Offset: 2,
+		Order:  "desc",
 	}
 	err = request.Validate()
 	assert.Nil(t, err)

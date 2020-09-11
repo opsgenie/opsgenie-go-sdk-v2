@@ -10,13 +10,13 @@ import (
 
 type CreateIncidentTemplateRequest struct {
 	client.BaseRequest
-	Name                  string 				`json:"name"`
-	Message               string 				`json:"message"`
-	Description           string 				`json:"description,omitempty"`
-	Tags                  []string 				`json:"tags,omitempty"`
+	Name                  string                `json:"name"`
+	Message               string                `json:"message"`
+	Description           string                `json:"description,omitempty"`
+	Tags                  []string              `json:"tags,omitempty"`
 	Details               map[string]string     `json:"details,omitempty"`
-	Priority              Priority 				`json:"priority"`
-	ImpactedServices      []string 				`json:"impactedServices,omitempty"`
+	Priority              Priority              `json:"priority"`
+	ImpactedServices      []string              `json:"impactedServices,omitempty"`
 	StakeholderProperties StakeholderProperties `json:"stakeholderProperties"`
 }
 
@@ -52,14 +52,14 @@ func (r *CreateIncidentTemplateRequest) Method() string {
 
 type UpdateIncidentTemplateRequest struct {
 	client.BaseRequest
-	IncidentTemplateId    string 				`json:"id"`
-	Name                  string 				`json:"name"`
-	Message               string 				`json:"message"`
-	Description           string 				`json:"description,omitempty"`
-	Tags                  []string 				`json:"tags,omitempty"`
+	IncidentTemplateId    string                `json:"id"`
+	Name                  string                `json:"name"`
+	Message               string                `json:"message"`
+	Description           string                `json:"description,omitempty"`
+	Tags                  []string              `json:"tags,omitempty"`
 	Details               map[string]string     `json:"details,omitempty"`
 	Priority              Priority              `json:"priority"`
-	ImpactedServices      []string 				`json:"impactedServices,omitempty"`
+	ImpactedServices      []string              `json:"impactedServices,omitempty"`
 	StakeholderProperties StakeholderProperties `json:"stakeholderProperties"`
 }
 
