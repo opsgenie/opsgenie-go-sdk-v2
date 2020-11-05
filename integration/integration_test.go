@@ -31,6 +31,28 @@ func TestAPIBasedIntegrationRequest_Validate(t *testing.T) {
 	assert.Nil(t, err)
 }
 
+func TestWebhookIntegrationRequest_Validate(t *testing.T) {
+	request := &WebhookIntegrationRequest{}
+	err := request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Name, Type and WebhookUrl fields cannot be empty.").Error())
+
+	request.Name = "Webhook test"
+	err = request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Name, Type and WebhookUrl fields cannot be empty.").Error())
+
+	request.WebhookUrl = "https://api-dummy.com/v1"
+	err = request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Name, Type and WebhookUrl fields cannot be empty.").Error())
+
+	request.Type = "CemType"
+	err = request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Type has to be [Webhook] for Webhook integration.").Error())
+
+	request.Type = "Webhook"
+	err = request.Validate()
+	assert.Nil(t, err)
+}
+
 func TestEmailBasedIntegrationRequest_Validate(t *testing.T) {
 	request := &EmailBasedIntegrationRequest{}
 	err := request.Validate()
@@ -66,6 +88,14 @@ func TestUpdateIntegrationRequest_Validate(t *testing.T) {
 
 	request.OtherFields["type"] = "CemType"
 	request.OtherFields["responders"] = []Responder{}
+	err = request.Validate()
+	assert.Nil(t, err)
+
+	request.OtherFields["type"] = "Webhook"
+	err = request.Validate()
+	assert.Equal(t, err.Error(), errors.New("[url] cannot be empty for type Webhook.").Error())
+
+	request.OtherFields["url"] = "https://api-dummy.com/v1"
 	err = request.Validate()
 	assert.Nil(t, err)
 }
