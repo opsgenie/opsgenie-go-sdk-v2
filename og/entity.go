@@ -70,7 +70,7 @@ func validateParticipants(rotation *Rotation) error {
 		if participant.Type == "" {
 			return errors.New("Participant type cannot be empty.")
 		}
-		if !(participant.Type == User || participant.Type == Team) {
+		if !(participant.Type == User || participant.Type == Team || participant.Type == None || participant.Type == Escalation) {
 			return errors.New("Participant type should be one of these: 'User', 'Team'")
 		}
 		if participant.Type == User && participant.Username == "" && participant.Id == "" {
