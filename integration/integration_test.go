@@ -206,14 +206,14 @@ func TestResponders_Validate(t *testing.T) {
 		{Type: "Cem"},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("Responder type should be one of these: " +
+	assert.Equal(t, err.Error(), errors.New("Responder type should be one of these: "+
 		"'User', 'Team', 'Schedule', 'Escalation'").Error())
 
 	responders = []Responder{
 		{Type: User},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type user either" +
+	assert.Equal(t, err.Error(), errors.New("For responder type user either"+
 		" username or id must be provided.").Error())
 
 	responders = []Responder{
@@ -230,7 +230,7 @@ func TestResponders_Validate(t *testing.T) {
 			Type: Team},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type team either team" +
+	assert.Equal(t, err.Error(), errors.New("For responder type team either team"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{
@@ -248,7 +248,7 @@ func TestResponders_Validate(t *testing.T) {
 		},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type schedule either schedule" +
+	assert.Equal(t, err.Error(), errors.New("For responder type schedule either schedule"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{
@@ -266,7 +266,7 @@ func TestResponders_Validate(t *testing.T) {
 		},
 	}
 	err = validateResponders(responders)
-	assert.Equal(t, err.Error(), errors.New("For responder type escalation either escalation" +
+	assert.Equal(t, err.Error(), errors.New("For responder type escalation either escalation"+
 		" name or id must be provided.").Error())
 
 	responders = []Responder{
@@ -282,7 +282,7 @@ func TestResponders_Validate(t *testing.T) {
 func TestActionType_Validate(t *testing.T) {
 	err := validateActionType("cem")
 	assert.Equal(t, err.Error(), errors.New("Action type should be one of these: "+
-		"'Create','Close','Acknowledge','AddNote'").Error())
+		"'Create','Close','Acknowledge','AddNote','Ignore'").Error())
 
 	err = validateActionType(Create)
 	assert.Nil(t, err)
@@ -294,6 +294,9 @@ func TestActionType_Validate(t *testing.T) {
 	assert.Nil(t, err)
 
 	err = validateActionType(AddNote)
+	assert.Nil(t, err)
+
+	err = validateActionType(Ignore)
 	assert.Nil(t, err)
 }
 
