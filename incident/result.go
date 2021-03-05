@@ -68,7 +68,7 @@ type NoteResult struct {
 	Note      string    `json:"note"`
 	Owner     string    `json:"owner"`
 	CreatedAt time.Time `json:"createdAt"`
-	Offset    string    `json:"offset"`
+	Offset    int       `json:"offset"`
 }
 
 type ListNotesResult struct {
