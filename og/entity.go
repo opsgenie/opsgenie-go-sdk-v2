@@ -81,7 +81,7 @@ func validateParticipants(rotation *Rotation) error {
 		}
 		if participant.Type == Escalation && participant.Name == "" && participant.Id == "" {
 			return errors.New("For participant type escalation either escalation name or id must be provided.")
-    }
+		}
 	}
 	return nil
 }

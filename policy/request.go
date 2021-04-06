@@ -257,9 +257,9 @@ func (r *UpdateAlertPolicyRequest) ResourcePath() string {
 }
 
 func (r *UpdateAlertPolicyRequest) RequestParams() map[string]string {
-        params := make(map[string]string)
-        params["teamId"] = r.TeamId
-        return params
+	params := make(map[string]string)
+	params["teamId"] = r.TeamId
+	return params
 }
 
 func (r *UpdateAlertPolicyRequest) Method() string {
