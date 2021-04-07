@@ -1,6 +1,6 @@
 package contact
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import "github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 
 type Contact struct {
 	Id              string `json:"id"`

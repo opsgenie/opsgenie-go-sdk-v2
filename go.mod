@@ -1,4 +1,4 @@
-module github.com/opsgenie/opsgenie-go-sdk-v2
+module github.com/joeyparsons/opsgenie-go-sdk-v2
 
 go 1.12
 
