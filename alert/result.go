@@ -27,6 +27,7 @@ type Alert struct {
 	Responders     []Responder `json:"responders"`
 	Integration    Integration `json:"integration,omitempty"`
 	Report         Report      `json:"report,omitempty"`
+	OwnerTeamID    string      `json:"ownerTeamId,omitempty"`
 }
 
 type Integration struct {
