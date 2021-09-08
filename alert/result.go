@@ -18,7 +18,7 @@ type Alert struct {
 	Snoozed        bool        `json:"snoozed,omitempty"`
 	SnoozedUntil   time.Time   `json:"snoozedUntil,omitempty"`
 	Count          int         `json:"count,omitempty"`
-	LastOccurredAt time.Time   `json:"lastOccuredAt,omitempty"`
+	LastOccurredAt time.Time   `json:"lastOccurredAt,omitempty"`
 	CreatedAt      time.Time   `json:"createdAt,omitempty"`
 	UpdatedAt      time.Time   `json:"updatedAt,omitempty"`
 	Source         string      `json:"source,omitempty"`
