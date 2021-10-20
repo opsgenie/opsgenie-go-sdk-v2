@@ -101,6 +101,28 @@ func TestListRequest_GetParams(t *testing.T) {
 	assert.Equal(t, "asc", params["order"])
 }
 
+func TestResolveRequest_Validate(t *testing.T) {
+	request := &ResolveRequest{
+		Identifier: Tiny,
+	}
+	err := request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Incident ID cannot be blank.").Error())
+	request.Id = "adea9e79-5527-4e49-b345-e55ae180ae59"
+	err = request.Validate()
+	assert.Nil(t, err)
+}
+
+func TestResolveRequest_Endpoint(t *testing.T) {
+	request := &ResolveRequest{
+		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
+		Identifier: Tiny,
+	}
+	endpoint := request.ResourcePath()
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/resolve", endpoint)
+	assert.Equal(t, "tiny", params["identifierType"])
+}
+
 func TestCloseRequest_Validate(t *testing.T) {
 	request := &CloseRequest{
 		Identifier: Tiny,
