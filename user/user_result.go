@@ -7,18 +7,19 @@ import (
 )
 
 type User struct {
-	Id          string              `json:"id"`
-	Username    string              `json:"username"`
-	FullName    string              `json:"fullName"`
-	Role        *UserRole           `json:"role"`
-	Blocked     bool                `json:"blocked"`
-	Verified    bool                `json:"verified"`
-	UserAddress *UserAddress        `json:"userAddress"`
-	Tags        []string            `json:"tags"`
-	Details     map[string][]string `json:"details"`
-	TimeZone    string              `json:"timeZone"`
-	Locale      string              `json:"locale"`
-	CreatedAt   time.Time           `json:"createdAt"`
+	Id            string              `json:"id"`
+	Username      string              `json:"username"`
+	FullName      string              `json:"fullName"`
+	Role          *UserRole           `json:"role"`
+	Blocked       bool                `json:"blocked"`
+	Verified      bool                `json:"verified"`
+	UserAddress   *UserAddress        `json:"userAddress"`
+	Tags          []string            `json:"tags"`
+	Details       map[string][]string `json:"details"`
+	TimeZone      string              `json:"timeZone"`
+	Locale        string              `json:"locale"`
+	CreatedAt     time.Time           `json:"createdAt"`
+	SkypeUsername string              `json:"skypeUsername"`
 }
 
 type UserRole struct {
