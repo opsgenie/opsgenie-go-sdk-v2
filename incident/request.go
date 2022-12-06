@@ -1,6 +1,7 @@
 package incident
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -803,21 +804,35 @@ const (
 )
 
 type Responder struct {
-	Type ResponderType `json:"type,omitempty"`
-	Name string        `json:"name,omitempty"`
-	Id   string        `json:"id,omitempty"`
+	Type     ResponderType `json:"type,omitempty"`
+	Name     string        `json:"name,omitempty"`
+	Username string        `json:"username,omitempty"`
+	Id       string        `json:"id,omitempty"`
 }
 
 func validateResponders(responders []Responder) error {
 	for _, responder := range responders {
-		if responder.Type == "" {
-			return errors.New("Responder type cannot be empty.")
-		}
-		if !(responder.Type == User || responder.Type == Team) {
-			return errors.New("Responder type should be one of these: 'User', 'Team'.")
-		}
-		if responder.Name == "" && responder.Id == "" {
-			return errors.New("For responder either name or id must be provided.")
+		switch responder.Type {
+		case Team:
+			if responder.Username != "" {
+				return errors.New("For team responders, username must not be set")
+			}
+
+			if responder.Name == "" && responder.Id == "" {
+				return errors.New("For team responders either name or id must be provided.")
+			}
+
+		case User:
+			if responder.Name != "" {
+				return errors.New("For user responders, name must not be set")
+			}
+
+			if responder.Username == "" && responder.Id == "" {
+				return errors.New("For user responders either username or id must be provided.")
+			}
+
+		default:
+			return errors.New(fmt.Sprintf("Unsupported responder type %s", responder.Type))
 		}
 	}
 	return nil
