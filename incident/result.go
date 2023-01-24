@@ -18,6 +18,7 @@ type Incident struct {
 	OwnerTeam       string            `json:"ownerTeam"`
 	Responders      []Responder       `json:"responders"`
 	ExtraProperties map[string]string `json:"extraProperties"`
+	Links           IncidentLinks     `json:"links"`
 }
 
 type RequestStatusResult struct {
@@ -79,4 +80,11 @@ type Paging struct {
 	Prev  string `json:"prev"`
 	First string `json:"first"`
 	Last  string `json:"last"`
+}
+
+// This is an undocumented part of the response, but is very important for us as it's the only way we
+// can get the web link to the incident.
+type IncidentLinks struct {
+	Web string `json:"web"`
+	API string `json:"api"`
 }
