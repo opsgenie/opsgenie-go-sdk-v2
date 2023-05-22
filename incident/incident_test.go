@@ -475,13 +475,12 @@ func TestResponders_Validate(t *testing.T) {
 		{Type: User},
 	}
 	err = validateResponders(Responders)
-	assert.Equal(t, err.Error(), errors.New("For responder either name"+
-		" or id must be provided.").Error())
+	assert.Equal(t, err.Error(), errors.New("For responder type user either username or id must be provided.").Error())
 
 	Responders = []Responder{
 		{
-			Type: User,
-			Name: "cem",
+			Type:     User,
+			Username: "cem@example.com",
 		},
 	}
 	err = validateResponders(Responders)
@@ -492,8 +491,7 @@ func TestResponders_Validate(t *testing.T) {
 			Type: Team},
 	}
 	err = validateResponders(Responders)
-	assert.Equal(t, err.Error(), errors.New("For responder either name"+
-		" or id must be provided.").Error())
+	assert.Equal(t, err.Error(), errors.New("For responder type team either team name or id must be provided.").Error())
 
 	Responders = []Responder{
 		{

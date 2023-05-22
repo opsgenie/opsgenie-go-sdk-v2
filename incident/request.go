@@ -861,6 +861,7 @@ type Responder struct {
 	Type ResponderType `json:"type,omitempty"`
 	Name string        `json:"name,omitempty"`
 	Id   string        `json:"id,omitempty"`
+	Username string    `json:"username,omitempty"`
 }
 
 func validateResponders(responders []Responder) error {
@@ -871,8 +872,11 @@ func validateResponders(responders []Responder) error {
 		if !(responder.Type == User || responder.Type == Team) {
 			return errors.New("Responder type should be one of these: 'User', 'Team'.")
 		}
-		if responder.Name == "" && responder.Id == "" {
-			return errors.New("For responder either name or id must be provided.")
+		if responder.Type == User && responder.Username == "" && responder.Id == "" {
+			return errors.New("For responder type user either username or id must be provided.")
+		}
+		if responder.Type == Team && responder.Name == "" && responder.Id == "" {
+			return errors.New("For responder type team either team name or id must be provided.")
 		}
 	}
 	return nil
