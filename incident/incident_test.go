@@ -502,3 +502,37 @@ func TestResponders_Validate(t *testing.T) {
 	err = validateResponders(Responders)
 	assert.Nil(t, err)
 }
+
+func TestGetResponderAlertsRequest_Endpoint(t *testing.T) {
+	request := &GetResponderAlertsRequest{
+		Id:         "adea9e79-5527-4e49-b345-e55ae180ae59",
+		Identifier: Id,
+	}
+	endpoint := request.ResourcePath()
+	params := request.RequestParams()
+	assert.Equal(t, "/v1/incidents/adea9e79-5527-4e49-b345-e55ae180ae59/responder-alert-ids", endpoint)
+	assert.Equal(t, "id", params["identifierType"])
+}
+
+func TestGetResponderAlertsRequest_GetParams(t *testing.T) {
+	request := &GetResponderAlertsRequest{
+		Limit:     10,
+		Offset:    30,
+		Order:     "desc",
+		Direction: "next",
+	}
+	params := request.RequestParams()
+	assert.Equal(t, "10", params["limit"])
+	assert.Equal(t, "30", params["offset"])
+	assert.Equal(t, "next", params["direction"])
+	assert.Equal(t, "desc", params["order"])
+}
+
+func TestGetResponderAlertsRequest_Validate(t *testing.T) {
+	request := &GetResponderAlertsRequest{}
+	err := request.Validate()
+	assert.Equal(t, err.Error(), errors.New("Incident ID cannot be blank.").Error())
+	request.Id = "adea9e79-5527-4e49-b345-e55ae180ae59"
+	err = request.Validate()
+	assert.Nil(t, err)
+}
