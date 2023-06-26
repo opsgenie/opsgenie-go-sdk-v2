@@ -3,10 +3,12 @@ package alert
 type ResponderType string
 
 const (
-	UserResponder       ResponderType = "user"
-	TeamResponder       ResponderType = "team"
-	EscalationResponder ResponderType = "escalation"
-	ScheduleResponder   ResponderType = "schedule"
+	UserResponder        ResponderType = "user"
+	TeamResponder        ResponderType = "team"
+	EscalationResponder  ResponderType = "escalation"
+	ScheduleResponder    ResponderType = "schedule"
+	GroupResponder       ResponderType = "group"
+	UnsupportedResponder ResponderType = "unsupported"
 )
 
 type Responder struct {
