@@ -7,7 +7,6 @@ const (
 	TeamResponder       ResponderType = "team"
 	EscalationResponder ResponderType = "escalation"
 	ScheduleResponder   ResponderType = "schedule"
-	GroupResponder      ResponderType = "group"
 )
 
 type Responder struct {

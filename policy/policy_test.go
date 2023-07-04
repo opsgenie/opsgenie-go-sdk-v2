@@ -126,7 +126,7 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 
 	req.Responders = &[]alert.Responder{
 		{
-			Type:     alert.GroupResponder,
+			Type:     "",
 			Name:     "",
 			Id:       "",
 			Username: "",
