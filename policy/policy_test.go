@@ -126,14 +126,14 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 
 	req.Responders = &[]alert.Responder{
 		{
-			Type:     alert.UnsupportedResponder,
+			Type:     alert.GroupResponder,
 			Name:     "",
 			Id:       "",
 			Username: "",
 		},
 	}
 	err = req.Validate()
-	assert.Equal(t, err.Error(), errors.New("responder type for alert policy should be one of team, user, escalation, schedule or group").Error())
+	assert.Equal(t, err.Error(), errors.New("responder type for alert policy should be one of team, user, escalation or schedule").Error())
 
 	req.Responders = &[]alert.Responder{
 		{
@@ -215,28 +215,6 @@ func TestCreateAlertPolicy_Validate(t *testing.T) {
 	req.Responders = &[]alert.Responder{
 		{
 			Type:     alert.ScheduleResponder,
-			Name:     "",
-			Id:       "teamId",
-			Username: "",
-		},
-	}
-	err = req.Validate()
-	assert.Nil(t, err)
-
-	req.Responders = &[]alert.Responder{
-		{
-			Type:     alert.GroupResponder,
-			Name:     "",
-			Id:       "",
-			Username: "user1",
-		},
-	}
-	err = req.Validate()
-	assert.Equal(t, err.Error(), errors.New("responder id should be provided").Error())
-
-	req.Responders = &[]alert.Responder{
-		{
-			Type:     alert.GroupResponder,
 			Name:     "",
 			Id:       "teamId",
 			Username: "",
