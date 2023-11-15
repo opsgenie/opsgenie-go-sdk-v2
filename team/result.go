@@ -18,6 +18,7 @@ type ListedTeams struct {
 type RoutingRuleMeta struct {
 	Id              string             `json:"id,omitempty"`
 	Name            string             `json:"name,omitempty"`
+	Order           int                `json:"order,omitempty"`
 	IsDefault       bool               `json:"isDefault,omitempty"`
 	Order           int                `json:"order,omitempty"`
 	Criteria        og.Criteria        `json:"criteria,omitempty"`
