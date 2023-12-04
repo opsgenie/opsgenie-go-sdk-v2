@@ -1,8 +1,9 @@
 package alert
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
 	"time"
+
+	"github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 )
 
 type Alert struct {
@@ -38,7 +39,8 @@ type Integration struct {
 
 type ListAlertResult struct {
 	client.ResultMetadata
-	Alerts []Alert `json:"data"`
+	Alerts []Alert           `json:"data"`
+	Paging map[string]string `json:"paging,omitempty"`
 }
 
 type RequestStatusResult struct {

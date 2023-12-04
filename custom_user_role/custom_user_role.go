@@ -1,7 +1,7 @@
 package custom_user_role
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 	"golang.org/x/net/context"
 )
 
