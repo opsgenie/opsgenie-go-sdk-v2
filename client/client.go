@@ -462,7 +462,7 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 	if ctx != nil {
-		req.WithContext(ctx)
+		req.Request = req.WithContext(ctx)
 	}
 
 	response, err := cli.do(req)
