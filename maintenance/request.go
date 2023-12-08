@@ -157,6 +157,15 @@ func (r *ListRequest) Method() string {
 	return http.MethodGet
 }
 
+func (r *ListRequest) RequestParams() map[string]string {
+	if r.Type == "" {
+		return nil
+	}
+	params := make(map[string]string)
+	params["type"] = string(r.Type)
+	return params
+}
+
 type CancelRequest struct {
 	client.BaseRequest
 	Id string
