@@ -478,7 +478,10 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 
 	err = handleErrorIfExist(response)
 	if err != nil {
-		cli.Config.Logger.Errorf(err.Error())
+		// Log only 5xx errors
+		if apiErr, ok := err.(*ApiError); ok && apiErr.StatusCode >= 500 {
+			cli.Config.Logger.Errorf(err.Error())
+		}
 		metricPublisher.publish(buildApiMetric(transactionId, request.ResourcePath(), duration(startTime, time.Now().UnixNano()), *setResultMetadata(response, result), response, err))
 		metricPublisher.publish(buildSdkMetric(transactionId, request.ResourcePath(), "api-error", err, request, result, duration(startTime, time.Now().UnixNano())))
 		return err
