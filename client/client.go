@@ -262,9 +262,6 @@ func printInfoLog(client *OpsGenieClient) {
 func (cli *OpsGenieClient) defineErrorHandler(resp *http.Response, err error, numTries int) (*http.Response, error) {
 	if err != nil {
 		cli.Config.Logger.Errorf("Unable to send the request %s ", err.Error())
-		if err == context.DeadlineExceeded {
-			return nil, err
-		}
 		return nil, err
 	}
 	resp.Header.Add("retryCount", strconv.Itoa(numTries))
