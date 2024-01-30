@@ -440,7 +440,7 @@ type ChangeOrderRequest struct {
 	Id          string `json:"id,omitempty"`
 	TeamId      string
 	Type        PolicyType
-	TargetIndex int `json:"targetIndex,omitempty"`
+	TargetIndex *int `json:"targetIndex,omitempty"`
 }
 
 func (r *ChangeOrderRequest) Validate() error {
@@ -451,7 +451,7 @@ func (r *ChangeOrderRequest) Validate() error {
 	if err != nil {
 		return err
 	}
-	if r.TargetIndex < 0 {
+	if *r.TargetIndex < 0 {
 		return errors.New("target index should be at least 0")
 	}
 	return nil
