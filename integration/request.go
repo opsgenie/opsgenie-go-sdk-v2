@@ -316,6 +316,7 @@ type CreateIntegrationActionsRequest struct {
 	Order                            int               `json:"order,omitempty"`
 	User                             string            `json:"user,omitempty"`
 	Note                             string            `json:"note,omitempty"`
+	Priority                         string            `json:"priority,omitempty"`
 	Filter                           *Filter           `json:"filter,omitempty"`
 	Source                           string            `json:"source,omitempty"`
 	Message                          string            `json:"message,omitempty"`
