@@ -48,6 +48,7 @@ type APIBasedIntegrationRequest struct {
 	client.BaseRequest
 	Name                        string        `json:"name"`
 	Type                        string        `json:"type"`
+	AllowConfigurationAccess    *bool         `json:"allowConfigurationAccess"`
 	AllowWriteAccess            *bool         `json:"allowWriteAccess"`
 	IgnoreRespondersFromPayload *bool         `json:"ignoreRespondersFromPayload"`
 	SuppressNotifications       *bool         `json:"suppressNotifications"`
