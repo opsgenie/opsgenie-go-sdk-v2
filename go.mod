@@ -1,6 +1,6 @@
 module github.com/opsgenie/opsgenie-go-sdk-v2
 
-go 1.12
+go 1.16
 
 require (
 	github.com/hashicorp/go-retryablehttp v0.5.1
