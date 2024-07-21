@@ -403,16 +403,18 @@ func TestDeletePolicy_Validate(t *testing.T) {
 }
 
 func TestChangeOrder_Validate(t *testing.T) {
+	targetIndex := -1
 	request := &ChangeOrderRequest{
 		Id:          "asd",
 		TeamId:      "asd",
 		Type:        NotificationPolicy,
-		TargetIndex: -1,
+		TargetIndex: &targetIndex,
 	}
 	err := request.Validate()
 	assert.Equal(t, "target index should be at least 0", err.Error())
 
-	request.TargetIndex = 0
+	targetIndex = 0
+	request.TargetIndex = &targetIndex
 	err = request.Validate()
 	assert.Nil(t, err)
 }
