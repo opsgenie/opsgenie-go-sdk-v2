@@ -21,7 +21,7 @@ type CreateAlertPolicyRequest struct {
 	IgnoreOriginalDetails    *bool              `json:"ignoreOriginalDetails,omitempty"`
 	Actions                  []string           `json:"actions,omitempty"`
 	IgnoreOriginalActions    *bool              `json:"ignoreOriginalActions,omitempty"`
-	Details                  []string           `json:"details,omitempty"`
+	Details                  map[string]string           `json:"details,omitempty"`
 	IgnoreOriginalResponders *bool              `json:"ignoreOriginalResponders,omitempty"`
 	Responders               *[]alert.Responder `json:"responders,omitempty"`
 	IgnoreOriginalTags       *bool              `json:"ignoreOriginalTags,omitempty"`
@@ -216,7 +216,7 @@ type UpdateAlertPolicyRequest struct {
 	IgnoreOriginalDetails    *bool                  `json:"ignoreOriginalDetails,omitempty"`
 	Actions                  []string               `json:"actions,omitempty"`
 	IgnoreOriginalActions    *bool                  `json:"ignoreOriginalActions,omitempty"`
-	Details                  map[string]interface{} `json:"details,omitempty"`
+	Details                  map[string]string 		`json:"details,omitempty"`
 	IgnoreOriginalResponders *bool                  `json:"ignoreOriginalResponders,omitempty"`
 	Responders               *[]alert.Responder     `json:"responders,omitempty"`
 	IgnoreOriginalTags       *bool                  `json:"ignoreOriginalTags,omitempty"`
