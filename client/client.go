@@ -484,6 +484,10 @@ func (cli *OpsGenieClient) Exec(ctx context.Context, request ApiRequest, result 
 		return err
 	}
 
+	if response.StatusCode == 204 {
+		return nil
+	}
+
 	err = result.Parse(response, result)
 	if err != nil {
 		cli.Config.Logger.Errorf(err.Error())
