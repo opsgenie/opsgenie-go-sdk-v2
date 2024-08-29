@@ -45,7 +45,7 @@ func (r *GetOnCallsRequest) RequestParams() map[string]string {
 	}
 
 	if r.Date != nil {
-		params["date"] = r.Date.Format("2006-01-02T15:04:05.000Z")
+		params["date"] = r.Date.UTC().Format("2006-01-02T15:04:05.000Z")
 	}
 
 	return params
@@ -89,7 +89,7 @@ func (r *GetNextOnCallsRequest) RequestParams() map[string]string {
 	}
 
 	if r.Date != nil {
-		params["date"] = r.Date.Format("2006-01-02T15:04:05.000Z")
+		params["date"] = r.Date.UTC().Format("2006-01-02T15:04:05.000Z")
 	}
 
 	return params
