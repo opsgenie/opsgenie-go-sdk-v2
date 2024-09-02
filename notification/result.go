@@ -70,6 +70,7 @@ type GetRuleResult struct {
 	Id               string                 `json:"id,omitempty"`
 	Name             string                 `json:"name,omitempty"`
 	ActionType       ActionType             `json:"actionType,omitempty"`
+	Criteria         *og.Filter             `json:"criteria,omitempty"`
 	Order            uint32                 `json:"order,omitempty"`
 	Enabled          bool                   `json:"enabled,omitempty"`
 	NotificationTime []NotificationTimeType `json:"notificationTime,omitempty"`
