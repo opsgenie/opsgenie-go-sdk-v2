@@ -4,14 +4,14 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 )
 
 type ListAlertLogsRequest struct {
 	client.BaseRequest
 	IdentifierType  AlertIdentifier
 	IdentifierValue string
-	Offset          string
+	Offset          int
 	Direction       RequestDirection
 	Order           Order
 	Limit           uint32
@@ -47,8 +47,8 @@ func (r *ListAlertLogsRequest) RequestParams() map[string]string {
 		params["identifierType"] = "id"
 	}
 
-	if r.Offset != "" {
-		params["offset"] = r.Offset
+	if r.Offset != 0 {
+		params["offset"] = strconv.Itoa(r.Offset)
 	}
 
 	if r.Order == Asc {

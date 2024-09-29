@@ -1,6 +1,6 @@
 package account
 
-import "github.com/opsgenie/opsgenie-go-sdk-v2/client"
+import "github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 
 type GetResult struct {
 	client.ResultMetadata

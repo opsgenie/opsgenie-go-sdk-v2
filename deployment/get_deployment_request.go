@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/opsgenie/opsgenie-go-sdk-v2/client"
+	"github.com/joeyparsons/opsgenie-go-sdk-v2/client"
 )
 
 type GetDeploymentRequest struct {

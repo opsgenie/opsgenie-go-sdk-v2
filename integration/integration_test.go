@@ -1,7 +1,7 @@
 package integration
 
 import (
-	"github.com/opsgenie/opsgenie-go-sdk-v2/og"
+	"github.com/joeyparsons/opsgenie-go-sdk-v2/og"
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
