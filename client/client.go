@@ -152,8 +152,6 @@ func (rm *ResultMetadata) ValidateResultMetadata() error {
 	return nil
 }
 
-var UserAgentHeader string
-
 const Version = "2.0.0"
 
 func setConfiguration(opsGenieClient *OpsGenieClient, cfg *Config) {
@@ -237,7 +235,6 @@ func setRetryPolicy(opsGenieClient *OpsGenieClient, cfg *Config) {
 }
 
 func NewOpsGenieClient(cfg *Config) (*OpsGenieClient, error) {
-	UserAgentHeader = fmt.Sprintf("opsgenie-go-sdk-%s %s (%s/%s)", Version, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 	opsGenieClient := &OpsGenieClient{
 		Config:          cfg,
 		RetryableClient: retryablehttp.NewClient(),
@@ -365,10 +362,14 @@ func (cli *OpsGenieClient) buildHttpRequest(apiRequest ApiRequest) (*request, er
 	}
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Authorization", "GenieKey "+cli.Config.ApiKey)
-	req.Header.Add("User-Agent", UserAgentHeader)
+	req.Header.Add("User-Agent", buildUserAgentHeader())
 
 	return &request{req}, err
 
+}
+
+func buildUserAgentHeader() string {
+	return fmt.Sprintf("opsgenie-go-sdk-%s %s (%s/%s)", Version, runtime.Version(), runtime.GOOS, runtime.GOARCH)
 }
 
 func buildRequestUrl(cli *OpsGenieClient, apiRequest ApiRequest, queryParams url.Values) string {
