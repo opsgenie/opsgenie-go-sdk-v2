@@ -38,7 +38,8 @@ type Integration struct {
 
 type ListAlertResult struct {
 	client.ResultMetadata
-	Alerts []Alert `json:"data"`
+	Alerts []Alert           `json:"data"`
+	Paging map[string]string `json:"paging,omitempty"`
 }
 
 type RequestStatusResult struct {
