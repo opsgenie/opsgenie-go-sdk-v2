@@ -12,6 +12,7 @@ type Heartbeat struct {
 	Enabled       bool         `json:"enabled"`
 	IntervalUnit  string       `json:"intervalUnit"`
 	Expired       bool         `json:"expired"`
+	LastPingTime  string       `json:"lastPingTime"`
 	OwnerTeam     og.OwnerTeam `json:"ownerTeam"`
 	AlertTags     []string     `json:"alertTags"`
 	AlertPriority string       `json:"alertPriority"`
