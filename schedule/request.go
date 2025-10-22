@@ -181,7 +181,7 @@ func (r *ListRequest) RequestParams() map[string]string {
 
 	params := make(map[string]string)
 
-	if *r.Expand {
+	if r.Expand != nil && *r.Expand {
 		params["expand"] = "rotation"
 
 	}
@@ -337,7 +337,7 @@ func validateIdentifier(identifier string) error {
 	return nil
 }
 
-//schedule rotation
+// schedule rotation
 type CreateRotationRequest struct {
 	*og.Rotation
 	ScheduleIdentifierType  Identifier
