@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+// LogFunction For big messages, it can be more efficient to pass a function
+// and only call it if the log level is actually enables rather than
+// generating the log message and then checking if the level is enabled
+type LogFunction func() []interface{}
+
 type Logger struct {
 	// The logs are `io.Copy`'d to this in a mutex. It's common to set this to a
 	// file, or leave it default which is `os.Stderr`. You can also set this to
@@ -39,6 +44,9 @@ type Logger struct {
 	entryPool sync.Pool
 	// Function to exit the application, defaults to `os.Exit()`
 	ExitFunc exitFunc
+	// The buffer pool used to format the log. If it is nil, the default global
+	// buffer pool will be used.
+	BufferPool BufferPool
 }
 
 type exitFunc func(int)
@@ -64,16 +72,16 @@ func (mw *MutexWrap) Disable() {
 	mw.disabled = true
 }
 
-// Creates a new logger. Configuration should be set by changing `Formatter`,
-// `Out` and `Hooks` directly on the default logger instance. You can also just
+// New Creates a new logger. Configuration should be set by changing [Formatter],
+// Out and Hooks directly on the default Logger instance. You can also just
 // instantiate your own:
 //
-//    var log = &Logger{
-//      Out: os.Stderr,
-//      Formatter: new(JSONFormatter),
-//      Hooks: make(LevelHooks),
-//      Level: logrus.DebugLevel,
-//    }
+//	var log = &logrus.Logger{
+//	  Out:       os.Stderr,
+//	  Formatter: new(logrus.TextFormatter),
+//	  Hooks:     make(logrus.LevelHooks),
+//	  Level:     logrus.DebugLevel,
+//	}
 //
 // It's recommended to make this a global instance called `log`.
 func New() *Logger {
@@ -100,8 +108,9 @@ func (logger *Logger) releaseEntry(entry *Entry) {
 	logger.entryPool.Put(entry)
 }
 
-// Adds a field to the log entry, note that it doesn't log until you call
-// Debug, Print, Info, Warn, Error, Fatal or Panic. It only creates a log entry.
+// WithField allocates a new entry and adds a field to it.
+// Debug, Print, Info, Warn, Error, Fatal or Panic must be then applied to
+// this new returned entry.
 // If you want multiple fields, use `WithFields`.
 func (logger *Logger) WithField(key string, value interface{}) *Entry {
 	entry := logger.newEntry()
@@ -109,30 +118,30 @@ func (logger *Logger) WithField(key string, value interface{}) *Entry {
 	return entry.WithField(key, value)
 }
 
-// Adds a struct of fields to the log entry. All it does is call `WithField` for
-// each `Field`.
+// WithFields adds a struct of fields to the log entry. It calls [Entry.WithField]
+// for each Field.
 func (logger *Logger) WithFields(fields Fields) *Entry {
 	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithFields(fields)
 }
 
-// Add an error as single field to the log entry.  All it does is call
-// `WithError` for the given `error`.
+// WithError adds an error as single field to the log entry.  It calls
+// [Entry.WithError] for the given error.
 func (logger *Logger) WithError(err error) *Entry {
 	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithError(err)
 }
 
-// Add a context to the log entry.
+// WithContext add a context to the log entry.
 func (logger *Logger) WithContext(ctx context.Context) *Entry {
 	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithContext(ctx)
 }
 
-// Overrides the time of the log entry.
+// WithTime overrides the time of the log entry.
 func (logger *Logger) WithTime(t time.Time) *Entry {
 	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
@@ -186,10 +195,21 @@ func (logger *Logger) Panicf(format string, args ...interface{}) {
 	logger.Logf(PanicLevel, format, args...)
 }
 
+// Log will log a message at the level given as parameter.
+// Warning: using Log at Panic or Fatal level will not respectively Panic nor Exit.
+// For this behaviour Logger.Panic or Logger.Fatal should be used instead.
 func (logger *Logger) Log(level Level, args ...interface{}) {
 	if logger.IsLevelEnabled(level) {
 		entry := logger.newEntry()
 		entry.Log(level, args...)
+		logger.releaseEntry(entry)
+	}
+}
+
+func (logger *Logger) LogFn(level Level, fn LogFunction) {
+	if logger.IsLevelEnabled(level) {
+		entry := logger.newEntry()
+		entry.Log(level, fn()...)
 		logger.releaseEntry(entry)
 	}
 }
@@ -231,6 +251,45 @@ func (logger *Logger) Fatal(args ...interface{}) {
 
 func (logger *Logger) Panic(args ...interface{}) {
 	logger.Log(PanicLevel, args...)
+}
+
+func (logger *Logger) TraceFn(fn LogFunction) {
+	logger.LogFn(TraceLevel, fn)
+}
+
+func (logger *Logger) DebugFn(fn LogFunction) {
+	logger.LogFn(DebugLevel, fn)
+}
+
+func (logger *Logger) InfoFn(fn LogFunction) {
+	logger.LogFn(InfoLevel, fn)
+}
+
+func (logger *Logger) PrintFn(fn LogFunction) {
+	entry := logger.newEntry()
+	entry.Print(fn()...)
+	logger.releaseEntry(entry)
+}
+
+func (logger *Logger) WarnFn(fn LogFunction) {
+	logger.LogFn(WarnLevel, fn)
+}
+
+func (logger *Logger) WarningFn(fn LogFunction) {
+	logger.WarnFn(fn)
+}
+
+func (logger *Logger) ErrorFn(fn LogFunction) {
+	logger.LogFn(ErrorLevel, fn)
+}
+
+func (logger *Logger) FatalFn(fn LogFunction) {
+	logger.LogFn(FatalLevel, fn)
+	logger.Exit(1)
+}
+
+func (logger *Logger) PanicFn(fn LogFunction) {
+	logger.LogFn(PanicLevel, fn)
 }
 
 func (logger *Logger) Logln(level Level, args ...interface{}) {
@@ -288,9 +347,9 @@ func (logger *Logger) Exit(code int) {
 	logger.ExitFunc(code)
 }
 
-//When file is opened with appending mode, it's safe to
-//write concurrently to a file (within 4k message on Linux).
-//In these cases user can choose to disable the lock.
+// SetNoLock disables the lock for situations where a file is opened with
+// appending mode, and safe for concurrent writes to the file (within 4k
+// message on Linux). In these cases user can choose to disable the lock.
 func (logger *Logger) SetNoLock() {
 	logger.mu.Disable()
 }
@@ -348,4 +407,11 @@ func (logger *Logger) ReplaceHooks(hooks LevelHooks) LevelHooks {
 	logger.Hooks = hooks
 	logger.mu.Unlock()
 	return oldHooks
+}
+
+// SetBufferPool sets the logger buffer pool.
+func (logger *Logger) SetBufferPool(pool BufferPool) {
+	logger.mu.Lock()
+	defer logger.mu.Unlock()
+	logger.BufferPool = pool
 }
