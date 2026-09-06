@@ -240,7 +240,7 @@ func validateTime(t Time) error {
 func validateRules(rules []Rule) error {
 	for _, rule := range rules {
 		if rule.Entity.Type != Policy && rule.Entity.Type != Integration {
-			return errors.New("Rule.Entity.Id should be one of these: " +
+			return errors.New("Rule.Entity.Type should be one of these: " +
 				"'Policy', 'Integration'.")
 		}
 		if rule.State != Enabled && rule.State != Disabled && rule.State != "" {
@@ -264,6 +264,6 @@ func validateStatusType(status StatusType) error {
 	case All, NonExpired, Past, "":
 		return nil
 	}
-	return errors.New("Priority should be one of these: " +
+	return errors.New("StatusType should be one of these: " +
 		"'All', 'NonExpired' and 'Past' or empty.")
 }

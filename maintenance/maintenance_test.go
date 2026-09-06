@@ -146,7 +146,7 @@ func TestRules_Validate(t *testing.T) {
 		{},
 	}
 	err := validateRules(rules)
-	assert.Equal(t, err.Error(), errors.New("Rule.Entity.Id should be one of these: 'Policy', 'Integration'.").Error())
+	assert.Equal(t, err.Error(), errors.New("Rule.Entity.Type should be one of these: 'Policy', 'Integration'.").Error())
 	rules = []Rule{
 		{
 			Entity: Entity{
@@ -169,7 +169,7 @@ func TestRules_Validate(t *testing.T) {
 		},
 	)
 	err = validateRules(rules)
-	assert.Equal(t, err.Error(), errors.New("Rule.Entity.Id should be one of these:"+
+	assert.Equal(t, err.Error(), errors.New("Rule.Entity.Type should be one of these:"+
 		" 'Policy', 'Integration'.").Error())
 	rules[1].Entity.Type = Integration
 	err = validateRules(rules)
@@ -186,7 +186,7 @@ func TestRules_Validate(t *testing.T) {
 
 func TestStatusType_Validate(t *testing.T) {
 	err := validateStatusType("cem")
-	assert.Equal(t, err.Error(), errors.New("Priority should be one of these: "+
+	assert.Equal(t, err.Error(), errors.New("StatusType should be one of these: "+
 		"'All', 'NonExpired' and 'Past' or empty.").Error())
 	err = validateStatusType("")
 	assert.Nil(t, err)

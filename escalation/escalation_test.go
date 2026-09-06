@@ -182,7 +182,7 @@ func TestUpdateRequest_Validate(t *testing.T) {
 		Identifier:     "id1",
 	}
 	err = updateRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of this : 'id', 'name' or empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of these: 'id', 'name' or empty.").Error())
 
 	updateRequest = &UpdateRequest{
 		IdentifierType: Name,
@@ -312,7 +312,7 @@ func TestDeleteRequest_Validate(t *testing.T) {
 		Identifier:     "id1",
 	}
 	err = deleteRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of this : 'id', 'name' or empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of these: 'id', 'name' or empty.").Error())
 
 	deleteRequest = &DeleteRequest{
 		IdentifierType: Name,
@@ -334,7 +334,7 @@ func TestGetRequest_Validate(t *testing.T) {
 		Identifier:     "id1",
 	}
 	err = getRequest.Validate()
-	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of this : 'id', 'name' or empty.").Error())
+	assert.Equal(t, err.Error(), errors.New("Identifier Type should be one of these: 'id', 'name' or empty.").Error())
 
 	getRequest = &GetRequest{
 		IdentifierType: Name,
