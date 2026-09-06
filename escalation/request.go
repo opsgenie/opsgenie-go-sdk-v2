@@ -235,7 +235,7 @@ func validateRecipient(participant og.Participant) error {
 
 func validateIdentifiers(identifier string, identifierType Identifier) error {
 	if identifierType != "" && identifierType != Name && identifierType != Id {
-		return errors.New("Identifier Type should be one of this : 'id', 'name' or empty.")
+		return errors.New("Identifier Type should be one of these: 'id', 'name' or empty.")
 	}
 
 	if identifier == "" {
